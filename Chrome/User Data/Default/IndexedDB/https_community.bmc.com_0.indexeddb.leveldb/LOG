@@ -1,0 +1,47 @@
+2022/09/21-17:19:55.432 56b4 Creating DB C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_community.bmc.com_0.indexeddb.leveldb since it was missing.
+2022/09/21-17:19:55.463 56b4 Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_community.bmc.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/09/21-17:20:02.228 56dc Level-0 table #5: started
+2022/09/21-17:20:02.281 56dc Level-0 table #5: 1246191 bytes OK
+2022/09/21-17:20:02.283 56dc Delete type=0 #3
+2022/09/21-17:20:02.313 56dc Level-0 table #7: started
+2022/09/21-17:20:02.356 56dc Level-0 table #7: 1082456 bytes OK
+2022/09/21-17:20:02.358 56dc Delete type=0 #4
+2022/09/21-17:20:02.365 56dc Compacting 1@1 + 1@2 files
+2022/09/21-17:20:02.490 56dc Generated table #8@1: 3954 keys, 2119856 bytes
+2022/09/21-17:20:02.501 56dc Compacted 1@1 + 1@2 files => 2119856 bytes
+2022/09/21-17:20:02.504 56dc compacted to: files[ 0 0 1 0 0 0 0 ]
+2022/09/21-17:20:02.505 56dc Delete type=2 #5
+2022/09/21-17:20:02.505 56dc Delete type=2 #7
+2022/09/21-17:20:02.511 56dc Level-0 table #10: started
+2022/09/21-17:20:02.562 56dc Level-0 table #10: 1333592 bytes OK
+2022/09/21-17:20:02.565 56dc Delete type=0 #6
+2022/09/21-17:20:04.405 4f90 Level-0 table #12: started
+2022/09/21-17:20:04.430 4f90 Level-0 table #12: 270580 bytes OK
+2022/09/21-17:20:04.431 4f90 Delete type=0 #9
+2022/09/21-17:20:04.435 4f90 Manual compaction at level-0 from '\x00\x08\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x09\x00\x00\x00' @ 0 : 0; will stop at '\x00\x08\x01\x1f\x03\x00\xd0\x01\xb1\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18449 : 1
+2022/09/21-17:20:04.435 4f90 Compacting 1@0 + 1@1 files
+2022/09/21-17:20:04.465 4f90 Generated table #13@0: 7717 keys, 245783 bytes
+2022/09/21-17:20:04.465 4f90 Compacted 1@0 + 1@1 files => 245783 bytes
+2022/09/21-17:20:04.465 4f90 compacted to: files[ 0 1 1 0 0 0 0 ]
+2022/09/21-17:20:04.466 4f90 Delete type=2 #12
+2022/09/21-17:20:04.473 4f90 Manual compaction at level-0 from '\x00\x08\x01\x1f\x03\x00\xd0\x01\xb1\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18449 : 1 .. '\x00\x09\x00\x00\x00' @ 0 : 0; will stop at (end)
+2022/09/21-17:20:10.504 bfc Level-0 table #15: started
+2022/09/21-17:20:10.513 bfc Level-0 table #15: 53414 bytes OK
+2022/09/21-17:20:10.514 bfc Delete type=2 #10
+2022/09/21-17:20:10.514 bfc Delete type=0 #11
+2022/09/21-17:20:10.523 bfc Manual compaction at level-0 from (begin) .. (end); will stop at '\x00\x07\x01\x1f\x03\x000u\xb0\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18744 : 0
+2022/09/21-17:20:10.523 bfc Compacting 1@0 + 1@1 files
+2022/09/21-17:20:10.547 bfc Generated table #16@0: 7860 keys, 291731 bytes
+2022/09/21-17:20:10.547 bfc Compacted 1@0 + 1@1 files => 291731 bytes
+2022/09/21-17:20:10.548 bfc compacted to: files[ 0 1 1 0 0 0 0 ]
+2022/09/21-17:20:10.548 bfc Delete type=2 #13
+2022/09/21-17:20:10.548 bfc Delete type=2 #15
+2022/09/21-17:20:10.554 bfc Manual compaction at level-0 from '\x00\x07\x01\x1f\x03\x000u\xb0\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18744 : 0 .. (end); will stop at (end)
+2022/09/21-17:20:10.554 bfc Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x07\x01\x1f\x03\x00P\xfb\xb0\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18334 : 1
+2022/09/21-17:20:10.554 bfc Compacting 1@1 + 1@2 files
+2022/09/21-17:20:10.572 bfc Generated table #17@1: 232 keys, 56257 bytes
+2022/09/21-17:20:10.572 bfc Compacted 1@1 + 1@2 files => 56257 bytes
+2022/09/21-17:20:10.573 bfc compacted to: files[ 0 0 1 0 0 0 0 ]
+2022/09/21-17:20:10.573 bfc Delete type=2 #8
+2022/09/21-17:20:10.573 bfc Delete type=2 #16
+2022/09/21-17:20:10.576 bfc Manual compaction at level-1 from '\x00\x07\x01\x1f\x03\x00P\xfb\xb0\xc7pxB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 18334 : 1 .. (end); will stop at (end)

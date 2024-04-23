@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel='stylesheet' href='components/bootstrap/dist/css/bootstrap.min.css' />
+		<link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
+		<link rel='stylesheet' href='dist/css/style.min.css' />
+	</head>
+	<body style="min-width:400px;">
+		<header class="main-header text-center">
+			<a href="#" id="btn-return" class="return hide"><i class="fa fa-angle-left"></i></a>
+			<a class="logo" href="https://www.xgeek.net/salesforce/tesforce-for-google-chrome/" target="_blank"><img src="icon/icon-24.png" />&nbsp;&nbsp;Salesforce DevTools</a>
+			<a href="#" id="btn-reload-meta" class="reload" title="Reload Metadata Index" data-container="body" data-toggle="tooltip" data-placement="left"><i class="glyphicon glyphicon-refresh"></i></a>
+			<div id="btn-user-profile" class="profile">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+					<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+					<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+				</svg>
+				<div class="dialog">
+					<div class="dialog-panel">
+						<p class="sf-name"></p>
+						<p class="sf-username"><i class="fa fa-user"></i></p>
+						<p class="sf-domain"><i class="fa fa-link"></i></p>
+						<p class="links"><a class="btn btn-brand" id="btn-reoauth">Reauthenticate</a></p>
+					</div>
+					<div class="pointer"></div>
+				</div>
+			</div>
+		</header>
+		<div id="container" class="container flat no-padding hide">
+			<ul class="nav nav-pills nav-stacked">
+				<li role="section" id="title-record-detail" class="section bg-info jq-detail hide"></li>
+			   	<li role="presentation" class="jq-detail hide" id="li-apiname">
+			   		<a href="#" id="btn-show-apiname"><i class="fa fa-eye"></i><span>Show Object API Name</span></a>
+			   		<a href="#" id="btn-hide-apiname" style="display:none;"><i class="fa fa-eye-slash"></i><span>Hide Object API Name</span></a>
+			   	</li>
+				<li role="presentation" class="last jq-detail hide" id="li-quick-apexcode">
+					<a href="#" id="btn-quick-apexcode">
+						<i class="fa fa-bolt"></i>
+						<span>Apex Code Generator</span>
+						<i class="fa fa-angle-right pull-right"></i>
+					</a>
+				</li>
+				<li role="section" id="title-record-list" class="section bg-info jq-list hide"></li>
+				<li role="presentation" id="li-quick-access" class="jq-list hide">
+					<div class="col-xs-12 rlist">
+						<div class="col-xs-9 mr8 no-padding">
+							<a href="#" id="btn-new-record" target="_blank" class="btn btn-success btn-xs flat" title="Open New Record Page" data-container="body" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus"></i>&nbsp;New</a>
+							<a href="#" id="btn-record-list" target="_blank" class="btn btn-default btn-xs flat ml5" title="Open List View" data-container="body" data-toggle="tooltip" data-placement="top"><i class="fa fa-list-ul"></i>&nbsp;List</a>
+							<a href="#" id="btn-object-setting" target="_blank" class="btn btn-default btn-xs flat ml5" title="Open Object Setting Page" data-container="body" data-toggle="tooltip" data-placement="top"><i class="fa fa-cog"></i>&nbsp;Setting</a>
+							<a href="#" id="btn-object-reference" target="_blank" class="btn btn-default btn-xs flat hide" title="Open Object API Reference Page" data-container="body" data-toggle="tooltip" data-placement="top"><i class="fa fa-question-circle"></i>&nbsp;Doc</a>
+						</div>
+						<div class="col-xs-3 mr8 no-padding text-right dropdown">
+							<button class="btn btn-primary btn-xs dropdown-toggle flat" type="button" id="btn-export-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Export<!--<span class="badge up badge-danger">New</span> -->
+							</button>
+							<div class="dropdown-menu" aria-labelledby="btn-export-dropdown">
+								<a class="dropdown-item" id="btn-object-export" href="#" title="Export Object Definition, Fields Definition, Fields Permissions, Validation Rules, Workflow Rules, Workflow Actions, Triggers to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+									Object Definition (FULL)
+								</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" id="btn-object-export-fields" href="#" title="Export Object and Fields Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+									Object Fields Definition
+								</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" id="btn-object-export-layout" href="#" title="Export Object Page Layout Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+									Page Layout 
+								</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" id="btn-object-export-listview" href="#" title="Export List View Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+									List View
+								</a>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li role="presentation" class="jq-list hide" id="li-quick-soql">
+					<a href="#" id="btn-quick-soql">
+						<i class="fa fa-database"></i>
+						<span>Query Editor</span>
+						<i class="fa fa-angle-right pull-right"></i>
+						<small style="color:red; font-weight: bold;">&nbsp;New!</small>
+					</a>
+				</li>
+				<li role="presentation" class="last jq-list hide" id="li-field-editor">
+					<a href="#" id="btn-field-editor">
+						<i class="fa fa-th-large"></i>
+						<span>Object Fields</span>
+						<small style="color:red; font-weight: bold;">&nbsp;New!</small>
+					</a>
+				</li>
+				<li role="section" class="section bg-info">Debug Logs</li>
+				<li role="presentation" class="jq-debuglog-viewer hide">
+					<a href="#" id="btn-debuglog-viewer">
+						<i class="fa fa-code"></i>
+						<span>Debug Log Viewer</span>
+					</a>
+        </li>
+        <li role="presentation" class="last">
+					<a href="#" id="btn-debuglog-panel">
+						<i class="fa fa-search"></i>
+						<span>Search Debug Logs <!--<small style="color:red; font-weight: bold;">&nbsp;New!</small> --></span>
+            <i class="fa fa-angle-right pull-right"></i>
+          </a>
+				</li>
+				<li role="section" class="section bg-info jq-panel">Salesforce Objects</li>
+				<li role="presentation" class="last jq-panel" id="li-objects-panel">
+					<a href="#" id="btn-objects-panel">
+						<i class="fa fa-search"></i>
+						<span>Search Objects</span>
+						<i class="fa fa-angle-right pull-right"></i>
+					</a>
+				</li>
+			</ul><!-- Explore documentation and API reference guides.-->
+		</div>
+		<div id="container-quick-apex-code" class="container flat no-padding hide">
+			<div class="loader">
+				<div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+			</div>
+		</div>
+		<!-- SOQL Generator -->
+		<div id="container-quick-soql" class="container flat no-padding hide">
+			<div class="loader">
+				<div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+			</div>
+		</div>
+		<div id="container-sfdc-objects" class="container flat no-padding hide">
+			<ul class="nav nav-pills nav-stacked nav-search-result">
+				<li class="header">
+					<div class="col-xs-12 no-padding">
+					  <input id="ipt-search-object" type="text" class="form-control input-sm flat" placeholder="Search..." autocomplete="off" />
+					  <a href="#" id="btn-search-clear" class="search-clear"><i class="fa fa-times-circle"></i></a>
+					</div>
+				</li>
+				<li class="check-all-header hide" id="nav-check-all">
+					<div class="col-xs-12 no-padding">
+					  <div class="col-xs-6">
+					  	<div class="checkbox checkbox-primary"><input type="checkbox" value="1" id="chk-all-objects"><label for="chk-all-objects">&nbsp;</label></div>
+					  	<div class="check-all-label">
+					  		<span class="label label-warning">0 Selected</span>
+					  	</div>
+					  </div>
+					  <div class="col-xs-6 text-right dropdown">
+						<button class="btn btn-primary btn-xs dropdown-toggle disabled flat" disabled="disabled" type="button" id="btn-export-all-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Export<!-- <span class="badge up badge-danger">New</span> -->
+						</button>
+						<div class="dropdown-menu" aria-labelledby="btn-export-dropdown">
+							<a href="#" id="btn-object-export-all" class="dropdown-item" title="Export Objects Definition, Fields Definition, Fields Permissions, Validation Rules, Workflow Rules, Workflow Actions, Triggers to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+								Objects Definition (FULL)
+							</a>
+							<div class="dropdown-divider"></div>
+							<a href="#" id="btn-object-export-fields-all" class="dropdown-item" title="Export Objects and Fields Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+								Object Fields Definition
+							</a>
+							<div class="dropdown-divider"></div>
+							<a href="#" id="btn-object-export-erd" class="dropdown-item" title="Generate Entity-Relationship Diagram" data-container="body" data-toggle="tooltip" data-placement="left">
+								ERDs (svg)
+							</a>
+							<div class="dropdown-divider"></div>
+							<a href="#" id="btn-object-export-layout-all" class="dropdown-item" title="Export Object Page Layouts Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+								Page Layouts
+							</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" id="btn-object-export-listview-all" href="#" title="Export List Views Definition to Excel" data-container="body" data-toggle="tooltip" data-placement="left">
+								List Views
+							</a>
+						</div><!-- .dropdown-menu -->
+				  		</div>
+					</div>
+				</li>
+				<li class="no-result hide" id="li-no-result"></li>
+				
+			</ul>
+    </div>
+    <!-- DebugLog viewer -->
+    <div id="container-debuglog-viewer" class="container flat no-padding hide"></div>
+    <div id="container-debuglog-search" class="container flat no-padding hide">
+      <ul class="nav nav-pills nav-stacked nav-search-result">
+				<li class="header hide">
+					<div class="col-xs-11 no-padding">
+					  <input id="ipt-search-debuglog" type="text" class="form-control input-sm flat" placeholder="Search...">
+					  <a href="#" id="btn-search-debuglog-clear" class="search-clear"><i class="fa fa-times-circle"></i></a>
+          </div>
+          <div class="col-xs-1 no-padding">
+            <a href="#" id="btn-debuglog-reload" class="reload pull-right" title="Reload Debug Log" data-container="body" data-toggle="tooltip" data-placement="top"><i class="glyphicon glyphicon-refresh"></i></a>
+          </div>
+				</li>
+        <li class="no-result hide" id="li-no-result"></li>
+        <li class="loading-body" id="debuglog-loading">
+          <div class="loader">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </li>
+			</ul>
+    </div>
+		<div class="col-md-12 hide" id='message'></div>
+		<div class="col-md-12" id='loading'>
+			<div class="loader">
+				<div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+			</div>
+		</div>
+		<div class="col-md-12 fb-share">
+			<div class="pull-left" style="width: 150px">
+				<iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.xgeek.net%2Fsalesforce%2Ftesforce-for-google-chrome%2F&width=150&locale=en_US&layout=button_count&action=like&size=small&show_faces=true&share=true&height=25" width="150" height="25" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+			</div>
+			<div class="pull-left" style="width: 90px;">
+				<iframe src="https://ghbtns.com/github-btn.html?user=xgeek-net&repo=salesforce-devtools&type=star&count=true" frameborder="0" scrolling="0" width="90px" height="25px"></iframe>
+			</div>
+			<div class="pull-right" style="width: 70px">
+				<a href="https://github.com/xgeek-net/salesforce-devtools/issues" class="btn btn-success btn-xs" target="_blank"><i class="fa fa-github"></i>&nbsp;Issues</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="components/ace-builds/src-min/ace.js"></script>
+		<script type="text/javascript" src="components/ace-builds/src-min/ext-language_tools.js"></script>
+    <script type="text/javascript" src='dist/js/popup.min.js'></script>
+	</body>
+</html>

@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+	<html >
+	<head>
+		<title data-i18n="opts_title"></title>
+		<link href="libs/bootstrap/css/bootstrap.min-ns.css" rel="stylesheet" media="screen" />
+		<link href="libs/bootstrap/css/bootstrap-dark.min-ns.css" rel="stylesheet" media="screen" />
+		<link href="libs/css/options.css" rel="stylesheet" media="screen" />
+		<link href="libs/fontawesome/css/font-awesome.min.css" rel="stylesheet" media="screen" />
+		<!--<link href="libs/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">-->
+		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+	</head>
+
+	
+	
+	<body class="bnsn bnsn-dark" >
+		<div class="container">
+		<nav class="navbar navbar-default">
+		    <div class="container-fluid">
+		        <div class="ui-top-left-corner ui-logo" title="Salesforce ORGanizer"></div>
+			    <div class="navbar-header pull-right"> 
+		    	    <h3 class="navbar-brand" href="#">ORGanizer - Options</h3>
+		      	</div>
+
+		    </div><!--/.container-fluid -->
+		 </nav>
+
+		<div  class="ui-page-content" style="display:none;">
+
+			<div class="row">
+				<div class="col-sm-6" >
+					<div class="input-group input-group-sm">
+						<span class="input-group-addon" id="sizing-addon1">Client ID</span>
+						<input type="text" class="form-control" id="txtClientID" readonly>
+					</div>
+					<div class="input-group input-group-sm">
+						<span class="input-group-addon" id="sizing-addon1">Client Name</span>
+						<input type="text" class="form-control" id="txtClientName" maxlength="50" readonly>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="btnSaveClientName" style="display:none">
+								<span class="fa fa-save"></span>
+							</button>
+							<button class="btn btn-default" type="button" id="btnEditClientName" title="Edit Client Name">
+								<span class="fa fa-edit"></span>
+							</button>
+						</span>
+					</div>
+					<div class="input-group input-group-sm">
+						<small>Sync Storage Status: </small>
+						<small><strong id="lblSyncStorageMsg"></strong></small>&nbsp;
+						<small>(last check <em id="lblSyncStorageLastCheck"></em>) </small>
+						<button class="btn btn-xs" style="color:white; background-color:#bbbbbb" id="lnkForceResync"><small>FORCE RESYNC</small></a>
+					</div>
+					
+				</div>
+				<div class="col-sm-6" >
+					<div class="content text-right">
+						<h4><strong>Too many features?</strong></h4>
+						<p>Jump to the <a href="#" id="faqLink" target="_blank">FAQ page</a>.
+						Need help? <a href="https://organizer.solutions/support.html" target="_blank">Contact support</a>.</p>
+					</div>
+				</div>
+				<div class="col-sm-12"><hr/></div>
+			</div>
+			
+
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" role="tablist" id="mainTabNav">
+				<li role="presentation" class="active">
+						<a href="#quotaPanel" aria-controls="quotaPanel" role="tab" data-toggle="tab">Quota</a>
+				</li>
+				<li role="presentation">
+					<a href="#featuresPanel" aria-controls="featuresPanel" role="tab" data-toggle="tab">Features</a>
+				</li>
+				<li role="presentation">
+					<a href="#shortcutsPanel" aria-controls="shortcutsPanel" role="tab" data-toggle="tab">Shortcuts</a>
+				</li>
+				<li role="presentation">
+					<a href="#encryptionPanel" aria-controls="encryptionPanel" role="tab" data-toggle="tab">Encryption</a>
+				</li>
+				<li role="presentation">
+					<a href="#impexpPanel" aria-controls="impexpPanel" role="tab" data-toggle="tab">Import / Export</a>
+				</li>
+				<li role="presentation">
+					<a href="#connectorPanel" aria-controls="connectorPanel" role="tab" data-toggle="tab">Connector</a>
+				</li>
+				<li role="presentation">
+					<a href="#advancedPanel" aria-controls="advancedPanel" role="tab" data-toggle="tab">Advanced</a>
+				</li>
+				<li role="presentation">
+					<a href="#proPanel" aria-controls="proPanel" role="tab" data-toggle="tab" >
+						<strong class="text-success">Pro <span class="fa fa-rocket"></span></strong>
+					</a>
+				</li>
+			</ul>
+
+			<div class="tab-content" id="optionsTabContainer">
+				<div role="tabpanel" class="tab-pane" id="featuresPanel">
+
+	    			<div class="panel panel-default" >
+					  <div class="panel-heading">
+					    	<h3 class="panel-title"><span data-i18n="opts_enable_features_title" ></span> </h3>
+					  	</div><!-- panel-heading -->
+					  	<div class="panel-body " >
+							<div class="form" id="featuresFrm"> 
+								<p class="text-default">
+									<span data-i18n="opts_enable_features_message" />
+								</p>
+
+								<div class="row">
+									<div class="col-sm-4" >&nbsp;</div>
+									<div class="col-sm-4">
+										<button type="button" id="btnSaveBetaSettingsTop" class="btn btn-info btn-block" ><span data-i18n="opts_enable_features_savebutton"/></button>
+										<p class="text-muted">
+											<span data-i18n="opts_enable_features_savebutton_hint" />
+										</p>
+									</div>
+									
+								</div>
+								
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkDarkMode" /> Apply Dark Mode</span>
+												</label>
+											</div>
+									    </h4>
+
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaMagicButton" /> <span data-i18n="opts_enable_features_orgbutton"></span>
+													<a id="organizerButtonHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+											<small>Change <strong>ORGanizer</strong> button's orientation and position.</small>
+											<div class="row">
+												<div class="col-sm-6">
+													<select id="slctMagicButtonOrientation" class="form-control input-sm">
+														<option value="horizzontal">Horizontal</option>
+														<option value="vertical">Vertical</option>
+													</select>
+												</div>
+												<div class="col-sm-6">
+													<p class="text-muted">
+														<small>Orientation</small>
+													</p>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<input id="slideMagicButtonPosition" type="range" min="0" max="100" step="1" />
+												</div>
+												<div class="col-sm-6">
+													<p class="text-muted">
+														<small data-i18n=""></small>
+														<small>Position (<span id="_orgBtnPosition"></span>%)</small>
+													</p>
+												</div>
+											</div>
+									    </h4>
+									</div>
+								</div>
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaQuicklogin" /> <span data-i18n="opts_enable_features_quicklogin"></span>
+													<a id="quicklinkHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+
+									</div>
+								</div>
+						
+							
+				
+								<div class="list-group">
+								  	<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+
+									    	<div class="checkbox">
+												<label>
+													Salesforce API Level <a id="apiLevelHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+											<div class="row">
+												<div class="col-sm-3">
+													<input id="slctApiLevel" list="slctApiLevelValues" class="form-control input-sm" placeholder="Input API level, e.g. 50.0"/>
+														<datalist  id="slctApiLevelValues" >
+															<option selected="selected">59.0</option>
+															<option>58.0</option>
+															<option>57.0</option>
+															<option>56.0</option>
+															<option>55.0</option>
+															<option>54.0</option>
+															<option>53.0</option>
+															<option>52.0</option>
+															<option>51.0</option>
+															<option>50.0</option>
+															<option>49.0</option>
+															<option>48.0</option>
+															<option>47.0</option>
+															<option>46.0</option>
+															<option>45.0</option>
+															<option>44.0</option>
+															<option>43.0</option>
+															<option>42.0</option>
+															<option>41.0</option>
+															<option>40.0</option>
+															<option>39.0</option>
+															<option>38.0</option>
+															<option>37.0</option>
+															<option>36.0</option>
+															<option>35.0</option>
+															<option>34.0</option>
+															<option>33.0</option>
+															<option>32.0</option>
+															<option>31.0</option>
+														</datalist >
+													
+												</div>
+												<div class="col-sm-9">
+													<p class="text-muted">
+														<small data-i18n=""></small>
+														<small>Change Salesforce API Level</small>
+													</p>
+												</div>
+											</div>
+									    </h4>
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaFormulaEditor" />
+													<span data-i18n="opts_enable_features_formula"></span>
+													<a id="formulaHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+									    <div class="form-group">
+											<label>Tab size</label> <span id="_tabSizeLabel" class="badge"></span>
+											<div class="row">
+												<div class="col-sm-6">
+													<input id="_inputTabSize" type="range" min="1" max="10" step="1" />
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaQuickConsole" /> <span data-i18n="opts_enable_features_quickconsole" ></span>
+													<a id="quickConsoleHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<button id="btnResetQuickConsoleSize" class="btn btn-default btn-sm btn-block">
+														<span class="fa fa-expand"></span>&nbsp;&nbsp;<span data-i18n="opts_quickconsole_reset_size"/>
+													</button>
+													<br/>
+												</div>
+												<div class="col-sm-6">
+													<p class="text-muted">
+														<small data-i18n="opts_quickconsole_reset_size_help"></small>
+													</p>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<button id="btnBackupVIQnVIS" class="btn btn-default btn-sm btn-block">
+														<spam class="fa fa-download"></spam>&nbsp;&nbsp;<span data-i18n="opts_quickconsole_backup_viq_vis"/>
+													</button>
+												</div>
+												<div class="col-sm-6">
+													<p class="text-muted">
+														<small data-i18n="opts_quickconsole_backup_viq_vis_help"></small>
+													</p>
+												</div>
+											</div>
+									    </h4>
+									</div>
+								</div>
+
+								<!--
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkJSApis" /> Enable Javascript APIs</span>
+													<a id="jsAPIsHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+									</div>
+								</div>
+							-->
+					
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									  	<h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaCSHelper" /> <span data-i18n="opts_enable_features_changeset"></span>
+													<a id="changesetHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+									    <div class="row" style="display:none;">
+											<div class="col-sm-3">
+												<select id="slctChangeSetHelperVersion" class="form-control input-sm">
+													<option value="V1">1.0</option>
+												</select>
+											</div>
+											<div class="col-sm-9">
+												<p class="text-muted">
+													<small>Plugin Version</small>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkWhitelist" /> Whitelist All IPs
+													<a id="whitelistHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkFieldHistory" /> Field History Helper
+													<a id="fieldHistoryHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+												</label>
+											</div>
+									    </h4>
+									</div>
+								</div>
+								
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+									    	<div class="checkbox">
+												<label>
+													<input type="checkbox" id="chkBetaDebugging" /> <span data-i18n="opts_enable_features_debug" />
+												</label>
+											</div>
+									    </h4>
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+											
+									    <div class="row">
+											<div class="col-sm-6">
+												<button id="btnResetBackgroundDescribe" class="btn btn-default btn-sm btn-block">
+													<spam class="fa fa-refresh"></spam>&nbsp;&nbsp;Reset Background
+												</button>
+											</div>
+											<div class="col-sm-6">
+												<p class="text-muted">
+													<small>Reset the background describe data: useful when addind Objects/Fields and need to refresh the describe data.</small>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="list-group">
+									<div class="list-group-item list-group-item-info ui-options-feature-item">
+									    <h4 class="list-group-item-heading">
+											Quicklinks <a id="quickLinksHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+										</h4>
+										<p class="text-muted"><small>Select the sort order of the Quicklinks main commands</small></p>
+										<div class="row">
+											<div class="col-sm-5">
+												<select id="qlCommandOrder" multiple="multiple" class="form-control" size="7">
+													<option value="links">Links</option>
+													<option value="history">History</option>
+													<option value="login">Login</option>
+													<option value="objects">Objects</option>
+													<option value="search">Search</option>
+													<option value="meta search">Metadata Search</option>
+													<option value="help" disabled="disabled">Help</option>
+												</select>
+
+											</div>
+											<div class="col-sm-6">
+												<br/>
+												<div class="btn-group-vertical "  role="group" >
+													<button id="qlCommandOrderUpBtn" class="btn btn-default btn-lg btn-block" id=""><span class="fa fa-angle-double-up"></span></button>
+													<button id="qlCommandOrderDownBtn" class="btn btn-default btn-lg btn-block" id=""><span class="fa fa-angle-double-down"></span></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+									
+								
+								<div class="row">
+									<div class="col-sm-4" >&nbsp;</div>
+									<div class="col-sm-4">
+										<button type="button" id="btnSaveBetaSettingsBottom" class="btn btn-info btn-block" ><span data-i18n="opts_enable_features_savebutton"/></button>
+										<p class="text-muted">
+											<span data-i18n="opts_enable_features_savebutton_hint" />
+										</p>
+									</div>
+									
+								</div>
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div role="tabpanel" class="tab-pane" id="shortcutsPanel">
+					<div class="panel panel-default">
+							  <div class="panel-heading">
+							    	<h3 class="panel-title">
+							    		<span data-i18n="opts_shortcuts_title" ></span>
+							    		<a id="shortcutsHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+							    	</h3>
+							  	</div><!-- panel-heading -->
+							  	<div class="panel-body ">
+									<div class="form form-horizontal" id="shortcutsform"> 
+										<p class="text-default">
+											<span data-i18n="opts_shortcuts_descr1" /><br/>
+											<span data-i18n="opts_shortcuts_descr2" />
+								    	</p>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_1" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenOrgs" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_2" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenAccounts" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_3" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scCreateAccount" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_4" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenHome" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_5" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenSetup" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_6" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenDevConsole" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_7" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenQuickLinks" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_8" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scOpenQuickConsole" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_9" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scAutocomplete" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="token" class="col-sm-6">Quicklink Command Char (e.g. <strong>@</strong>objects)</label>
+											<div class="col-sm-6">
+												<input type="text" class="form-control" maxlength="1" id="scQuickLinkCommand" />
+											</div>
+										</div>
+
+										
+
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_1" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins1" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_2" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins2" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_3" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins3" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_4" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins4" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6" style="text-align: right"><small>Quick plugin action</small></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPluginsAction4" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_5" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins5" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_6" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins6" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6" style="text-align: right"><small>Quick plugin action</small></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPluginsAction6" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_7" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins7" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6" style="text-align: right"><small>Quick plugin action</small></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPluginsAction7" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_8" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins8" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="token" class="col-sm-6"><span data-i18n="opts_shortcuts_sc_plugins_9" /></label>
+											<div class="col-sm-6">
+												<input type="text" readonly="true" class="form-control" data-i18n="placeholder=" id="scPlugins9" />
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-sm-4">
+												<button type="button" id="resetSCBtn" class="btn btn-default btn-block"><span data-i18n="opts_shortcuts_btn_reset_title" /></button>
+											</div>
+											<div class="col-sm-8">
+												<button type="button" id="saveSCBtn" class="btn btn-info btn-block"><span data-i18n="opts_shortcuts_btn_save_title" /></button>
+											</div>
+										</div>
+									</div>
+									
+									
+								</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane active" id="quotaPanel">
+					<div class="panel panel-default">
+						  <div class="panel-heading">
+						    <h3 class="panel-title"><span data-i18n="opts_quota_title" ></span>
+						    <a id="quotaHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+						    </h3>
+						  </div><!-- panel-heading -->
+						  <div class="panel-body ">
+							<div >License: 
+								<a href="https://organizer.solutions/faq.html?#licenses" target="_blank">
+									<strong class="text-success" id="licenseType"><small>loading...</small></strong>
+								</a>
+							</div>
+							<div class="row">
+								<div class="col-xs-3"></div>
+								<div id="localAccountsGauge" class="col-xs-3"  style="width:250px;height:150px"></div>
+								<div id="synchedAccountsGauge" class="col-xs-3" style="width:250px;height:150px"></div>
+								
+							</div>
+						  	<div class="row">
+									<div class="col-xs-2"></div>
+						  		<div id="dataGauge" class="col-xs-3" style="width:250px;height:150px"></div>
+								  <div id="itemsGauge" class="col-xs-3" style="width:250px;height:150px"></div>
+								  <div id="localDataGauge" class="col-xs-3" style="width:250px;height:150px"></div>
+						  	</div>
+						  	
+						  	<p class="text-default">
+							  	<!--
+							  	This is the amount of synched data you are using: exceeding the maximum data quota or number of items will cause error while trying to sync.-->
+							  	<span data-i18n="opts_quota_descr1" />
+						  	</p>
+
+							  <hr/>
+						  	<!--<h4>Background Sync</h4>
+						  	<p class="text-default">Check background sync job status.</p>
+					  		<div class="row">				  			
+					  			<div class="col-xs-6">
+									Backup Method: <strong id="syncBackupTypeLbl" ></strong><br/>
+									Last Check: <strong id="syncBackupLastCheckLbl" ></strong><br/>
+									Status: <strong id="syncBackupMsgLbl" ></strong><br/>
+					  				MD5: <em id="syncBackupMD5Lbl" ></em><br/>
+									
+					  			</div>
+					  			<div class="col-xs-6">
+					  				<button id="btnForceSync" class="btn btn-info btn-sm btn-block">
+										Synchronize now!
+									</button>
+									<small class="text-muted">Sync is executed in background. Use the <strong>Synchronize now!</strong> button to synchronize immediately.
+										It can take few seconds to complete.</small>
+								</div>
+							</div>
+
+						  	<hr/>-->
+						  	<h4>API usage</h4>
+						  	<p class="text-default">Monitor API usage from the ORGanizer plugins.</p>
+					  		<div class="row">				  			
+					  			<div class="col-xs-6">
+					  				API counter: <strong id="apiUsageTotal" ></strong><br/>
+					  				Since: <em id="apiUsageDate" ></em>
+									<br/>
+									<input type="checkbox" id="chkToggleDetails"> Enable detailed API monitoring
+					  			</div>
+								
+								  <div class="col-xs-3">
+									<button id="btnDownloadDetails" class="btn btn-default btn-sm btn-block">
+									  Download details
+								  </button>
+							  </div>
+					  			<div class="col-xs-3">
+					  				<button id="btnResetAPIUsage" class="btn btn-default btn-sm btn-block">
+										Reset counter
+									</button>
+								</div>
+							</div>
+
+
+						  </div><!-- body -->
+					</div> <!-- panel -->
+				</div>
+
+				<div role="tabpanel" class="tab-pane" id="encryptionPanel">
+					<div class="panel panel-default">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><span data-i18n="opts_enc_title"></span>
+					    <a id="encryptionHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a></h3>
+					  </div><!-- panel-heading -->
+					  <div class="panel-body ">
+			    	
+					    	<div class=" form">
+						    	<p class="text-default">
+						    		<!--Enabling encryption causes your passwords to be encrypted.
+						    		<br/>Enabling encryption may required to insert the password
+						    		in the other installations of this extension after they are synched.-->
+						    		<span data-i18n="opts_enc_descr1" /> 
+						    	</p>
+								<p class="alert alert-warning">
+									<strong><span data-i18n="general_warning_title"/></strong> <!--Enabling encryption does not mean your data is completely secure. You need to physically limit the browser access only to you for better protection.-->
+									<span data-i18n="opts_enc_warning1" />
+								</p>
+								<p class="text-default">
+									<!--To change password, disable and re-enable encryption.-->
+									<span data-i18n="opts_enc_descr2" />
+								</p>
+
+								<div class="btn-group btn-group-justified" role="group">
+								  <div class="btn-group" role="group">
+								    <button id="encryptionYesBtn" type="button" class="btn"><span data-i18n="opts_enc_btn_enabled" /></button>
+								  </div>
+								  <div class="btn-group" role="group">
+								    <button id="encryptionNoBtn" type="button" class="btn btn-default"><span data-i18n="opts_enc_btn_disabled" /></button>
+								  </div>
+								</div>
+								<br/>
+								<div id="timePasswordSection" style="display:none;">
+									<p class="text-default">
+										<h4><span data-i18n="opts_enc_tbs_title"></span></h4>
+										<span data-i18n="opts_enc_tbs_info_ln1"></span><br/>
+										<span data-i18n="opts_enc_tbs_info_ln2"></span><br/>
+										<span data-i18n="opts_enc_tbs_info_ln3"></span><br/>
+										<span data-i18n="opts_enc_tbs_info_ln4"></span>
+									</p>
+									<div class="row">
+										<div class="col-sm-5">
+												<button id="pinEnableBtn" type="button" class="btn btn-block"><span data-i18n="opts_enc_btn_disabled" /></button>
+										</div>
+										<div class="col-sm-3">
+											<input id="tpFrequencyInput" type="number" class="form-control" 
+												id="pinMinutes" />
+											<small id="tpFrequencyInputLbl" class="text-muted"><span data-i18n="opts_enc_tbs_freq_label"></span></small>
+										</div>
+										<div class="col-sm-4">
+											<button class="btn btn-block btn-info" id="saveTimedPasswordBtn">
+												<span data-i18n="opts_enc_tbs_save_btn"></span>
+											</button>
+										</div>
+									</div>
+									</div>
+							</div> <!-- form -->
+
+
+					  </div><!-- panel-body -->
+
+					</div><!-- panel -->
+				</div>
+
+				<div role="tabpanel" class="tab-pane" id="impexpPanel">
+	    			<div class="row">
+	    				<div class="col-sm-6">
+			    			<div class="panel panel-default" style="height: 380px;">
+							  <div class="panel-heading">
+							    	<h3 class="panel-title">
+							    		<span data-i18n="opts_impexp_title" ></span>
+							    		<a id="impexpHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+							    	</h3>
+							  	</div><!-- panel-heading -->
+							  	<div class="panel-body ">
+									<div class="form " id="exportForm"> 
+										<p class="text-default">
+								    		<span data-i18n="opts_impexp_descr1" /><br/>
+								    		<a href="/resources/import_example.json" target="_blank"><span data-i18n="opts_impexp_downloadexample" /></a>.
+								    	</p>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<input class="form-control" type="file" accept=".json,.bkp" id="importFile"/>
+													<!--
+													<textarea class="form-control" id="exportTextarea" rows="7" data-i18n="placeholder=opts_impexp_import_pLaceholder"></textarea>
+													-->
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<button type="button" id="importBtn" class="btn btn-info btn-block"><span data-i18n="opts_impexp_btn_import" /></button>
+											</div>
+										</div>
+									</div>
+									<p class="text-default">
+							    		<span data-i18n="opts_impexp_descr2" />
+							    	</p>
+									<div class="row">
+										<div class="col-sm-6">
+											<p class="text-muted">
+												<small>Use <strong>JSON</strong> format for a clean export with all info in clear. 
+													<br/>Use the <strong>Obfuscated</strong> format for a more safer backup. If no encryption is set, remember that you can reimport this file from this browser type only.
+												</small>
+											</p>
+										</div>
+										<div class="col-sm-6">
+											<button type="button" data-export="json" id="exportBtn" class="btn btn-info btn-block"><span data-i18n="opts_impexp_btn_export" /></button>
+											<button type="button" data-export"bkp" id="exportBtnBkp" class="btn btn-info btn-block" ><span data-i18n="opts_impexp_btn_export_bkp" /></button>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+			    			<div class="panel panel-default" style="height: 380px;">
+							  <div class="panel-heading">
+							    	<h3 class="panel-title">
+							    		<span data-i18n="opts_backup_title"></span>
+							    		<a id="backupHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+							    	</h3>
+							  	</div><!-- panel-heading -->
+							  	<div class="panel-body ">
+									<div class="form" id="backupForm"> 
+
+										<p class="text-default">
+								    		
+								    		<span data-i18n="opts_backup_descr1" />
+								    	</p>
+										<div class="row">
+											<div class="col-sm-6"><small data-i18n="opts_backup_max_num_input" ></small></div>
+											<div class="col-sm-3"><input type="number" min="0" max="100" class="form-control" id="backupNumInp"/></div>
+											<div class="col-sm-3">
+												<button type="button" id="saveBackupNumBtn" class="btn btn-info btn-block"><span data-i18n="opts_backup_max_num_btn" /></button>
+											</div>
+										</div>
+										<br/>
+										<p class="text-muted">Available backups</p>
+										<div class="row">
+											<div class="col-sm-6">
+												<select class="form-control" id="backupSlct" ></select>
+											</div>
+											<div class="col-sm-6">
+												<button type="button" id="downloadBackupBtn" class="btn btn-info btn-block">Download</button>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row" id="gdriveAppPanelContainerParent" >
+
+
+						<div class="col-sm-12">
+							
+			    			<div class="panel panel-success" >
+							  <div class="panel-heading">
+							    	<h3 class="panel-title">
+							    		Google Drive Backup <small>(Alpha)</small>
+							    		<a id="gdriveHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+							    	</h3>
+							  	</div><!-- panel-heading -->
+
+								<div id="gdriveBackupPanelNoPro" class="panel-body ">This feature is available with a <a href="/options.html?tab=%23proPanel">PRO license</a> only.</div>
+								
+							  	<div class="panel-body " id="gdriveBackupPanel" style="display:none;">
+									<div class="alert alert-warning">
+										&#9888; This is an alpha feature. Before activating this feature, please take a full manual backup.
+									</div>
+									<div class="text-center" id="authGoogleDiv" style="display:none">
+										<button class="btn btn-lg btn-danger" id="authGoogle" >
+											<i class="fa fa-google" aria-hidden="true"></i>
+											<span id="authGoogleDetailsTxt">Authenticate with Google</span>
+										</button>
+										<br/>
+										<button class="btn btn-sm" id="unauthorizeAuthBtn" >Reset authorizations</button>
+									</div>
+									  <p class="text-default">Enable Google Drive backup for a more reliable cross-browser remote backup experience.</p>
+									  <div class="btn-group btn-group-justified" role="group">
+										<div class="btn-group" role="group">
+										  <button id="gdriveEnabled" type="button" class="btn btn-default"><span>Enabled</span></button>
+										</div>
+										<div class="btn-group" role="group">
+										  <button id="gdriveDisabled" type="button" class="btn active btn-default"><span>Disabled</span></button>
+										</div>
+									  </div>
+									  <p class="text-default">
+										<br/>
+										<small>If Google Drive Backup is enabled, you need to authenticate in the <a href="/options.html?tab=%23proPanel">PRO tab</a>:
+										if you are under Chrome or Edge you need to use the <em>Alternative authentication</em> button to enable GDrive integration.
+										</small>
+									</p>
+									<p>
+										<strong>Backup status</strong>: <strong id="gdriveBackupMsgLbl" ></strong><br/>
+										<span style="margin-left: 10pt">MD5 (last update)</strong>: <span id="gdriveBackupStatusLbl" ></span><br/>
+									</p>
+									<div>
+										<h4 style="display:inline-block">Download older Google Drive Backups</h4>
+									</div>
+									<div>
+										<small>You'll have up to <span id="gdriveBackupMaxNum"></span> backups available on your GDrive private space: only ORGanizer will be able to access the folder.</small>
+										<br/>
+										<button id="gdriveGetBackups" type="button" class="btn btn-primary btn-sm" style="display:inline-block">Retrieve List</button>
+									</div>
+									<div id="gdriveCakupResults">
+										<div id="gdriveBackupListMsg" class="text-muted" style="display:none">No backup found.</div>
+										<div class="" style="overflow: auto; max-height: 250px">
+											<table id="gdriveBackupTable" class="table table-condensed table-hover " style="display:none">
+												<thead>
+													<th><input type="checkbox" id="gdriveSelectAll"/></th>
+													<th>Created Date</th>
+													<th>Encryption</th>
+													<th>MD5</th>
+													<th>Extension ID</th>
+													<th>Client Details</th>
+													<th></th>
+												</thead>
+												<tbody/>
+											</table>
+										</div>
+										<br/>
+										&#9888; <small class="text-muted"> Highlighted rows identify backup made from the extension you are using right now.</small>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="connectorPanel">
+
+					<div class="row" id="backupAppPanelContainerParent">
+
+						<div class="col-sm-12">
+							<div class="panel panel-success" >
+							<div class="panel-heading">
+									<h3 class="panel-title">
+										ORGanizer Connector (<strong>PRO</strong>)
+										<a id="backupApp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+									</h3>
+								</div><!-- panel-heading -->
+								<div id="backupAppPanelContainerNoPro" class="panel-body ">This feature is available with a <a href="/options.html?tab=%23proPanel">PRO license</a> only.</div>
+								<div class="panel-body " id="backupAppPanelContainer">
+									<small>ORGanizer Connector AppExchange app lets you store company-wide passwords 
+										on a dedicated package right on your CRM.<br/><br/>
+									</small>
+									<div id="backupAppPanel"></div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="advancedPanel">
+					<div class="panel panel-warning">
+					  	<div class="panel-heading">
+					    	<h3 class="panel-title">
+					    		<span data-i18n="opts_errlog_title"></span>
+					    		<a id="errorlogHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+					    	</h3>
+					  	</div><!-- panel-heading -->
+					  	<div class="panel-body ">
+							<div class="form" id="errorLogForm"> 
+								<p class="text-default">
+								<!--Download error logs to be sent for support analysis.-->
+									<span data-i18n="opts_errlog_descr" />
+								</p>
+								<button type="button" id="downloadLogBtn" class="btn btn-warning btn-block" ><span data-i18n="opts_errlog_btn_download" /></button>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-danger">
+					  <div class="panel-heading">
+					    	<h3 class="panel-title">
+					    		<span data-i18n="opts_hardreset_title" ></span>
+					    		<a id="resetHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+					    	</h3>
+					  	</div><!-- panel-heading -->
+					  	<div class="panel-body ">
+							<div class="form" id="hardResetForm"> 
+								<p class="text-default">
+									<span data-i18n="opts_hardreset_descr1" /><br/>
+									<span data-i18n="opts_hardreset_descr2" />
+								</p>
+								<button type="button" id="hardResetBtn" class="btn btn-danger btn-block"><span data-i18n="opts_hardreset_btn_reset_title" /></button>
+							</div>
+							<br/><br/>
+							<div class="form" id="localHardResetForm"> 
+								<p class="text-default">
+									<span data-i18n="opts_localhardreset_descr1" /><br/>
+									<span data-i18n="opts_localhardreset_descr2" />
+								</p>
+								<button type="button" id="localHardResetBtn" class="btn btn-danger btn-block"><span data-i18n="opts_hardreset_btn_localreset_title" /></button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div role="tabpanel" class="tab-pane" id="proPanel">
+					<div class="panel panel-success">
+					  	<div class="panel-heading">
+					    	<h3 class="panel-title">
+					    		Pro
+					    		<a id="proHelp" href="#" target="_blank"><span class="fa fa-question-circle"></span></a>
+					    	</h3>
+					  	</div><!-- panel-heading -->
+					  	<div class="panel-body ">
+
+							<div class="panel panel-default">
+								<div class="panel-heading"><h4>Current subscriptions and licenses</h4></div>
+								<div class="panel-body">
+															
+							  <!-- TODO: REMOVE for end of support-->
+							  <!--
+									<div id="storeProducts" style="display:none">
+										<h4>Chrome Web Store purchased products</h4>
+										<div class="alert alert-danger" role="alert">
+											<strong>End of support!</strong>
+											Chrome Web Store payments have been discountinued: your license will last until its natural expiration.<br/>
+											Unfortunately we cannot migrate your purchase to the new system.
+											<br/><br/>
+											<strong>We highly recommend to contact the support to anticipate your licensing expiration and get a new license code.</strong>
+										</div>
+									
+										<table id="prodListTableCnt" class="table  table-condensed table-striped" >
+											<thead>
+												<th>Product Code</th>
+												<th>Category</th>
+												<th>Title</th>
+												<th>Description</th>
+												<th>Subscription</th>
+												<th>Status</th>
+											</thead>
+											<tbody id="prodListTable">
+												<tr><td colspan="4"><small>Loading . . .</small></td></tr>
+											</tbody>
+										</table>
+										<hr/>
+									</div>
+								-->	
+
+									<div id="appliedPromoSection" style="display:none;">
+										<h4>Applied licenses</h4>
+										<table id="promoListTableCnt" class="table  table-condensed table-striped" >
+											<thead>
+												<tr>
+													<th>Promo Code</th>
+													<th>Type</th>
+													<th>Product Code</th>
+													<th>Expiration</th>
+													<th>Status</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody id="promoListTable">
+												<tr><td colspan="6"><small>Loading . . .</small></td></tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="text-right">
+										<a href="?force=true" class="btn btn-xs" style="color:white; background-color:#bbbbbb">Force licenses refresh</a>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="panel panel-default" style="min-height:600px">
+										<div class="panel-heading"><h4>1. Get a license key</h4></div>
+										<div class="panel-body">
+											<div class="col-sm-12">
+												<p class="text-muted" id="promoTextChrome" >
+													<p class="text-muted">
+														<small>
+															To get a <strong>PRO license</strong> for yourself click here:
+															<a id="buyLink" class="btn btn-xs btn-success" href="#" target="_blank">GET A LICENSE</a>
+															<br/>If you want to get a bunch of promo codes for your devmins, contact the support.
+														</small>
+														<br/>
+														<small>If you have any trouble or questions have a look at the <a id="proHelp" href="#" target="_blank">FAQ page</a>
+															where you can find all the info needed to contact the <strong>ORGanizer</strong> support.
+														</small>
+														<br/>
+														<small>Remember that you can change the email address linked to your purchased license using the <strong>Manage Membership</strong> link at the
+															bottom of the Gumroad email address or by contacting the support.</small>
+													</p>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="panel panel-default" style="min-height:600px">
+										<div class="panel-heading"><h4>2. Validate your license</h4></div>
+										<div class="panel-body">
+											<!--
+											<small class="text-muted">
+												To validate your license key you need to be authenticated with the same email address you configured on your account that matches the license.
+												<ul>
+													<li>Chrome and Edge users should be logged in with a user using the same email address, which is the preferred method.
+														<br/>To check, jump to <em>chrome://settings</em> in Chrome or <em>edge://settings</em> in Edge and have a look at the <em>People / Profile</em> section.
+													</li>
+													<li>Firefox, Opera users needs to use an alternative authentication method, by explicitly authorizing a Google email address
+													through the <strong>Authenticate with Google</strong> button, that automatically shows up.</li>
+													<li>Brave users need to explicitly activate the <strong>alternative authentication</strong> mtethod</li>
+													<li>Chrome and Edge users who wants to use the same license key across different Chrome/Edge profiles should activate the <strong>alternative authentication</strong> mathod.</li>
+												</ul>
+											</small>
+
+											<div id="loadingAuthorizationLbl" class="text-muted text-center">
+												<i class="fa fa-spinner fa-spin fa-fw"></i> Loading authorization details... Please wait...
+												<hr/>
+											</div>
+
+											<div id="chomeWebStoreError" class="alert alert-warning" style="display:none;">
+												<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+												<span id="chomeWebStoreErrorMsg"></span>
+											</div>
+											<div class="text-center" id="authGoogleDiv" style="display:none">
+												<button class="btn btn-lg btn-danger" id="authGoogle" >
+													<i class="fa fa-google" aria-hidden="true"></i>
+													<span id="authGoogleDetailsTxt">Authenticate with Google</span>
+												</button>
+												<br/>
+												<button class="btn btn-sm" id="unauthorizeAuthBtn" >Reset authorizations</button>
+											</div>
+											<div id="braveSupportDiv" style="display:none;text-align:right">
+												<button id="deactivateBraveSupport" class="btn btn-xs btn-default" style="display:none">Deactivate alternative authentication</button>
+												<button id="activateBraveSupport" class="btn btn-xs btn-default" style="display:none">Activate alternative authentication</button>
+											</div>-->
+											<div class="row" >
+												<div class="col-sm-12">
+													<p class="text-muted" id="promoTextChrome" >
+														<small>
+															Copy the license key you have purchased in the following input text and click the <strong>Validate &amp; Apply</strong> button to validate it.
+															<br/>
+															To check your new limits, jump to the <a href="/options.html?tab=%23quotaPanel">Quota</a> tab.
+															<br/>
+															Upon a successfull license verification, you'll be required to activate this client: 
+															an email will be sent to your registered email address containing a verificaton code that
+															you must input into the "<em>Activation code</em>" textbox that will eventually show up.
+															<br/>N.B. If you reached the active clients limit for your license type (this feature will be activated in the next weeks), you'll be required to 
+															deactivate a client from the list that will pop up after the license verification process.
+															<br/>Client deactivation frequency has a cooldown that depends on the license type (e.g. if you just activated a client you'll not enabled to deactivate it immediatly, but 
+															you'll need to wait the cooldown time, whose amount depends on license type).
+														</small>
+														<br/><strong>Sharing license key and email is forbidden and leads to immediate license expiration with no refund.</strong>
+													</p>
+												</div>
+											</div>
+											<div class="row" >
+												<div class="col-sm-10">
+													<small>License Key:</small><br/>
+													<input type="text" class="form-control" id="licenseKey" placeholder="Place key here...">
+												</div>
+											</div>
+											<div class="row" >
+												<div class="col-sm-10" >
+													<small>Licensed Email Address:</small><br/>
+													<input type="email" class="form-control" id="licensedEmail" placeholder="Place licensed email here...">
+												</div>
+												
+											</div>
+											<div class="row" >
+												<div class="col-sm-5" style="display:none">
+													<small>Activation code:</small><br/>
+													<input type="text" class="form-control input-sm" id="activationKey" placeholder="Place activation code...">
+												</div>
+												<div class="col-sm-5" style="display:none">
+													<br/>
+													<button type="button" id="sendActivationAgainBtn" class="btn btn-warning btn-block btn-sm" data-resend-code="1">
+														<span>Re-send Activation Code</span>
+													</button>
+												</div>
+											</div>
+											<div class="row" >
+												<div class="col-sm-10">
+														<br/>
+														<button type="button" id="consumeLicenseBtn" class="btn btn-success btn-block">
+															<span>Validate &amp; Apply</span>
+														</button>
+												</div>
+												
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+					  	</div>
+					</div>
+				</div>
+
+			</div><!-- .tab-content -->
+
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="largeModal">
+				<div class="modal-dialog modal-lg">
+				  <div class="modal-content panel-primary">
+					<div class="modal-header panel-heading">
+					  <h4 class="modal-title"></h4>
+					</div>
+					<div class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn ui-ok" data-dismiss="modal">Close</button>
+					</div>
+				  </div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			  </div><!-- /.modal -->
+		
+			<div class="modal fade out" tabindex="-1" role="dialog" id="alertBox">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-danger">
+			      <div class="modal-header panel-heading">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title"><span data-i18n="general_err_modal_title" /></h4>
+			      </div>
+			      <div class="modal-body">
+			        <p class=""></p>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default ui-ok" data-dismiss="modal">OK</button>
+					</div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="dialogBox">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-primary">
+			      <div class="modal-header panel-heading">
+			        <h4 class="modal-title"><span data-i18n="general_conf_modal_title" /></h4>
+			      </div>
+			      <div class="modal-body">
+			        <p></p>
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-info ui-yes" data-dismiss="modal"><span data-i18n="general_conf_modal_yes" /></button>
+			        <button type="button" class="btn btn-default ui-no" data-dismiss="modal"><span data-i18n="general_conf_modal_no" /></button>
+			        
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="messageBox">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-primary">
+			      <div class="modal-header panel-heading">
+			        <h4 class="modal-title">Info</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p></p>
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-info ui-ok" data-dismiss="modal">OK</button>
+			        
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="loadingBox">
+					<div class="modal-dialog">
+						<div class="modal-content panel-info">
+							<div class="modal-header panel-heading">
+								<h4 class="modal-title">Loading...</h4>
+							</div>
+							<div class="modal-body">
+								<p></p>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="passwordBox">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-warning">
+			      <div class="modal-header panel-heading">
+			        <h4 class="modal-title"><span data-i18n="opts_pwd_modal_confirm_title" /></h4>
+			      </div>
+			      <div class="modal-body">
+			      		<p></p>
+			        	<div class="form-group">
+							<label for="encPassword"><span data-i18n="opts_pwd_modal_lbl_pwd" /></label>
+							<input type="password" class="form-control input-sm" id="encPassword" data-i18n="placeholder=opts_pwd_modal_inpt_plchld_pwd" />
+						</div>
+						<div class="form-group">
+							<label for="encPassword2"><span data-i18n="opts_pwd_modal_lbl_pwd_confirm" /></label>
+							<input type="password" class="form-control input-sm" id="encPassword2" data-i18n="placeholder=opts_pwd_modal_inpt_plchld_pwd" />
+						</div>
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-warning ui-ok" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_ok" /></button>
+			        <button type="button" class="btn btn-default ui-cancel" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_cancel" /></button>
+			        
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="activationBox">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-warning">
+			      <div class="modal-header panel-heading">
+			        <h4 class="modal-title">Firefox activation</h4>
+			      </div>
+			      <div class="modal-body">
+			      		<p>Insert the Firefox activation key:</p>
+			        	<div class="form-group">
+									<input type="text" class="form-control input-sm" id="ffactKey" placeholder="Insert Firefox activation key..." />
+								</div>
+					
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-warning ui-ok" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_ok" /></button>
+			        <button type="button" class="btn btn-default ui-cancel" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_cancel" /></button>
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<div class="modal fade out" tabindex="-1" role="dialog" id="backupKeyRequest">
+			  <div class="modal-dialog">
+			    <div class="modal-content panel-warning">
+			      <div class="modal-header panel-heading">
+			        <h4 class="modal-title">ORGanizer Connector</h4>
+			      </div>
+			      <div class="modal-body">
+			      		<p>Insert the backup's key you received by email:</p>
+			        	<div class="form-group">
+									<input type="password" class="form-control input-sm" id="backupKey" placeholder="Insert package key..." />
+								</div>
+					
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-warning ui-ok" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_ok" /></button>
+			        <button type="button" class="btn btn-default ui-cancel" data-dismiss="modal"><span data-i18n="opts_pwd_modal_confirm_cancel" /></button>
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<div id="clientDeactivationPanel" style="display:none">
+				<h3 id="serverMessage"></h3>
+				<span>Max active clients: <strong id="maxActiveClients"></strong></span>
+				<br/>
+				<span>Min deactivation frequence (minutes): <strong id="deactivationFrequence"></strong></span>
+				<br/>
+				<table class="table table-striped table-hover table-condensed active-clients-table">
+					<thead>
+						<tr>
+							<th>Client Name</th>
+							<th>Client ID</th>
+							<th>Activation Date</th>
+							<th>OS</th>
+							<th>Browser</th>
+							<th>Estension ID</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+
+
+		</div><!--container -->
+
+	</div>
+		<script src="libs/google/buy.js"></script>
+		<script src="libs/requirejs/require-2.3.2.js"></script>
+		<script src="libs/jquery/js/jquery-3.4.1.min.js"></script>
+		<script src="libs/jquery/js/jquery-ui-1.12.2.min.js"></script>
+		<script src="libs/bootstrap/js/tab.js"></script>
+		<script src="libs/bootstrap/js/modal.js"></script>
+		<script src="libs/justgage/raphael.min.js"></script>
+		<script src="libs/justgage/justgage.js"></script>
+		<script src="libs/crypto/crypto-js.js"></script>
+		<script src="libs/lz-string/lz-string.min.js"></script>
+		<script src="libs/js/modules/global.js"></script>
+		<script src="libs/js/modules/constants.js"></script>
+		<script src="libs/js/modules/sf-client.js"></script>
+		<script src="libs/js/modules/popup-utils.js"></script>
+		<script src="libs/js/modules/lic-utl.js"></script>
+		<script src="libs/js/modules/backup-utils.js"></script>
+		<script src="libs/js/i18n-dom-matcher.js"></script>
+		<script src="libs/js/modules/backup-connector.js"></script>
+		<script src="libs/js/logger.js"></script>
+		<script src="libs/js/options.js"></script>
+		
+		<!--<script src="libs/js/analytics.js"></script>-->
+
+		
+	
+	</body>
+</html>

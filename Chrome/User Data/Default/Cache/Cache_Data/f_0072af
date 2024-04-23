@@ -1,0 +1,735 @@
+SP.SOD.registerSod('reputation.js', '/_layouts/15/reputation.js');
+SP.SOD.executeFunc(
+	'reputation.js',
+	'Microsoft.Office.Server.ReputationModel.Reputation',
+	function () {
+		SP.SOD.executeFunc('sp.js', 'SP.ClientContext', setLikeToAnnouncement);
+	}
+);
+var announcementTotalCount = 0;
+var countAnnouncementData = 0;
+
+cgi.announcements = {
+	$announcement: $('.announcement'),
+	$announcementAction: $('.announcement-action'),
+	annUnread_EN: '<span aria-hidden="true">Mark as Unread</span><span class="sr-only">Mark Announcement as Unread:</span> <span class="sr-only js-sr-title">{SRtitle}</span>',
+	annUnread_FR: '<span aria-hidden="true">Marquer comme non lue</span><span class="sr-only">Mark annonce comme non lu:</span> <span class="sr-only js-sr-title">{SRtitle}</span>',
+	annRead_EN: '<span aria-hidden="true">Mark as Read</span><span class="sr-only">Mark Announcement as Read:</span> <span class="sr-only js-sr-title">{SRtitle}</span>',
+	annRead_FR: '<span aria-hidden="true">Marquer comme lue</span><span class="sr-only">Mark annonce comme lu:</span> <span class="sr-only js-sr-title">{SRtitle}</span>',
+	markRead: function (useParent, el) {
+		var $announcementEl = $(el).parents('.announcement');
+		if(!useParent) {
+			$announcementEl = $(el);
+		}
+
+		var itemTitle = $announcementEl.find('.js-announcement-title').text();
+		var itemID = $announcementEl[0].getAttribute('data-itemid');
+		var webURL = $announcementEl[0].getAttribute('data-weburl');
+		var listID = $announcementEl[0].getAttribute('data-listid');
+		
+		if(itemID != null && itemID != undefined && webURL != null && webURL != undefined && listID != null && listID != undefined) {			
+			$announcementEl.addClass('announcement-read');
+			$announcementEl.removeClass('announcement-unread');
+			if (preferredLanguage == "FR") {
+				$announcementEl
+					.find('.announcement-action')
+					.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annUnread_FR);	
+			} else {
+				$announcementEl
+					.find('.announcement-action')
+					.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annUnread_EN);		
+			}
+			
+			$announcementEl.find('.js-sr-title').html(itemTitle);	
+			loadAnnouncementCount();
+			setLikeToAnnouncement(webURL, listID, itemID, true);
+		}
+	},
+	markUnread: function (useParent, el) {
+		var $announcementEl = $(el).parents('.announcement');
+
+		if (!useParent) {
+			$announcementEl = $(el);
+		}
+		var itemTitle = $announcementEl.find('.js-announcement-title').text();
+		var itemID = $announcementEl[0].getAttribute('data-itemid');
+		var webURL = $announcementEl[0].getAttribute('data-weburl');
+		var listID = $announcementEl[0].getAttribute('data-listid');
+		
+		if(itemID != null && itemID != undefined && webURL != null && webURL != undefined && listID != null && listID != undefined) {
+			$announcementEl.addClass('announcement-unread');
+			$announcementEl.removeClass('announcement-read');
+			if (preferredLanguage == "FR") {
+				$announcementEl
+					.find('.announcement-action')
+					.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annRead_FR);			
+			} else {
+				$announcementEl
+					.find('.announcement-action')
+					.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annRead_EN);		
+			}
+			
+			$announcementEl.find('.js-sr-title').html(itemTitle);
+			loadAnnouncementCount();
+			setLikeToAnnouncement(webURL, listID, itemID, false);
+		}
+
+	},
+	toggleReadState: function (e) {
+		e.preventDefault();
+		if ($(this).parents('.announcement').hasClass('announcement-unread')) {
+			cgi.announcements.markRead(true, this);
+		} else {
+			cgi.announcements.markUnread(true, this);
+		}
+	},
+	markAllRead: function (e) {
+		e.preventDefault();
+		
+		var $announcement = $('.announcement');
+
+		//cgi.announcements.$announcement.each(function () { 
+		$announcement.each(function () { 
+			cgi.announcements.markRead(false, this);
+		});
+	},
+	listeners: function () {
+
+		$(document).on(
+			'click',
+			'.announcement-action',
+			cgi.announcements.toggleReadState
+		);
+
+		$(document).on(
+			'click', 
+			'#js-mark-all-read', 
+			function(e){
+				cgi.announcements.markAllRead(e);
+			}
+		);
+	},
+	init: function () {
+		cgi.announcements.listeners();		
+		getAllAnnouncements();
+	},
+};
+
+function getAllAnnouncements() {
+	try{
+		var dateToday = new Date()
+		var strDateToday = dateToday.toISOString();
+		
+		var announcementsAPI= "/_api/search/query?querytext=%27CGIActiveFrom<=\""+ strDateToday +"\"AND ExpiryDate>=\""+ strDateToday +"\"AND (CGILanguage:\""+ preferredLanguage +"\" OR CGILanguage:\"Generic\")%27&refinementfilters=%27ContentType:%22Intranet%20Announcement%22%27&selectproperties=%27ContentType,Title,CGIIntranetDescription,CGIActiveFrom,ExpiryDate,CGIAnnouncementStart,CGIAnnouncementEnd,CGIAnnouncementCategory,CGIAnnouncementContent,CGIChannel,CGICalculatedJobTitle,LikesCount,ListID,ListItemID,SPWebUrl,Path,CGICountry%27&sortlist=%27CGIActiveFrom:descending%27&rowLimit=100";
+		
+		var AllAnnouncementsCache = "AllAnnouncementsCacheEN";
+		if(preferredLanguage == "FR"){
+			AllAnnouncementsCache = "AllAnnouncementsCacheFR";
+		}
+		var getStorageData = getLocalStorageGeneric(AllAnnouncementsCache);
+		if(getStorageData == null){
+			var announcementItems = getListItems.getRequest(announcementsAPI,true);
+			announcementItems.done(function (result) {
+				var announcementsData = result.d.query.PrimaryQueryResult.RelevantResults.Table.Rows.results;
+				setLocalStorageGeneric(AllAnnouncementsCache,JSON.stringify(announcementsData),15 * 60 * 1000);	
+				filterAnnouncements(announcementsData);
+			})
+		}
+		else {
+			var theReturnedJSONData = JSON.parse(getStorageData);
+			filterAnnouncements(theReturnedJSONData);
+		}		
+	}
+	catch(ex){
+		console.log("Exception occurred inside getAllAnnouncements().Message- "+ex.Message);
+	}
+}
+
+function filterAnnouncements(data) {
+	try {
+		var userChannel = $("#divUPCalculatedChannel")[0].innerText.trim();
+		var userPreferredChannel = $("#divUPPreferredChannel")[0].innerText.trim();
+		var userCalculatedTitle = $("#divUPSIntranetCalculatedJobTitle")[0].innerText.trim();
+		var userCountry = $("#divUPSIntranetCountry")[0].innerText.trim();
+		var filteredItems = [];
+		
+		if(userPreferredChannel == null || userPreferredChannel == undefined || userPreferredChannel == "") {
+			userPreferredChannel = "NoPreferredChannelSelected";
+		}
+		
+		data.forEach(function(item,index){
+			var job = item.Cells.results[12].Value == null ? "" : item.Cells.results[12].Value;
+			var channel = item.Cells.results[11].Value == null ? "" : item.Cells.results[11].Value;
+			var country = item.Cells.results[18].Value == null ? "" : item.Cells.results[18].Value;
+			if(job!=null && channel!=null && userCalculatedTitle!=null && userChannel!=null && userCountry!=null){
+				if((job.indexOf(userCalculatedTitle)!==-1 || job==="") && (channel.indexOf(userChannel)!==-1 || channel.indexOf(userPreferredChannel)!==-1 || channel==="" || channel.toString().toLowerCase() ==="global") && (country.indexOf(userCountry)!==-1 || country==="")) {
+					filteredItems.push(item);
+				}
+			}
+		});
+		
+		if(filteredItems != null && filteredItems.length > 0) {
+			bindAnnouncements(filteredItems);
+		}
+	}
+	catch(ex){
+		console.log("Exception occurred inside filterAnnouncements().Message- "+ex.Message);
+	}
+	
+}
+
+function bindAnnouncements(filteredData) {
+	try {
+		var finalData = [];
+		var pageContext = _spPageContextInfo;
+		var userKey = pageContext.userId.toString();
+		
+		var AllAnnouncementsLikesCache = "AllAnnouncementsLikesCacheEN";
+		
+		var announcementPretext = 'Announcement about:';
+		if (preferredLanguage == "FR") {
+			announcementPretext = 'Annonce sur:';
+			AllAnnouncementsLikesCache = "AllAnnouncementsLikesCacheFR";
+		}
+
+		var announcementTemplate =
+	'<div onclick="{gaonclick}" class="announcement {categoryClass} {readClass}" data-itemid="{itemID}" data-weburl="{webUrl}" data-listid="{listid}"><a href="#" class="announcement-link stretched-link serviceannouncements-ga4" data-toggle="offcanvas-child" data-target="#announcement-detail" aria-haspopup="true" aria-controls="announcment-detail" aria-expanded="false" onclick="bindAnnouncemetDetail()"><h3 class="announcement-title mb-1"><span class="sr-only">'+announcementPretext+' </span><span class="js-announcement-title">{title}</span></h3><p class="announcement-text">{description}</p></a><div class="announcement-footer"><div><span class="badge badge-pill mr-2">{category}</span><time datetime="{startTime}" class="text-muted"><span class="fal fa-clock mr-1" aria-hidden="true"></span>{startTime}</time></div><button class="btn btn-sm btn-text announcement-action" role="button"><span class="fal {envelopeClass} mr-1" aria-hidden="true"></span>{readStatusText}</button></div></div>';
+		
+		announcementTotalCount = filteredData.length;
+		
+		filteredData.forEach(function(announcement, index){
+			
+			var isElementPresent = false;			
+			var announcementData = {
+					announcementWebURl : announcement.Cells.results[17].Value.toString().toLowerCase().split("/lists")[0],
+					announcementItemId : announcement.Cells.results[15].Value,
+					announcementListId : announcement.Cells.results[14].Value,
+					readClassName : "announcement-unread",
+					readStatus_EN : cgi.announcements.annRead_EN,
+					readStatus_FR : cgi.announcements.annRead_FR, 
+					listTitle : "Announcements",  
+					envelopeClassName : "fa-envelope"
+				  
+				};
+		
+			if (preferredLanguage == 'FR') {
+				announcementData.readStatus_FR = cgi.announcements.annRead_FR;
+			}
+			
+			var getStorageData = getAnnouncementLocalStorage(AllAnnouncementsLikesCache, false);
+			if(getStorageData == null){
+				return this.getListItem(announcementData.announcementWebURl, announcementData.listTitle, announcementData.announcementItemId).then(function (data) {
+					bindAnnouncementsToDOM(data.d, finalData, userKey, announcementTemplate, announcement, index, announcementData);
+					setAnnouncementLocalStorage(AllAnnouncementsLikesCache, data.d, 15 * 60 * 1000, true, -1);
+				});
+			}
+			else {
+				for (var i=0; i< getStorageData.length; i++){
+					if(getStorageData[i].ID.toString() == announcementData.announcementItemId && getStorageData[i].ParentList.__deferred.uri.toString().split("/_api")[0] == announcementData.announcementWebURl) {
+						//use from cache
+						isElementPresent = true;
+						var theReturnedJSONData = getStorageData[i];
+						bindAnnouncementsToDOM(theReturnedJSONData, finalData, userKey, announcementTemplate, announcement, index, announcementData);
+						break;
+					}
+				}
+			}
+			
+			if(!isElementPresent) {
+				return this.getListItem(announcementData.announcementWebURl, announcementData.listTitle, announcementData.announcementItemId).then(function (data) {
+					bindAnnouncementsToDOM(data.d, finalData, userKey, announcementTemplate, announcement, index, announcementData);
+					setAnnouncementLocalStorage(AllAnnouncementsLikesCache, data.d, 15 * 60 * 1000, false, -1);
+				});
+			}
+			
+		});
+	}
+	catch(ex){
+		console.log("Exception occurred inside bindAnnouncements().Message- "+ex.Message);
+	}
+}
+
+
+function bindAnnouncementsToDOM(data, finalData, userKey, announcementTemplate, announcement, index, announcementData) {
+	try {
+		countAnnouncementData++;
+			
+		var likesCount = data.LikesCount;
+		//if(likesCount != null && likesCount != "" && likesCount != undefined) {
+		if(data.LikedByStringId != null && data.LikedByStringId != "" && data.LikedByStringId != undefined) {
+			//if(parseInt(likesCount) > 0) {
+			if(data.LikedByStringId.results.length > 0) {
+				var likedByUsers = data.LikedByStringId.results;
+				for (var i = 0; i < likedByUsers.length; i++) {
+					if (likedByUsers[i] == userKey) {
+						announcementData.readClassName = "announcement-read";
+						announcementData.envelopeClassName = "fa-envelope-open";
+
+						if (preferredLanguage == "FR") {
+							announcementData.readStatus_FR = cgi.announcements.annUnread_FR;
+						} else {
+							announcementData.readStatus_EN = cgi.announcements.annUnread_EN;
+						}
+
+						//countUnread--;
+						break;
+					}
+				}
+			}
+		}
+		
+		var gaonclick = onclick="ga('send','event','ServiceAnnouncements','{etitle}','{webUrl}/Lists/Announcements/DispForm.aspx?ID={itemID}');";
+		var encodedTitle = encodeURIComponent(announcement.Cells.results[3].Value).replaceAll("'", "%27");
+		var intrDesc = announcement.Cells.results[4].Value == null ? "" : announcement.Cells.results[4].Value;
+		var allAnnouncements = announcementTemplate
+			.replace(
+				'{categoryClass}',
+				'announcement-' +
+					announcement.Cells.results[9].Value.toString().toLowerCase()
+			)
+			.replace('{gaonclick}', gaonclick)
+			.replace('{etitle}', encodedTitle)
+			.replaceAll('{title}', announcement.Cells.results[3].Value)
+			.replace('{SRtitle}', announcement.Cells.results[3].Value)
+			.replace('{description}', intrDesc)
+			.replace('{category}', announcement.Cells.results[9].Value)
+			.replace(
+				'{startTime}',
+				formatAnnouncementDate(announcement.Cells.results[5].Value, true)
+			)
+			.replace(
+				'{startTime}',
+				formatAnnouncementDate(announcement.Cells.results[5].Value, true)
+			)
+			.replace('{readClass}', announcementData.readClassName)
+			.replaceAll('{webUrl}', announcementData.announcementWebURl)
+			.replaceAll('{itemID}', announcementData.announcementItemId)
+			.replace('{envelopeClass}', announcementData.envelopeClassName)
+			.replace('{listid}', announcementData.announcementListId);
+
+		// Language
+		if (preferredLanguage == "FR") {
+			allAnnouncements = allAnnouncements
+				.replace('{readStatusText}', announcementData.readStatus_FR)
+				.replace('{SRtitle}', announcement.Cells.results[3].Value)
+				.replace('{title}', announcement.Cells.results[3].Value);
+		} else {
+			allAnnouncements = allAnnouncements
+				.replace('{readStatusText}', announcementData.readStatus_EN)
+				.replace('{SRtitle}', announcement.Cells.results[3].Value)
+				.replace('{title}', announcement.Cells.results[3].Value);
+		}
+
+		finalData[index] = allAnnouncements;
+		
+		if(countAnnouncementData == announcementTotalCount){
+			for (var i=0; i<finalData.length; i++){
+				$('#announcements-body').append(finalData[i]);
+			}
+			loadAnnouncementCount();
+			//check if specific announcement needs to be opened after all announcements are binded
+			openSpecificAnnouncement();
+		}
+	}
+	catch(ex){
+		console.log("Exception occurred inside bindAnnouncementsToDOM().Message- "+ex.Message);
+	}
+}
+
+
+function setLikeToAnnouncement(webURL, listID, itemID, isRead) {
+	try {
+		var context = new SP.ClientContext(webURL);
+		Microsoft.Office.Server.ReputationModel.Reputation.setLike(context, listID, itemID, isRead);
+
+		context.executeQueryAsync(function() {
+			//overwrite cache
+			var AllAnnouncementsLikesCache = "AllAnnouncementsLikesCacheEN";
+			if(preferredLanguage === "FR"){
+				AllAnnouncementsLikesCache = "AllAnnouncementsLikesCacheFR";
+			}
+			var position = -1;
+			var getStorageData = getAnnouncementLocalStorage(AllAnnouncementsLikesCache, true);
+			getStorageData = getStorageData.value;
+			for (var i=0; i< getStorageData.length; i++){
+				if(getStorageData[i].ID.toString() == itemID && getStorageData[i].ParentList.__deferred.uri.toString().split("/_api")[0] == webURL) {
+					position = i;
+					break;
+				}
+			}
+			
+			if(position != -1){
+				var pageContext = _spPageContextInfo;
+				var userKey = pageContext.userId.toString();
+				var data = getStorageData[position];
+				var likedByCount = data.LikesCount;
+				var likedByUsers = data.LikedByStringId.results;
+				
+				if(isRead) {
+					likedByUsers.push(userKey);
+					data.LikedByStringId.results = likedByUsers;
+					data.likesCount = likedByCount++;
+				}
+				else {
+					if(likedByUsers.indexOf(userKey) != -1) {
+						var pos = likedByUsers.indexOf(userKey);
+						likedByUsers.splice(pos, 1);
+						data.LikedByStringId.results = likedByUsers;
+						data.likesCount = data.likesCount > 0 ? (likedByCount--) : likedByCount;
+					}
+				}
+				setAnnouncementLocalStorage(AllAnnouncementsLikesCache, data, 15 * 60 * 1000, false, position);
+			}
+		}, 
+		function(sender, args) {
+		// Custom error handling if needed
+		});
+	}
+	catch(ex){
+		console.log("Exception occurred inside setLikeToAnnouncement().Message- "+ex.Message);
+	}
+}
+
+function formatAnnouncementDate(dateStr, isDateOnly) {
+	try {
+		var utcCutoff = moment.utc(dateStr, 'YYYYMMDD HH:mm:ss');
+		var displayCutoff = utcCutoff.clone().tz('America/New_York');
+		
+		if(isDateOnly) {
+			var formattedMonth = cgi.translateToFR.month(displayCutoff.format('MMMM'));
+			var formattedDay =  displayCutoff.format('DD');
+
+			if(preferredLanguage == "EN") {
+				var formattedDate = formattedMonth + ' ' + formattedDay;
+			} else if (preferredLanguage == "FR"){
+				var formattedDate = formattedDay + ' ' + formattedMonth;
+			}
+		}
+		else {
+			var formattedMonth = cgi.translateToFR.month(displayCutoff.format('MMMM'));
+			var formattedDay = displayCutoff.format('DD');
+					
+			if (preferredLanguage == 'EN') {
+				var formattedTime = displayCutoff.format('h:mm A');
+				var formattedDate = formattedMonth + ' ' + formattedDay + ', ' + formattedTime;
+			} else if (preferredLanguage == 'FR') {
+				var formattedHour = displayCutoff.format('H');
+				var formattedMin = displayCutoff.format('mm');
+				var formattedDate = formattedDay + ' ' + formattedMonth + ', ' + formattedHour + 'h' + formattedMin;
+			}
+		}
+		
+		return formattedDate;
+	}
+	catch(ex){
+		console.log("Exception occurred inside formatAnnouncementDate().Message- "+ex.Message);
+	}
+}
+
+
+function loadAnnouncementCount() {
+	var countUnread = $('.announcement-unread').length;
+	$('#announcementUnreadCount').html(countUnread.toString());
+	
+	if(countUnread == 0) {
+		$('.announcement-indicator').removeClass('has-announcements');
+		$('.announcement-indicator .fa-bell').addClass('fal');
+		$('.announcement-indicator .fa-bell').removeClass('fas');
+	}
+	else {
+		$('.announcement-indicator').attr('data-count', countUnread.toString());
+		$('.announcement-indicator').addClass('has-announcements');
+		$('.announcement-indicator .fa-bell').removeClass('fal');
+		$('.announcement-indicator .fa-bell').addClass('fas');
+	}
+}
+
+
+function bindAnnouncemetDetail() {
+	try {
+		var url = "";
+		var itemID = "";
+		var webURL = "";
+					
+		if($(event.target).closest('a').parents('.announcement')[0] != undefined){
+			itemID = $(event.target).closest('a').parents('.announcement')[0].getAttribute('data-itemid');
+			webURL = $(event.target).closest('a').parents('.announcement')[0].getAttribute('data-weburl');
+		} 
+	
+		if(itemID != "" && webURL != ""){
+			url = webURL + "/_api/web/lists/getbytitle('Announcements')/items(" + itemID + ")?$select=Id,Title,IntranetDescription,AnnouncementCategory,AnnouncementStart,AnnouncementEnd,AnnouncementContent,ParentList"
+			
+			var isElementPresent = false;
+			var AllAnnouncementsDetailsCache = "AllAnnouncementsDetailsCacheEN";
+			if(preferredLanguage == "FR"){
+				AllAnnouncementsDetailsCache = "AllAnnouncementsDetailsCacheFR";
+			}
+			var getStorageData = getAnnouncementLocalStorage(AllAnnouncementsDetailsCache, false);
+			if(getStorageData == null){
+				return this.getItems(url)
+				.then(function (data) {
+					bindAnnouncemetDetailToDOM(data.d);
+					//setvvaluearray
+					setAnnouncementLocalStorage(AllAnnouncementsDetailsCache, data.d, 120 * 60 * 1000, true, -1);
+				});
+			}
+			else {
+				for (var i=0; i< getStorageData.length; i++){
+					if(getStorageData[i].ID.toString() == itemID && getStorageData[i].ParentList.__deferred.uri.toString().split("/_api")[0] == webURL) {
+						//use from cache
+						isElementPresent = true;
+						var theReturnedJSONData = getStorageData[i];
+						bindAnnouncemetDetailToDOM(theReturnedJSONData);
+						break;
+					}
+				}
+			}
+			
+			if(!isElementPresent) {
+				return this.getItems(url)
+				.then(function (data) {
+					bindAnnouncemetDetailToDOM(data.d);
+					//setvvaluearray update it with additional item
+					setAnnouncementLocalStorage(AllAnnouncementsDetailsCache, data.d, 120 * 60 * 1000, false, -1);
+				});
+			}
+		}
+	}
+	catch(ex){
+		console.log("Exception occurred inside bindAnnouncemetDetail().Message- "+ex.Message);
+	}
+	
+}
+
+
+function bindAnnouncemetDetailToDOM(data) {
+	try {
+		var title = data.Title;
+		var intranetDesc = data.IntranetDescription;
+		var category = data.AnnouncementCategory;
+		var startDate = data.AnnouncementStart;
+		var endDate = data.AnnouncementEnd;
+		var annContent = data.AnnouncementContent;
+		var itemId = data.ID.toString();
+		var itemWebURL = data.ParentList.__deferred.uri.toString().split("/_api")[0];
+		
+		intranetDesc = intranetDesc == null ? "" : intranetDesc;
+		startDate = startDate == null ? "" : formatAnnouncementDate(startDate.toString(), false);
+		endDate = endDate == null ? "" : formatAnnouncementDate(endDate.toString(), false);
+		
+		$('#announcement-detail-headline').text(title);
+		$('#announcement-detail-lead').text(intranetDesc);
+		$('#announcement-detail-category').text(category);
+		$('#announcement-detail-start').text(startDate);
+		$('#announcement-detail-end').text(endDate);
+		$('#announcement-detail-copy').html(annContent);
+		$('.btnAnnouncementCollapse').attr("data-itemid",itemId);
+		$('.btnAnnouncementCollapse').attr("data-weburl",itemWebURL);
+
+		if (preferredLanguage == "FR") {
+			$('.Announcements_JSLabelClass_Collapse').html('Réduire l\'annonce<span class="sr-only">: ' + title + '</span>');
+		} else {
+			$('.Announcements_JSLabelClass_Collapse').html('Collapse Announcement<span class="sr-only">: ' + title + '</span>');
+		}
+		
+		if(endDate == "") {
+			$('#liAnnouncementEndDate').css("display","none");
+		}
+		else {
+			$('#liAnnouncementEndDate').css("display","block");
+		}
+		
+		$("#announcement-detail").removeClass("announcement-service");
+		$("#announcement-detail").removeClass("announcement-local");
+		$("#announcement-detail").removeClass("announcement-leadership");
+		$("#announcement-detail").removeClass("announcement-security");
+		$("#announcement-detail").removeClass("announcement-global");
+		$("#announcement-detail").addClass("announcement-" + category.toString().toLowerCase());
+	}
+	catch(ex){
+		console.log("Exception occurred inside bindAnnouncemetDetailToDOM.Message- "+ex.Message);
+	}
+}
+
+
+function MarkAsReadFromSecondaryPane() {
+	try {
+		
+		var btnItemID = $('.btnAnnouncementCollapse')[0].getAttribute('data-itemid');
+		var btnWebURL = $('.btnAnnouncementCollapse')[0].getAttribute('data-weburl');
+		var $announcementEl = $("div").find("[data-itemid='" + btnItemID.toString() + "'][data-weburl='" + btnWebURL.toString() + "']");
+		var itemTitle = $announcementEl.find('.js-announcement-title').text();
+		
+		if ($announcementEl.hasClass('announcement-unread')) {
+			var itemID = $announcementEl[0].getAttribute('data-itemid');
+			var webURL = $announcementEl[0].getAttribute('data-weburl');
+			var listID = $announcementEl[0].getAttribute('data-listid');
+			
+			if(itemID != null && itemID != undefined && webURL != null && webURL != undefined && listID != null && listID != undefined) {			
+				$announcementEl.addClass('announcement-read');
+				$announcementEl.removeClass('announcement-unread');
+				
+				if (preferredLanguage == "FR") {
+					$announcementEl
+						.find('.announcement-action')
+						.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annUnread_FR);	
+				} else {
+					$announcementEl
+						.find('.announcement-action')
+						.html('<span class="fal fa-envelope-open mr-1" aria-hidden="true"></span>' + cgi.announcements.annUnread_EN);	
+				}
+
+				$announcementEl.find('.js-sr-title').html(itemTitle);
+				loadAnnouncementCount();
+				setLikeToAnnouncement(webURL, listID, itemID, true);
+			}
+		}
+	}
+	catch(ex){
+		console.log("Exception occurred inside MarkAsReadFromSecondaryPane.Message- "+ex.Message);
+	}
+}
+
+
+
+function setAnnouncementLocalStorage(key, valueAnnouncement, timespan, isNewArray, position){
+	try{
+		const now = new Date();
+		
+		if(isNewArray) {
+			var arrayAnnouncments = [];
+			arrayAnnouncments[0] = valueAnnouncement;
+			const item = {
+				value: arrayAnnouncments,
+				expiry: now.getTime() + timespan,
+			}
+			localStorage.setItem(key, JSON.stringify(item));
+		}
+		else {
+			var itemAnn = getAnnouncementLocalStorage(key, true);
+			var arrayAnnouncments = itemAnn.value;
+			var expiryTime = itemAnn.expiry;
+			
+			if(position != -1){
+				arrayAnnouncments[position] = valueAnnouncement;
+			}
+			else {
+				arrayAnnouncments[arrayAnnouncments.length] = valueAnnouncement;
+			}
+			
+			const item = {
+				value: arrayAnnouncments,
+				expiry: expiryTime,
+			}
+			localStorage.setItem(key, JSON.stringify(item));
+		}
+		
+		
+	}
+	catch(ex){
+		console.log("Exception occurred inside setAnnouncementLocalStorage.Message- "+ex.Message);
+	}
+}
+
+function getAnnouncementLocalStorage(key, isFullValue){
+	try{
+		const itemStr = localStorage.getItem(key);
+		if (!itemStr){
+			 return null;
+		   }
+		const item = JSON.parse(itemStr);
+		const now = new Date();
+		if (!isFullValue && now.getTime() > item.expiry) {
+			localStorage.removeItem(key)
+			return null
+		}
+		if (isFullValue) {
+			return item;
+		}
+		else {
+			return item.value;
+		}
+		
+	}
+	catch(ex){
+		console.log("Exception occurred inside getAnnouncementLocalStorage.Message- "+ex.Message);
+	}
+}
+
+function setLocalStorageGeneric(key, value, timespan){
+	try{
+		const now = new Date();
+		const item = {
+			value: value,
+			expiry: now.getTime() + timespan,
+			}
+			localStorage.setItem(key, JSON.stringify(item));
+	}
+	catch(ex){
+		console.log("Exception occurred inside setLocalStorageGeneric.Message- "+ex.Message);
+	}
+}
+
+
+function getLocalStorageGeneric(key){
+	try{
+		const itemStr = localStorage.getItem(key);
+		if (!itemStr){
+			 return null;
+		   }
+		const item = JSON.parse(itemStr);
+		const now = new Date();
+		if (now.getTime() > item.expiry) {
+			localStorage.removeItem(key)
+			return null
+		}
+		return item.value;
+	}
+	catch(ex){
+		console.log("Exception occurred inside getLocalStorageGeneric.Message- "+ex.Message);
+	}
+}
+
+
+function openSpecificAnnouncement() {
+	try {
+		var siteCode = getQueryParameterByName("sitecode");
+		var itemID = getQueryParameterByName("annid");
+		
+		if(siteCode != null && itemID != null) {
+			var webURL = _spPageContextInfo.siteAbsoluteUrl + "/news/" + siteCode.toLowerCase();
+			
+			if(itemID != null && webURL != null && itemID != "" && webURL != "") {
+				if($("div").find('[data-weburl="'+ webURL +'"][data-itemid='+ itemID +']').length > 0) {
+					//element exists on DOM
+					$('#announcements-trigger').click();
+					$("div").find('[data-weburl="'+ webURL +'"][data-itemid='+ itemID +']').children('a')[0].click();
+				}
+				else{
+					//element not on DOM. Show error
+					var errorMsg = "Sorry this announcement is not available. The announcement might be expired, not targeted to you, or in a language that does not match your interface preferences.";
+					if(preferredLanguage == "FR"){
+						errorMsg = "Impossible d\'afficher cette annonce. Il se peut qu\'elle soit expirée, qu\'elle ne s\'adresse pas à vous ou qu\'elle soit dans une autre langue que celle de votre interface.";
+					}
+					$('#Intranet_Announcement_Error').modal('show');
+					$('#Intranet_Announcement_Error_Heading_EN').text(errorMsg);
+				}
+			
+			}
+		}
+	}
+	catch(ex){
+		cgiError.LogError("Error: announcements.js: openSpecificAnnouncement()",JSON.stringify(ex.Message));
+	}
+}
+
+
+function getQueryParameterByName(name) {
+    var url = window.location.href.toLowerCase();
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}

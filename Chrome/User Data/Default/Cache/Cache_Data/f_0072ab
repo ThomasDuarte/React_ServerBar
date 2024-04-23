@@ -1,0 +1,1047 @@
+// See end of file for additional comments
+var cgi = {
+	resizeTimer: null,
+	sidebarOpen: true,
+	windowCurWidth: $(window).outerWidth(),
+	$topBarNav: $('#ui-navbar-top'),
+	menuTooltips: null,
+	$hideSuitebar:
+		'<div id="suitebar-hide-ribbon" class="suitebar-hide-ribbon" style="display: none;"><div class="suitebar-hide-wrap" title="Toggle SharePoint Suitebar" data-toggle="toggle"><span class="fad fa-cog" aria-hidden="true"></span><span class="sr-only" id="SR_Header_SharePointSuiteBar">Toggle SharePoint Suitebar</span></div></div>',
+	isRibbonOpen: false,
+	helpers: {
+		objectFitImagesIeFallback: function () {
+			// Object Fit Images Polyfill for IE
+			/*! npm.im/object-fit-images 3.2.4 */
+			//https://github.com/bfred-it/object-fit-images
+			var objectFitImages=function(){"use strict";var o="fregante:object-fit-images",a=/(object-fit|object-position)\s*:\s*([-.\w\s%]+)/g,t="undefined"==typeof Image?{style:{"object-position":1}}:new Image,l="object-fit"in t.style,s="object-position"in t.style,c="background-size"in t.style,u="string"==typeof t.currentSrc,g=t.getAttribute,f=t.setAttribute,d=!1;function m(t,e,i){var r="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='"+(e||1)+"' height='"+(i||0)+"'%3E%3C/svg%3E";g.call(t,"src")!==r&&f.call(t,"src",r)}function p(t,e){t.naturalWidth?e(t):setTimeout(p,100,t,e)}function b(e){var i,r,t,n,s=function(t){for(var e,i=getComputedStyle(t).fontFamily,r={};null!==(e=a.exec(i));)r[e[1]]=e[2];return r}(e),c=e[o];if(s["object-fit"]=s["object-fit"]||"fill",!c.img){if("fill"===s["object-fit"])return;if(!c.skipTest&&l&&!s["object-position"])return}if(!c.img){c.img=new Image(e.width,e.height),c.img.srcset=g.call(e,"data-ofi-srcset")||e.srcset,c.img.src=g.call(e,"data-ofi-src")||e.src,f.call(e,"data-ofi-src",e.src),e.srcset&&f.call(e,"data-ofi-srcset",e.srcset),m(e,e.naturalWidth||e.width,e.naturalHeight||e.height),e.srcset&&(e.srcset="");try{i=e,r={get:function(t){return i[o].img[t||"src"]},set:function(t,e){return i[o].img[e||"src"]=t,f.call(i,"data-ofi-"+e,t),b(i),t}},Object.defineProperty(i,"src",r),Object.defineProperty(i,"currentSrc",{get:function(){return r.get("currentSrc")}}),Object.defineProperty(i,"srcset",{get:function(){return r.get("srcset")},set:function(t){return r.set(t,"srcset")}})}catch(t){window.console&&console.warn("https://bit.ly/ofi-old-browser")}}(t=c.img).srcset&&!u&&window.picturefill&&(t[(n=window.picturefill._).ns]&&t[n.ns].evaled||n.fillImg(t,{reselect:!0}),t[n.ns].curSrc||(t[n.ns].supported=!1,n.fillImg(t,{reselect:!0})),t.currentSrc=t[n.ns].curSrc||t.src),e.style.backgroundImage='url("'+(c.img.currentSrc||c.img.src).replace(/"/g,'\\"')+'")',e.style.backgroundPosition=s["object-position"]||"center",e.style.backgroundRepeat="no-repeat",e.style.backgroundOrigin="content-box",/scale-down/.test(s["object-fit"])?p(c.img,function(){c.img.naturalWidth>e.width||c.img.naturalHeight>e.height?e.style.backgroundSize="contain":e.style.backgroundSize="auto"}):e.style.backgroundSize=s["object-fit"].replace("none","auto").replace("fill","100% 100%"),p(c.img,function(t){m(e,t.naturalWidth,t.naturalHeight)})}function h(t,e){var i=!d&&!t;if(e=e||{},t=t||"img",s&&!e.skipTest||!c)return!1;"img"===t?t=document.getElementsByTagName("img"):"string"==typeof t?t=document.querySelectorAll(t):"length"in t||(t=[t]);for(var r=t.length,n=0;n<r;n++)t[n][o]=t[n][o]||{skipTest:e.skipTest},b(t[n]);i&&(document.body.addEventListener("load",function(t){"IMG"===t.target.tagName&&h(t.target,{skipTest:e.skipTest})},!0),d=!0,t="img"),e.watchMQ&&window.addEventListener("resize",h.bind(null,t,{skipTest:e.skipTest}))}function i(t,e){return t[o]&&t[o].img&&("src"===e||"srcset"===e)?t[o].img:t}return h.supportsObjectFit=l,(h.supportsObjectPosition=s)||(HTMLImageElement.prototype.getAttribute=function(t){return g.call(i(this,t),t)},HTMLImageElement.prototype.setAttribute=function(t,e){return f.call(i(this,t),t,String(e))}),h}();
+			objectFitImages();
+		},
+		isTouchDevice: function () {
+			return (
+				true ==
+				('ontouchstart' in window ||
+					(window.DocumentTouch && document instanceof DocumentTouch))
+			);
+		},
+		init: function () {
+			cgi.helpers.objectFitImagesIeFallback();
+		},
+	},
+	uiGlobal: {
+		carousels: function () {
+			$('.carousel').carousel({
+				interval: 0,
+				pause: true,
+			});
+		},
+		truncatedCards: function () {
+			// Moved to MyProfileDisplayForm.js but EHHH :/
+			function createTruncatedCard(cardBodyEl, charLimit) {
+				var moreHtml =
+					'<p class="card-truncate-more-trigger"><a role="button" aria-label="Read More"><span class="fas fa-caret-down text-beet" aria-hidden="true"></span></a></p>';
+				var charCount = cardBodyEl.text().length;
+				var newCharLimit;
+
+				// Set char limit or use default of 450
+				if (charLimit) {
+					newCharLimit = charLimit;
+				} else {
+					newCharLimit = 250;
+				}
+
+				// Check char count of card and truncate if greater than char limit
+				if (charCount > newCharLimit) {
+					cardBodyEl.parents('.card-truncate').addClass('is-truncated');
+					cardBodyEl.parents('.card-truncate').append(moreHtml);
+				}
+			}
+			function toggleTruncatedCard(clickedEl) {
+				$(clickedEl).parents('.card-truncate').toggleClass('is-expanded');
+			}
+
+			$(document).on('click', '.card-truncate-more-trigger', function () {
+				toggleTruncatedCard(this);
+			});
+		},
+		stickySetup: function () {
+			if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+				stickybits('.ui-sticky-include-ie', {
+					scrollEl: '#s4-workspace',
+					stickyBitStickyOffset: 62,
+				});
+				cgi.uiGlobal.updateFixedWidth();
+			}
+		},
+		viewMoreButtons: function () {
+			// Toggle and Button functions
+			function toggleContent(target) {
+				if (!$(target).hasClass('show')) {
+					$(target).collapse('show');
+					displayFewerButton(target);
+				} else {
+					$(target).collapse('hide');
+					displayMoreButton(target);
+				}
+			}
+
+			function displayFewerButton(target) {
+				var $btn = $('button[aria-controls="' + target + '"]');
+				$btn.html('View Fewer');
+				$(target).addClass('bg-ice-lightest');
+				setTimeout(function () {
+					$(target).removeClass('bg-ice-lightest');
+				}, 1500);
+			}
+
+			function displayMoreButton(target) {
+				var $btn = $('button[aria-controls="' + target + '"]');
+				$btn.html('View More');
+			}
+
+			// Button triggers
+			var rr = '#moreRelatedResources',
+				cq = '#moreCommonQuestions',
+				fi = '#moreFeaturedItems';
+
+			$(document).on('click', 'button[aria-controls="' + rr + '"]', function () {
+				toggleContent(rr);
+			});
+
+			$(document).on('click', 'button[aria-controls="' + cq + '"]', function () {
+				toggleContent(cq);
+			});
+
+			$(document).on('click', 'button[aria-controls="' + fi + '"]', function () {
+				toggleContent(fi);
+			});
+		},
+		listeners: function () {
+			// Profile Picture Upload filename display
+			$('.custom-file-input').on('change', function () {
+				var fileName = $(this).val().split('\\').pop();
+				$(this).next('.custom-file-label').addClass('selected').html(fileName);
+			});
+
+			// Homepage News feed scrolling on click
+			$(document).on('click', '.js-scroll-newsfeed', function (e) {
+				if ($(window).outerWidth() >= 768) {
+					e.preventDefault();
+					$('#s4-workspace')
+						.stop()
+						.animate(
+							{
+								scrollTop: $('.home-bottom').offset().top - 61,
+							},
+							500,
+							'swing'
+						);
+				}
+			});
+
+			// Navigatyion via <select>
+			$('.select-nav').on('change', function () {
+				location.href = $(this).val();
+			});
+
+			// IE11 fix for the accordion heading click that was reloading
+			$(document).on('click', '.accordion-trigger.subnav-heading', function (e) {
+				e.preventDefault();
+			});
+		},
+		initFastSelect: function () {
+			// GDS
+			var $gdns = $('.js-fastselect-gdn');
+			if ($gdns.length) {
+				// Clear selected value to make way for placeholder
+				$gdns.val('');
+
+				$gdns.fastselect({
+					placeholder: 'Navigate to Delivery Center',
+					searchPlaceholder: 'Filter',
+					onItemSelect: function ($item, itemModel) {
+						// Go to url
+						window.location.href = itemModel.value;
+					},
+				});
+			}
+		},
+		updateFixedWidth: function () {
+			if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+				$('.ui-sticky-include-ie').each(function () {
+					$(this).css('width', '');
+					var parentWidth = $(this).parent().outerWidth(),
+						elWidth = $(this).width(),
+						diffWidth = Math.abs(parentWidth - elWidth);
+					$(this).width(parentWidth - diffWidth);
+				});
+			}
+		},
+		navSidebarCheck: function () {
+			if ($('.ui-sidebar-content').outerWidth() >= 200) {
+				cgi.sidebarOpen = true;
+				$('[data-toggleMenu="true"]').attr('data-original-title', '');
+			} else {
+				cgi.sidebarOpen = false;
+				cgi.tooltipSetup.menuItemSetup();
+			}
+		},
+		tabs: function () {
+			var totalTabs = $('#landingPageBody .nav-tabs a, #landingPageBody .nav-pills a').length;
+			var currentTab = 1;
+			var prevTabBtn = $('.prev-tab');
+			var nextTabBtn = $('.next-tab');
+
+			function showHideControls() {
+				if (currentTab == 1) {
+					prevTabBtn.hide();
+					nextTabBtn.show();
+				} else if (currentTab == totalTabs) {
+					prevTabBtn.show();
+					nextTabBtn.hide();
+				} else {
+					prevTabBtn.show();
+					nextTabBtn.show();
+				}
+				//console.log('Set Tab Buttons');
+			}
+
+			$('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+				currentTab = $(e.target).index() + 1;
+				showHideControls();
+				//console.log(currentTab);
+			});
+
+			nextTabBtn.on('click', function (e) {
+				e.preventDefault();
+				currentTab += 1;
+				showHideControls();
+				var next_tab = $('.nav-tabs > .active, .nav-pills > .active').next('a');
+				if (next_tab.length > 0) {
+					next_tab.trigger('click');
+				}
+				$('#s4-workspace').animate({
+					scrollTop: $('.nav-tabs, .nav-pills').offset().top
+				}, 500);
+				//console.log('Goto next tab');
+			});
+			prevTabBtn.on('click', function (e) {
+				e.preventDefault();
+				currentTab -= 1;
+				showHideControls();
+				var prev_tab = $('.nav-tabs > .active, .nav-pills > .active').prev('a');
+				if (prev_tab.length > 0) {
+					prev_tab.trigger('click');
+				}
+				$('#s4-workspace').animate({
+					scrollTop: $('.nav-tabs, .nav-pills').offset().top
+				}, 500);
+				//console.log('Goto prev tab');
+			});
+
+			showHideControls();
+		},
+		init: function () {
+			cgi.uiGlobal.viewMoreButtons();
+			cgi.uiGlobal.listeners();
+			cgi.uiGlobal.stickySetup();
+			cgi.uiGlobal.truncatedCards();
+
+			if ($('.carousel').length) {
+				cgi.uiGlobal.carousels();
+			}
+			if ($('.nav-tabs, .nav-pills').length) {
+				cgi.uiGlobal.tabs();
+			}
+		},
+	},
+	fullPageLoader: {
+		// To init the page loader, call cgi.fullPageLoader.init();
+		// When page loading is complete, call cgi.fullPageLoader.loaded();
+		init: function(loadingMsg){
+			if(loadingMsg === undefined) {
+				loadingMsg = "";
+			}
+			var loadingSRText = "Loading...";
+			if (typeof preferredLanguage !== 'undefined' && preferredLanguage == 'FR') {
+				loadingSRText = 'Chargement...';
+			}
+			var loadingHTML = '<div id="page-area-loader" class="loader loader-full-page inactive"><span class="fal fa-spinner-third fa-spin fa-3x" aria-hidden="true"></span><span class="sr-only">'+loadingSRText+'</span><p class="loader-p">'+loadingMsg+'</p></div>'
+
+			$('.ui-content-placeholder-main').prepend(loadingHTML);
+			setTimeout(function () {
+				$('#page-area-loader').removeClass('inactive');
+			}, 300);
+		},
+		loaded: function(){
+			$('#page-area-loader').addClass('is-loaded');
+			setTimeout(function () {
+				$('#page-area-loader').remove();
+			}, 1000);
+		}
+	},
+	spConfig: {
+		ui: function () {
+			// Append classes to html
+			$('html').addClass('hide-sp-ribbon').addClass('ui-loading');
+			$(cgi.$hideSuitebar).appendTo(cgi.$topBarNav);
+
+			// Set ribbon to visible if in page-editing mode
+			if ($('.ms-cui-topBarMaximized').length) {
+				$('html').addClass('hide-sp-ribbon--expanded active-edit-mode');
+				cgi.isRibbonOpen = true;
+			}
+		},
+		toggleRibbon: function () {
+			// Toggle native SP suitebar
+			if (cgi.isRibbonOpen) {
+				$('html').removeClass('hide-sp-ribbon--expanded');
+				cgi.isRibbonOpen = false;
+			} else {
+				$('html').addClass('hide-sp-ribbon--expanded');
+				cgi.isRibbonOpen = true;
+			}
+			return cgi.isRibbonOpen;
+		},
+		listeners: function () {
+			$('.suitebar-hide-wrap').on('click touch', function (e) {
+				cgi.spConfig.toggleRibbon(e);
+			});
+		},
+		init: function () {
+			cgi.spConfig.ui();
+			cgi.spConfig.listeners();
+		},
+	},
+	browseCgi: {
+		init: function () {
+			$('.nav-link[href^="#"]')
+				.not('[href="#"]')
+				.not('[href="#0"]')
+				.click(function (e) {
+					e.preventDefault();
+					var target = this.hash,
+						$target = $(target);
+
+					$('#s4-workspace').animate(
+						{
+							scrollTop: $target.position().top - 38,
+						},
+						850,
+						function () {
+							if (history.pushState) {
+								history.pushState(null, null, target);
+							} else {
+								location.hash = target;
+							}
+						}
+					);
+				});
+		},
+	},
+	a11y: {
+		removeDupRefinerArrowIds: function () {
+			if ($('#Refinement').length) {
+				var upArrows = $('.ms-ref-uparrow');
+				var downArrows = $('.ms-ref-downarrow');
+				var allArrows = upArrows.add(downArrows);
+				allArrows.each(function (i) {
+					$(this).attr('id', 'refinerExpandCollapseArrow-' + i);
+				});
+			}
+		},
+		addAriaExpandedRefiners: function () {
+			if ($('#Refinement').length) {
+				var expandedHeadings = $('.search-container > .ms-ref-refinername')
+					.find('.ms-ref-uparrow')
+					.parent('.ms-ref-refinername');
+				var collapsedHeadings = $('.search-container > .ms-ref-refinername')
+					.find('.ms-ref-downarrow')
+					.parent('.ms-ref-refinername');
+
+				expandedHeadings.each(function (i) {
+					$(this).attr('aria-expanded', 'true');
+				});
+
+				collapsedHeadings.each(function (i) {
+					$(this).attr('aria-expanded', 'false');
+				});
+
+				$(document).on('click', '.ms-ref-refinername', function () {
+					var isOpen = $(this).attr('aria-expanded');
+					if (isOpen == 'true') {
+						$(this).attr('aria-expanded', 'false');
+					} else {
+						$(this).attr('aria-expanded', 'true');
+					}
+				});
+			}
+		},
+		setUpListenerForA11yFocusStyling: function () {
+			// Let the document know when the mouse is being used,
+			// so accessibility styling can be removed.
+			document.documentElement.addEventListener('mousedown', function () {
+				document.documentElement.classList.add('using-mouse');
+			});
+
+			document.documentElement.addEventListener('keydown', function () {
+				document.documentElement.classList.remove('using-mouse');
+			});
+		},
+		keybinding: function () {
+			// Global Search Submit
+			$(document).on('keydown', '#site-search-input', function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 13) {
+					e.preventDefault();
+					RedirectToSiteSearchPage();
+				}
+			});
+
+			// People Search Submit
+			$(document).on('keydown', '#CGI-Members-search-input', function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 13) {
+					e.preventDefault();
+					$('#CGI-Members-search-submit').click();
+				}
+			});
+
+			// Skip to links for new focus
+			$(document).on('keypress', '.js-tab-focus-search-result', function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 13) {
+					e.preventDefault();
+					$(this).blur();
+					if ($('#SearchBody table').length) {
+						$('#SearchBody .control.dtr-control').first().focus();
+					} else if ($('#SearchBody .card-search-result').length) {
+						$('#SearchBody .card-search-result a').first().focus();
+					} else if ($('#SearchBody .tile').length) {
+						$('#SearchBody .tile a').first().focus();
+					}
+				}
+			});
+
+			// Loop back to top when exiting the footer
+			$(document).on('keydown', '#Footer_LabelUrl_Right_LinkURL', function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 9) {
+					if (!e.shiftKey) {
+						$('.SRClass_Header_SkipContent').focus();
+						e.preventDefault();
+					}
+				}
+			});
+
+			// Loop back to bottom when exiting the footer
+			$(document).on('keydown', '.SRClass_Header_SkipContent', function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 9) {
+					if (e.shiftKey) {
+						$('#Footer_LabelUrl_Right_LinkURL').focus();
+						e.preventDefault();
+					}
+				}
+			});
+		},
+		init: function () {
+			cgi.a11y.setUpListenerForA11yFocusStyling();
+			cgi.a11y.removeDupRefinerArrowIds();
+			cgi.a11y.addAriaExpandedRefiners();
+			cgi.a11y.keybinding();
+		},
+	},
+	tooltipSetup: {
+		basicSetup: function () {
+			// Setup all tooltips that are not for the nav only
+			$('[data-toggle="tooltip"]:not([data-toggleMenu="true"]').tooltip();
+		},
+		menuItemSetup: function () {
+			// Nav-sepecific tooltips should only show then the menu text is unavilable
+			$('[data-toggleMenu="true"]').tooltip({ boundary: 'window' });
+			$.each(cgi.menuTooltips, function () {
+				if ($(this).attr('data-original-title') === '') {
+					$(this).attr('data-original-title', $(this).text());
+				}
+			});
+		},
+	},
+	translateToFR: {
+		month: function (month) {
+			if (preferredLanguage == 'FR') {
+				var monthText = '';
+				switch (month) {
+					case 'January':
+						monthText = 'janvier';
+						break;
+				}
+				switch (month) {
+					case 'February':
+						monthText = 'février';
+						break;
+				}
+				switch (month) {
+					case 'March':
+						monthText = 'mars';
+						break;
+				}
+				switch (month) {
+					case 'April':
+						monthText = 'avril';
+						break;
+				}
+				switch (month) {
+					case 'May':
+						monthText = 'mai';
+						break;
+				}
+				switch (month) {
+					case 'June':
+						monthText = 'juin';
+						break;
+				}
+				switch (month) {
+					case 'July':
+						monthText = 'juillet';
+						break;
+				}
+				switch (month) {
+					case 'August':
+						monthText = 'août';
+						break;
+				}
+				switch (month) {
+					case 'September':
+						monthText = 'septembre';
+						break;
+				}
+				switch (month) {
+					case 'October':
+						monthText = 'octobre';
+						break;
+				}
+				switch (month) {
+					case 'November':
+						monthText = 'novembre';
+						break;
+				}
+				switch (month) {
+					case 'December':
+						monthText = 'décembre';
+						break;
+				}
+
+				return monthText;
+			} else {
+				return month;
+			}
+		},
+	}, 
+	searchPage: {
+		collapseRefiners: function(collapseActive){
+			// Collapse
+			$('#SearchResults_Label_ExpandRefiners').removeClass('d-none');
+			$('#SearchResults_Label_CollapseRefiners').addClass('d-none');
+
+			// Update the aria labelling so that all of the refiners collapseon the .ms-ref-refinername.click()
+			var expandedHeadings = $('.search-container > .ms-ref-refinername').find('.ms-ref-uparrow').parent('.ms-ref-refinername');
+			expandedHeadings.each(function (i) {
+				// Based on the param, either collapse the active refiners or dont
+				if(collapseActive == null || collapseActive == undefined){ 
+					// Don't collapse active refiners
+					var activeRefiner = $(this).siblings('.UnselectedSection').find('input[type="checkbox"]:checked');
+					if (activeRefiner.length <= 0) {
+						$(this).attr('aria-expanded', 'true');
+						$(this).find('.ms-ref-uparrow').removeClass('ms-ref-uparrow').addClass('ms-ref-downarrow');
+						$(this).siblings('.UnselectedSection').css('display', 'none');
+					}
+				} else {
+					// Collapse everything
+					$(this).attr('aria-expanded', 'true');
+					$(this).find('.ms-ref-uparrow').removeClass('ms-ref-uparrow').addClass('ms-ref-downarrow');
+					$(this).siblings('.UnselectedSection').css('display', 'none');
+				}
+			});
+		},
+		expandRefiners: function (){
+			// Expand
+			$('#SearchResults_Label_ExpandRefiners').addClass('d-none');
+			$('#SearchResults_Label_CollapseRefiners').removeClass('d-none');
+
+			// Update the aria labelling so that all of the refiners expand on the .ms-ref-refinername.click()
+			var collapsedHeadings = $('.search-container > .ms-ref-refinername').find('.ms-ref-downarrow').parent('.ms-ref-refinername');
+			collapsedHeadings.each(function (i) {
+				$(this).attr('aria-expanded', 'false');
+				$(this).find('.ms-ref-downarrow').removeClass('ms-ref-downarrow').addClass('ms-ref-uparrow');
+				$(this).siblings('.UnselectedSection').attr('style', '');
+			});
+		},
+		toggleRefinersClickHandler: function(){
+			$(document).on('click', '.toggle-refiners', function (e) {
+				e.preventDefault();
+				if($('#SearchResults_Label_ExpandRefiners').is(":visible")){
+					cgi.searchPage.expandRefiners();
+				} else {
+					cgi.searchPage.collapseRefiners(true);
+				}	
+			});
+		},
+		init: function(){
+			cgi.searchPage.toggleRefinersClickHandler();
+		}
+	}
+};
+
+$(document).ready(function () {
+	cgi.helpers.init();
+	cgi.uiGlobal.init();
+	cgi.spConfig.init();
+	cgi.offcanvas.init();
+	cgi.browseCgi.init();
+	cgi.myFavorites.init();
+	cgi.announcements.init();
+	cgi.searchPage.init();
+});
+
+$(window).on('load', function (e) {
+	$('html').removeClass('ui-loading').addClass('ui-complete');
+
+	// Define Tooltip listeners
+	if (cgi.helpers.isTouchDevice() === false) {
+		cgi.tooltipSetup.basicSetup();
+		cgi.uiGlobal.navSidebarCheck();
+	}
+
+	// Accordions via keyboard
+	$('[data-toggle="collapse"]').keypress(function (e) {
+		if (e.which == 13) {
+			e.preventDefault();
+			$(this).click();
+		}
+	});
+
+	// Accessibility
+	cgi.a11y.init();
+	cgi.myFavorites.keybinding();
+	cgi.offcanvas.keybinding();
+});
+
+$(window).on('resize', function (e) {
+	// Only apply resize if the window width is different than the initial
+	// This prevents the main nav from being hidden on load because load was being counted as a resize
+	var newWindowWidth = $(window).outerWidth();
+	if (cgi.windowCurWidth !== newWindowWidth && newWindowWidth >= 992) {
+		clearTimeout(cgi.resizeTimer);
+		cgi.uiGlobal.updateFixedWidth();
+
+		cgi.resizeTimer = setTimeout(function () {
+			cgi.windowCurWidth = newWindowWidth;
+		}, 250);
+	}
+
+	if (cgi.helpers.isTouchDevice() === false) {
+		cgi.uiGlobal.navSidebarCheck();
+	}
+});
+
+//https://coderwall.com/p/jqsanw/jquery-find-every-focusable-elements
+jQuery.extend(jQuery.expr[':'], {
+	focusable: function (el, index, selector) {
+		return $(el).is('a, button, :input, [tabindex]');
+	},
+});
+
+// Vanila JS Start 
+
+document.addEventListener('DOMContentLoaded', () => {
+
+	// create horizontal tabs
+	new VanillaTabs({
+		'selector': '#tabs-h',	// default is ".tabs"
+		'type': 'horizontal', 	// can be horizontal / vertical / accordion
+		'responsiveBreak': 768,	// tabs become accordion on this device width
+		'activeIndex' : 0				// active tab index (starts from 0 ). Can be -1 for accordions.
+	});
+
+
+});
+
+class VanillaTabs {
+
+	constructor( opts ) {
+
+		const DEFAULTS = {
+			'selector': '.tabs',
+			'type': 'horizontal',
+			'responsiveBreak': 840,
+			'activeIndex' : 0
+		}
+
+		this.options = Object.assign( DEFAULTS, opts );
+		this.elems = document.querySelectorAll( this.options.selector );
+
+		// skip building tabs if they were already initialized
+		this.skipIfInitialized = ( tabsElem ) => {
+
+			// skip element if already initialized
+			if( tabsElem.classList.contains('tabs__initialized') ) {
+				return;
+			}
+
+		}
+
+		this.buildUI();
+		this.handleNavigation();
+		this.handleResponsive();
+
+	}
+
+	// initialize the UI Elements
+	buildUI(){
+
+		let tabs = this.elems;
+
+		// walk on all tabs on the page
+		tabs.forEach( ( el, i ) => {
+			
+			let tabsElem = el,
+			childNodes = tabsElem.childNodes,
+			tabsTitles = [],
+			tabsStyle = this.options.type;
+
+			this.skipIfInitialized( tabsElem );
+
+			tabsElem.classList.add( 'style__' + this.options.type );
+			tabsElem.classList.add( 'tabs__initialized' );
+
+			for( let i = 0; i < childNodes.length; i++ ) {
+
+				let tabItem = childNodes[i];
+
+				if ( tabItem.nodeType != Node.TEXT_NODE ) {
+
+					// add tab__content CSS class
+					tabItem.classList.add( 'tabs__content');
+
+					// grab tab title from data attribute
+					let tabTitle = tabItem.dataset.title ? tabItem.dataset.title : '';
+					tabsTitles.push( tabTitle );
+
+					// wrap tab content
+					let tabContent = tabItem.innerText;
+					tabItem.innerText = '<div class="tabs__content_wrapper">' + tabContent + '</div>';
+
+					// insert nav link for accordion navigation
+					tabItem.insertAdjacentHTML( 'afterbegin', '<a class="tabs__nav_link">' + tabTitle + '</a>');
+
+				}
+
+			}
+
+			// create horizontal / vertical tabs navigation elements
+			let navElemsHTML = '';
+
+			tabsTitles.forEach( ( title ) => {
+				navElemsHTML = navElemsHTML + '<a class="tabs__nav_link">' + title + '</a>';
+			});
+
+			tabsElem.insertAdjacentHTML( 'afterbegin', '<li class="tabs__nav">' + navElemsHTML + '</li>');
+
+			// set initial active tab
+			let activeTabIndex = Number( this.options.activeIndex );
+
+			// validate active tab index. but, you can specify -1 for accordion tabs to make all of them closed by defaults
+			if( tabsStyle != 'accordion' && activeTabIndex != -1 ) {
+				if( activeTabIndex > (tabsTitles.length - 1) ) {
+					console.warn( 'VANILLA TABS: Active tab number from settings is bigger than tabs count. Please remember, that index starts from Zero! To avoid crashes, activeIndex option was reverted to 0.');
+					activeTabIndex = 0;
+				}
+
+				tabsElem.querySelectorAll( '.tabs__nav > .tabs__nav_link')[ activeTabIndex ].classList.add( 'is__active' );
+				tabsElem.querySelectorAll( '.tabs__content')[ activeTabIndex ].classList.add( 'is__active' );
+				tabsElem.querySelectorAll( '.tabs__content > .tabs__nav_link')[ activeTabIndex ].classList.add( 'is__active' );
+
+			}
+
+		});
+
+	}
+
+	// navigation: assign click events
+	handleNavigation() {
+
+		let tabs = this.elems,
+		tabsStyle = this.options.type;
+
+		// walk on all tabs on the page
+		tabs.forEach( ( el, i ) => {
+
+			let tabsElem = el;
+
+			this.skipIfInitialized( tabsElem );
+
+			tabsElem.addEventListener( 'click', function( e ){
+
+				if( e.target && e.target.classList.contains( 'tabs__nav_link') ) {
+					e.preventDefault();
+
+					let activeTabIndex;
+
+					// if we click on main navigation link
+					if( e.target.parentElement.classList == 'tabs__nav' ) {
+						activeTabIndex = Array.prototype.slice.call( e.target.parentElement.children ).indexOf( e.target );
+
+					// if we click on accordion nav link
+					} else {
+						activeTabIndex = Array.prototype.slice.call( e.target.parentElement.parentElement.children ).indexOf( e.target.parentElement ) - 1;
+					}
+
+					let tabsContent = tabsElem.getElementsByClassName( 'tabs__content'),
+					mainNavLinks = tabsElem.querySelectorAll( '.tabs__nav > .tabs__nav_link'),
+					accordionNavLinks = tabsElem.querySelectorAll( '.tabs__content > .tabs__nav_link');
+
+					// toggle accordion panel
+					if( ( tabsStyle == 'accordion' || tabsElem.classList.contains( 'is__responsive') ) && e.target.classList.contains( 'is__active') ) {
+						tabsContent[ activeTabIndex ].classList.remove( 'is__active');
+						mainNavLinks[ activeTabIndex ].classList.remove( 'is__active');
+						accordionNavLinks[ activeTabIndex ].classList.remove( 'is__active');
+						return;
+					}
+
+					// remove active class for inactive tabs
+					for( let i = 0; i < tabsContent.length; i++ ) {
+						tabsContent[ i ].classList.remove( 'is__active');
+					}
+
+					// add active class for a current (active) tab
+					tabsContent[ activeTabIndex ].classList.add( 'is__active');
+
+					// add active classes and remove inactive for main nav links
+					mainNavLinks.forEach( ( el ) => {
+						el.classList.remove( 'is__active');
+					});
+
+					mainNavLinks[ activeTabIndex ].classList.add( 'is__active');
+
+					// add active classes and remove inactive for accordion nav links
+					accordionNavLinks.forEach( ( el ) => {
+						el.classList.remove( 'is__active');
+					});									
+
+					accordionNavLinks[ activeTabIndex ].classList.add( 'is__active');
+					
+				}
+
+			});
+
+		});
+
+	}
+
+	// responsive: tabs to accordion
+	handleResponsive() {
+
+		let tabs = this.elems,
+		responsiveClassName = 'is__responsive',
+		tabsStyle = this.options.type;
+
+		window.addEventListener( 'resize', () => {
+
+			// walk on all tabs on the page
+			tabs.forEach( ( el, i ) => {
+
+				let tabsElem = el,
+				tabsContent = tabsElem.getElementsByClassName( 'tabs__content'),
+				mainNavLinks = tabsElem.querySelectorAll( '.tabs__nav > .tabs__nav_link'),
+				accordionNavLinks = tabsElem.querySelectorAll( '.tabs__content > .tabs__nav_link');
+
+				this.skipIfInitialized( tabsElem );
+				
+				if( window.innerWidth > Number( this.options.responsiveBreak ) ) {
+
+					tabsElem.classList.remove( responsiveClassName );
+
+					if( tabsStyle != 'accordion' ) {
+						// set first active tab if all of tabs were closed in accordion mode
+						let openTabs = tabsElem.querySelectorAll( '.tabs__nav_link.is__active');
+						if( openTabs.length == 0 ) {
+							tabsContent[0].classList.add('is__active');
+							mainNavLinks[0].classList.add('is__active');
+							accordionNavLinks[0].classList.add('is__active');
+						}
+					}
+
+				} else {
+
+					tabsElem.classList.add( responsiveClassName );
+
+				}
+
+			});
+
+		});
+
+		// manually fire resize event
+		window.dispatchEvent( new Event( 'resize' ));
+
+	}
+
+}
+
+// Responsive Tabs JS Start
+
+$(document).ready(function () {
+	$('.horizontalTab').easyResponsiveTabs({
+	type: 'default', //Types: default, vertical, accordion           
+	width: 'auto', //auto or any width like 600px
+	fit: true,   // 100% fit in a container
+	closed: 'accordion', // Start closed if in accordion view
+	activate: function(event) { // Callback function if tab is switched
+	var $tab = $(this);
+	var $info = $('#tabInfo');
+	var $name = $('span', $info);
+	$name.text($tab.text());
+	$info.show();
+	}
+	});
+	$('#verticalTab').easyResponsiveTabs({
+	type: 'vertical',
+	width: 'auto',
+	fit: true
+	});
+	});
+
+
+// Easy Responsive Tabs Plugin
+(function ($) {
+    $.fn.extend({
+        easyResponsiveTabs: function (options) {
+            //Set the default values, use comma to separate the settings, example:
+            var defaults = {
+                type: 'default', //default, vertical, accordion;
+                width: 'auto',
+                fit: true,
+                closed: false,
+                activate: function(){}
+            }
+            //Variables
+            var options = $.extend(defaults, options);            
+            var opt = options, jtype = opt.type, jfit = opt.fit, jwidth = opt.width, vtabs = 'vertical', accord = 'accordion';
+
+            //Events
+            $(this).bind('tabactivate', function(e, currentTab) {
+                if(typeof options.activate === 'function') {
+                    options.activate.call(currentTab, e)
+                }
+            });
+
+            //Main function
+            this.each(function () {
+                var $respTabs = $(this);
+                var $respTabsList = $respTabs.find('ul.resp-tabs-list');
+                $respTabs.find('ul.resp-tabs-list li').addClass('resp-tab-item');
+                $respTabs.css({
+                    'display': 'block',
+                    'width': jwidth
+                });
+
+                $respTabs.find('.resp-tabs-container > div').addClass('resp-tab-content');
+                jtab_options();
+                //Properties Function
+                function jtab_options() {
+                    if (jtype == vtabs) {
+                        $respTabs.addClass('resp-vtabs');
+                    }
+                    if (jfit == true) {
+                        $respTabs.css({ width: '100%', margin: '0px' });
+                    }
+                    if (jtype == accord) {
+                        $respTabs.addClass('resp-easy-accordion');
+                        $respTabs.find('.resp-tabs-list').css('display', 'none');
+                    }
+                }
+
+                //Assigning the h2 markup to accordion title
+                var $tabItemh2;
+				var elementH2Id;
+                $respTabs.find('.resp-tab-content').before("<h2 class='resp-accordion' role='tab'></h2>");
+
+                var itemCount = 0;
+                $respTabs.find('.resp-accordion').each(function () {
+                    $tabItemh2 = $(this);
+                    var innertext = $respTabs.find('.resp-tab-item:eq(' + itemCount + ')').html();
+                    $respTabs.find('.resp-accordion:eq(' + itemCount + ')').append(innertext);
+                    $tabItemh2.attr('aria-controls', 'tab_item-' + (itemCount));
+					if ($tabItemh2[0].parentNode.id != undefined) {
+					   elementH2Id = $tabItemh2[0].parentNode.id + '-tab' + (itemCount+1) + '-tabName-mobile';
+					}					
+					$tabItemh2.attr('id', elementH2Id);
+                    itemCount++;
+                });
+				
+
+                //Assigning the 'aria-controls' to Tab items
+                var count = 0,
+                    $tabContent;
+                $respTabs.find('.resp-tab-item').each(function () {
+                    $tabItem = $(this);
+                    $tabItem.attr('aria-controls', 'tab_item-' + (count));
+                    $tabItem.attr('role', 'tab');
+
+                    //First active tab, keep closed if option = 'closed' or option is 'accordion' and the element is in accordion mode 
+                    if(options.closed !== true && !(options.closed === 'accordion' && !$respTabsList.is(':visible')) && !(options.closed === 'tabs' && $respTabsList.is(':visible'))) {                  
+                        $respTabs.find('.resp-tab-item').first().addClass('resp-tab-active');
+                        $respTabs.find('.resp-accordion').first().addClass('resp-tab-active');
+                        $respTabs.find('.resp-tab-content').first().addClass('resp-tab-content-active').attr('style', 'display:block');
+                    }
+
+                    //Assigning the 'aria-labelledby' attr to tab-content
+                    var tabcount = 0;
+                    $respTabs.find('.resp-tab-content').each(function () {
+                        $tabContent = $(this);
+                        $tabContent.attr('aria-labelledby', 'tab_item-' + (tabcount));
+                        tabcount++;
+                    });
+                    count++;
+                });
+
+                //Tab Click action function
+                $respTabs.find("[role=tab]").each(function () {
+                    var $currentTab = $(this);
+                    $currentTab.click(function () {
+
+                        var $tabAria = $currentTab.attr('aria-controls');
+
+                        if ($currentTab.hasClass('resp-accordion') && $currentTab.hasClass('resp-tab-active')) {
+                            $respTabs.find('.resp-tab-content-active').slideUp('', function () { $(this).addClass('resp-accordion-closed'); });
+                            $currentTab.removeClass('resp-tab-active');
+                            return false;
+                        }
+                        if (!$currentTab.hasClass('resp-tab-active') && $currentTab.hasClass('resp-accordion')) {
+                            $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
+                            $respTabs.find('.resp-tab-content-active').slideUp().removeClass('resp-tab-content-active resp-accordion-closed');
+                            $respTabs.find("[aria-controls=" + $tabAria + "]").addClass('resp-tab-active');
+
+                            $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').slideDown().addClass('resp-tab-content-active');
+                        } else {
+                            $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
+                            $respTabs.find('.resp-tab-content-active').removeAttr('style').removeClass('resp-tab-content-active').removeClass('resp-accordion-closed');
+                            $respTabs.find("[aria-controls=" + $tabAria + "]").addClass('resp-tab-active');
+                            $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').addClass('resp-tab-content-active').attr('style', 'display:block');
+                        }
+                        //Trigger tab activation event
+                        $currentTab.trigger('tabactivate', $currentTab);
+                    });
+                    //Window resize function                   
+                    $(window).resize(function () {
+                        $respTabs.find('.resp-accordion-closed').removeAttr('style');
+                    });
+                });
+            });
+        }
+    });
+})(jQuery);
+
+
+// TODO: combine JS files and minify
+console.log("[LOADED] core.js"),function(t){"function"==typeof define&&define.amd?define(["jquery"],t):"object"==typeof module&&module.exports?module.exports=t(require("jquery")):t(jQuery)}(function(t){function e(t,e){this.init.apply(this,arguments)}var s=t(window.document),i=0,n=/\w\b/g,o={13:"enter",27:"escape",40:"downArrow",38:"upArrow"};return t.extend(e.prototype,{init:function(s,n){n=this.options=t.extend(!0,{},e.defaults,n),this.$input=t(s),this.$el=n.wrapSelector instanceof t?n.wrapSelector:this.$input.closest(n.wrapSelector),e.pickTo(n,this.$el.data(),["url","onItemSelect","noResultsText","inputIdName","apiInputName"]),n.url=n.url||this.$el.attr("action"),this.ens=".fastsearch"+ ++i,this.itemSelector=e.selectorFromClass(n.itemClass),this.focusedItemSelector=e.selectorFromClass(n.focusedItemClass),this.events()},namespaceEvents:function(t){var e=this.ens;return t.replace(n,function(t){return t+e})},events:function(){var e=this,s=this.options;this.$input.on(this.namespaceEvents("keyup focus click"),function(t){"enter"!==o[t.keyCode]&&e.handleTyping()}).on(this.namespaceEvents("keydown"),function(t){if("enter"===o[t.keyCode]&&s.preventSubmit&&t.preventDefault(),e.hasResults&&e.resultsOpened)switch(o[t.keyCode]){case"downArrow":t.preventDefault(),e.navigateItem("down");break;case"upArrow":t.preventDefault(),e.navigateItem("up");break;case"enter":e.onEnter(t)}}),this.$el.on(this.namespaceEvents("click"),this.itemSelector,function(s){s.preventDefault(),e.handleItemSelect(t(this))}),s.mouseEvents&&this.$el.on(this.namespaceEvents("mouseleave"),this.itemSelector,function(e){t(this).removeClass(s.focusedItemClass)}).on(this.namespaceEvents("mouseenter"),this.itemSelector,function(i){e.$resultItems.removeClass(s.focusedItemClass),t(this).addClass(s.focusedItemClass)})},handleTyping:function(){var e=t.trim(this.$input.val()),s=this;e.length<this.options.minQueryLength?this.hideResults():e===this.query?this.showResults():(clearTimeout(this.keyupTimeout),this.keyupTimeout=setTimeout(function(){s.$el.addClass(s.options.loadingClass),s.query=e,s.getResults(function(t){s.showResults(s.storeResponse(t).generateResults(t))})},this.options.typeTimeout))},getResults:function(e){var s=this,i=this.options,n=this.$el.find("input, textarea, select").serializeArray();i.apiInputName&&n.push({name:i.apiInputName,value:this.$input.val()}),t.get(i.url,n,function(t){e(i.parseResponse?i.parseResponse.call(s,t,s):t)})},storeResponse:function(t){return this.responseData=t,this.hasResults=0!==t.length,this},generateResults:function(e){var s=t("<div>"),i=this.options;return i.template?t(i.template(e,this)):(0===e.length?s.html('<p class="'+i.noResultsClass+'">'+("function"==typeof i.noResultsText?i.noResultsText.call(this):i.noResultsText)+"</p>"):"html"===this.options.responseType?s.html(e):this["generate"+(e[0][i.responseFormat.groupItems]?"GroupedResults":"SimpleResults")](e,s),s.children())},generateSimpleResults:function(e,s){var i=this;this.itemModels=e,t.each(e,function(t,e){s.append(i.generateItem(e))})},generateGroupedResults:function(e,s){var i=this,n=this.options,o=n.responseFormat;this.itemModels=[],t.each(e,function(e,l){var a=t('<div class="'+n.groupClass+'">').appendTo(s);l[o.groupCaption]&&a.append('<h3 class="'+n.groupTitleClass+'">'+l[o.groupCaption]+"</h3>"),t.each(l.items,function(t,e){i.itemModels.push(e),a.append(i.generateItem(e))}),n.onGroupCreate&&n.onGroupCreate.call(i,a,l,i)})},generateItem:function(e){var s=this.options,i=s.responseFormat,n=e[i.url],o=e[i.html]||e[i.label],l=t("<"+(n?"a":"span")+">").html(o).addClass(s.itemClass);return n&&l.attr("href",n),s.onItemCreate&&s.onItemCreate.call(this,l,e,this),l},showResults:function(e){!e&&this.resultsOpened||(this.$el.removeClass(this.options.loadingClass).addClass(this.options.resultsOpenedClass),this.options.flipOnBottom&&this.checkDropdownPosition(),this.$resultsCont=this.$resultsCont||t("<div>").addClass(this.options.resultsContClass).appendTo(this.$el),e&&(this.$resultsCont.html(e),this.$resultItems=this.$resultsCont.find(this.itemSelector),this.options.onResultsCreate&&this.options.onResultsCreate.call(this,this.$resultsCont,this.responseData,this)),this.resultsOpened||(this.documentCancelEvents("on"),this.$input.trigger("openingResults")),this.options.focusFirstItem&&this.$resultItems&&this.$resultItems.length&&this.navigateItem("down"),this.resultsOpened=!0)},checkDropdownPosition:function(){var t=this.options.flipOnBottom,e="boolean"==typeof t&&t?400:t,i=this.$input.offset().top+e>s.height();this.$el.toggleClass(this.options.resultsFlippedClass,i)},documentCancelEvents:function(e,i){var n=this;return"off"===e&&this.closeEventsSetuped?(s.off(this.ens),void(this.closeEventsSetuped=!1)):void("on"!==e||this.closeEventsSetuped||(s.on(this.namespaceEvents("click keyup"),function(e){("escape"===o[e.keyCode]||!t(e.target).is(n.$el)&&!t.contains(n.$el.get(0),e.target)&&t.contains(document.documentElement,e.target))&&(i?i.call(n):n.hideResults())}),this.closeEventsSetuped=!0))},navigateItem:function(t){var e=this.$resultItems.filter(this.focusedItemSelector),s=this.$resultItems.length-1;if(0!==e.length){var i=this.$resultItems.index(e),n="up"===t?i-1:i+1;n>s&&(n=0),n<0&&(n=s),e.removeClass(this.options.focusedItemClass),this.$resultItems.eq(n).addClass(this.options.focusedItemClass)}else this.$resultItems.eq("up"===t?s:0).addClass(this.options.focusedItemClass)},navigateDown:function(){this.navigateItem("down")},navigateUp:function(){this.navigateItem("up")},onEnter:function(t){var e=this.$resultItems.filter(this.focusedItemSelector);e.length&&(t.preventDefault(),this.handleItemSelect(e))},handleItemSelect:function(t){var e=this.options.onItemSelect,s=this.itemModels.length?this.itemModels[this.$resultItems.index(t)]:{};this.$input.trigger("itemSelected"),"fillInput"===e?this.fillInput(s):"follow"===e?window.location.href=t.attr("href"):"function"==typeof e&&e.call(this,t,s,this)},fillInput:function(e){var s=this.options,i=s.responseFormat;if(this.query=e[i.label],this.$input.val(e[i.label]).trigger("change"),s.fillInputId&&e.id){if(!this.$inputId){var n=s.inputIdName||this.$input.attr("name")+"_id";this.$inputId=this.$el.find('input[name="'+n+'"]'),this.$inputId.length||(this.$inputId=t('<input type="hidden" name="'+n+'" />').appendTo(this.$el))}this.$inputId.val(e.id).trigger("change")}this.hideResults()},hideResults:function(){return this.resultsOpened&&(this.resultsOpened=!1,this.$el.removeClass(this.options.resultsOpenedClass),this.$input.trigger("closingResults"),this.documentCancelEvents("off")),this},clear:function(){return this.hideResults(),this.$input.val("").trigger("change"),this},destroy:function(){s.off(this.ens),this.$input.off(this.ens),this.$el.off(this.ens).removeClass(this.options.resultsOpenedClass).removeClass(this.options.loadingClass),this.$resultsCont&&(this.$resultsCont.remove(),delete this.$resultsCont),delete this.$el.data().fastsearch}}),t.extend(e,{pickTo:function(e,s,i){return t.each(i,function(t,i){e[i]=s&&s[i]||e[i]}),e},selectorFromClass:function(t){return"."+t.replace(/\s/g,".")}}),e.defaults={wrapSelector:"form",url:null,responseType:"JSON",preventSubmit:!1,resultsContClass:"fs_results",resultsOpenedClass:"fsr_opened",resultsFlippedClass:"fsr_flipped",groupClass:"fs_group",itemClass:"fs_result_item",groupTitleClass:"fs_group_title",loadingClass:"loading",noResultsClass:"fs_no_results",focusedItemClass:"focused",typeTimeout:140,minQueryLength:2,template:null,mouseEvents:!("ontouchstart"in window||navigator.maxTouchPoints>0||navigator.msMaxTouchPoints>0),focusFirstItem:!1,flipOnBottom:!1,responseFormat:{url:"url",html:"html",label:"label",groupCaption:"caption",groupItems:"items"},fillInputId:!0,inputIdName:null,apiInputName:null,noResultsText:"No results found",onItemSelect:"follow",parseResponse:null,onResultsCreate:null,onGroupCreate:null,onItemCreate:null},t.fastsearch=e,t.fn.fastsearch=function(s){return this.each(function(){t.data(this,"fastsearch")||t.data(this,"fastsearch",new e(this,s))})},t}),function(t,e){"function"==typeof define&&define.amd?define(["jquery","fastsearch"],e):"object"==typeof module&&module.exports?module.exports=e(require("jquery"),require("fastsearch")):e(t.jQuery)}(this,function(t){function e(t,e){this.init.apply(this,arguments)}function s(t){this.init(t)}var i=t(document),n=0,o=t.fastsearch,l=o.pickTo,a=o.selectorFromClass;return t.extend(e.prototype,{init:function(i,o){this.$input=t(i),this.options=l(t.extend(!0,{},e.defaults,o,{placeholder:this.$input.attr("placeholder")}),this.$input.data(),["url","loadOnce","apiParam","initialValue","userOptionAllowed"]),this.ens=".fastselect"+ ++n,this.hasCustomLoader=this.$input.is("input"),this.isMultiple=!!this.$input.attr("multiple"),this.userOptionAllowed=this.hasCustomLoader&&this.isMultiple&&this.options.userOptionAllowed,this.optionsCollection=new s(l({multipleValues:this.isMultiple},this.options,["url","loadOnce","parseData","matcher"])),this.setupDomElements(),this.setupFastsearch(),this.setupEvents()},setupDomElements:function(){this.$el=t("<div>").addClass(this.options.elementClass),this[this.isMultiple?"setupMultipleElement":"setupSingleElement"](function(){this.updateDomElements(),this.$controls.appendTo(this.$el),this.$el.insertAfter(this.$input),this.$input.detach().appendTo(this.$el)})},setupSingleElement:function(e){var s=this.processInitialOptions(),i=s&&s.length?s[0].text:this.options.placeholder;this.$el.addClass(this.options.singleModeClass),this.$controls=t("<div>").addClass(this.options.controlsClass),this.$toggleBtn=t("<div>").addClass(this.options.toggleButtonClass).text(i).appendTo(this.$el),this.$queryInput=t("<input>").attr("placeholder",this.options.searchPlaceholder).addClass(this.options.queryInputClass).appendTo(this.$controls),e.call(this)},setupMultipleElement:function(e){var s=this,i=s.options,n=this.processInitialOptions();this.$el.addClass(i.multipleModeClass),this.$controls=t("<div>").addClass(i.controlsClass),this.$queryInput=t("<input>").addClass(i.queryInputClass).appendTo(this.$controls),n&&t.each(n,function(t,e){s.addChoiceItem(e)}),e.call(this)},updateDomElements:function(){this.$el.toggleClass(this.options.noneSelectedClass,!this.optionsCollection.hasSelectedValues()),this.adjustQueryInputLayout()},processInitialOptions:function(){var e,s=this;return this.hasCustomLoader?(e=this.options.initialValue,t.isPlainObject(e)&&(e=[e])):e=t.map(this.$input.find("option:selected").get(),function(e){var s=t(e);return{text:s.text(),value:s.attr("value")}}),e&&t.each(e,function(t,e){s.optionsCollection.setSelected(e)}),e},addChoiceItem:function(e){t('<div data-text="'+e.text+'" data-value="'+e.value+'" class="'+this.options.choiceItemClass+'">'+t("<div>").html(e.text).text()+'<button class="'+this.options.choiceRemoveClass+'" type="button">×</button></div>').insertBefore(this.$queryInput)},setupFastsearch:function(){var e=this,s=this.options,i={};l(i,s,["resultsContClass","resultsOpenedClass","resultsFlippedClass","groupClass","itemClass","focusFirstItem","groupTitleClass","loadingClass","noResultsClass","noResultsText","focusedItemClass","flipOnBottom"]),this.fastsearch=new o(this.$queryInput.get(0),t.extend(i,{wrapSelector:this.isMultiple?this.$el:this.$controls,minQueryLength:0,typeTimeout:this.hasCustomLoader?s.typeTimeout:0,preventSubmit:!0,fillInputId:!1,responseFormat:{label:"text",groupCaption:"label"},onItemSelect:function(t,i,n){var o=s.maxItems;e.isMultiple&&o&&e.optionsCollection.getValues().length>o-1?s.onMaxItemsReached&&s.onMaxItemsReached(this):(e.setSelectedOption(i),e.writeToInput(),!e.isMultiple&&e.hide(),s.clearQueryOnSelect&&n.clear(),e.userOptionAllowed&&i.isUserOption&&(n.$resultsCont.remove(),delete n.$resultsCont,e.hide()),s.onItemSelect&&s.onItemSelect.call(e,t,i,e,n))},onItemCreate:function(t,i){i.$item=t,i.selected&&t.addClass(s.itemSelectedClass),e.userOptionAllowed&&i.isUserOption&&t.text(e.options.userOptionPrefix+t.text()).addClass(e.options.userOptionClass),s.onItemCreate&&s.onItemCreate.call(e,t,i,e)}})),this.fastsearch.getResults=function(){e.userOptionAllowed&&e.$queryInput.val().length>1&&e.renderOptions(),e.getOptions(function(){e.renderOptions(!0)})}},getOptions:function(e){var s=this.options,i={};if(this.hasCustomLoader){var n=t.trim(this.$queryInput.val());n&&s.apiParam&&(i[s.apiParam]=n),this.optionsCollection.fetch(i,e)}else!this.optionsCollection.models&&this.optionsCollection.reset(this.gleanSelectData(this.$input)),e()},namespaceEvents:function(t){return o.prototype.namespaceEvents.call(this,t)},setupEvents:function(){var e=this,s=this.options;this.isMultiple?(this.$el.on(this.namespaceEvents("click"),function(i){t(i.target).is(a(s.controlsClass))&&e.$queryInput.focus()}),this.$queryInput.on(this.namespaceEvents("keyup"),function(t){e.adjustQueryInputLayout(),e.show()}).on(this.namespaceEvents("focus"),function(){e.show()}),this.$el.on(this.namespaceEvents("click"),a(s.choiceRemoveClass),function(i){var n=t(i.currentTarget).closest(a(s.choiceItemClass));e.removeSelectedOption({value:n.attr("data-value"),text:n.attr("data-text")},n)})):this.$el.on(this.namespaceEvents("click"),a(s.toggleButtonClass),function(){e.$el.hasClass(s.activeClass)?e.hide():e.show(!0)})},adjustQueryInputLayout:function(){if(this.isMultiple&&this.$queryInput){var e=this.$el.hasClass(this.options.noneSelectedClass);this.$queryInput.toggleClass(this.options.queryInputExpandedClass,e),e?this.$queryInput.attr({style:"",placeholder:this.options.placeholder}):(this.$fakeInput=this.$fakeInput||t("<span>").addClass(this.options.fakeInputClass),this.$fakeInput.text(this.$queryInput.val().replace(/\s/g,"&nbsp;")),this.$queryInput.removeAttr("placeholder").css("width",this.$fakeInput.insertAfter(this.$queryInput).width()+20),this.$fakeInput.detach())}},show:function(t){this.$el.addClass(this.options.activeClass),t?this.$queryInput.focus():this.fastsearch.handleTyping(),this.documentCancelEvents("on")},hide:function(){this.$el.removeClass(this.options.activeClass),this.documentCancelEvents("off")},documentCancelEvents:function(t){o.prototype.documentCancelEvents.call(this,t,this.hide)},setSelectedOption:function(t){if(!this.optionsCollection.isSelected(t.value)){this.optionsCollection.setSelected(t);var e=this.optionsCollection.findWhere(function(e){return e.value===t.value});this.isMultiple?this.$controls&&this.addChoiceItem(t):(this.fastsearch&&this.fastsearch.$resultItems.removeClass(this.options.itemSelectedClass),this.$toggleBtn&&this.$toggleBtn.text(t.text)),e&&e.$item.addClass(this.options.itemSelectedClass),this.updateDomElements()}},removeSelectedOption:function(t,e){var s=this.optionsCollection.removeSelected(t);s&&s.$item&&s.$item.removeClass(this.options.itemSelectedClass),e?e.remove():this.$el.find(a(this.options.choiceItemClass)+'[data-value="'+t.value+'"]').remove(),this.updateDomElements(),this.writeToInput()},writeToInput:function(){var t=this.optionsCollection.getValues(),e=this.options.valueDelimiter,s=this.isMultiple?this.hasCustomLoader?t.join(e):t:t[0];this.$input.val(s).trigger("change")},renderOptions:function(t){var e,s=this.$queryInput.val();if(e=this.optionsCollection.models?(t?this.optionsCollection.filter(s):this.optionsCollection.models).slice(0):[],this.userOptionAllowed){var i=this.optionsCollection.models&&this.optionsCollection.findWhere(function(t){return t.value===s});s&&!i&&e.unshift({text:s,value:s,isUserOption:!0})}this.fastsearch.showResults(this.fastsearch.storeResponse(e).generateResults(e))},gleanSelectData:function(e){var s=this,i=e.children();return i.eq(0).is("optgroup")?t.map(i.get(),function(e){var i=t(e);return{label:i.attr("label"),items:s.gleanOptionsData(i.children())}}):this.gleanOptionsData(i)},gleanOptionsData:function(e){return t.map(e.get(),function(e){var s=t(e);return{text:s.text(),value:s.attr("value"),selected:s.is(":selected")}})},destroy:function(){i.off(this.ens),this.fastsearch.destroy(),this.$input.off(this.ens).detach().insertAfter(this.$el),this.$el.off(this.ens).remove(),this.$input.data()&&delete this.$input.data().fastselect}}),t.extend(s.prototype,{defaults:{loadOnce:!1,url:null,parseData:null,multipleValues:!1,matcher:function(t,e){return t.toLowerCase().indexOf(e.toLowerCase())>-1}},init:function(e){this.options=t.extend({},this.defaults,e),this.selectedValues={}},fetch:function(t,e){var s=this,i=function(){s.applySelectedValues(e)};this.options.loadOnce?(this.fetchDeferred=this.fetchDeferred||this.load(t),this.fetchDeferred.done(i)):this.load(t,i)},reset:function(t){this.models=this.options.parseData?this.options.parseData(t):t,this.applySelectedValues()},applySelectedValues:function(t){this.each(function(t){this.options.multipleValues&&t.selected?this.selectedValues[t.value]=!0:t.selected=!!this.selectedValues[t.value]}),t&&t.call(this)},load:function(e,s){var i=this,n=this.options;return t.get(n.url,e,function(t){i.models=n.parseData?n.parseData(t):t,s&&s.call(i)})},setSelected:function(t){this.options.multipleValues||(this.selectedValues={}),this.selectedValues[t.value]=!0,this.applySelectedValues()},removeSelected:function(t){var e=this.findWhere(function(e){return t.value===e.value});return e&&(e.selected=!1),delete this.selectedValues[t.value],e},isSelected:function(t){return!!this.selectedValues[t]},hasSelectedValues:function(){return this.getValues().length>0},each:function(e){var s=this;this.models&&t.each(this.models,function(i,n){n.items?t.each(n.items,function(t,i){e.call(s,i)}):e.call(s,n)})},where:function(t){var e=[];return this.each(function(s){t(s)&&e.push(s)}),e},findWhere:function(t){var e=this.where(t);return e.length?e[0]:void 0},filter:function(e){function s(t){return i.options.matcher(t.text,e)?t:null}var i=this;return e&&0!==e.length?t.map(this.models,function(e){if(e.items){var i=t.map(e.items,s);return i.length?{label:e.label,items:i}:null}return s(e)}):this.models},getValues:function(){return t.map(this.selectedValues,function(t,e){return t?e:null})}}),e.defaults={elementClass:"fstElement",singleModeClass:"fstSingleMode",noneSelectedClass:"fstNoneSelected",multipleModeClass:"fstMultipleMode",queryInputClass:"fstQueryInput",queryInputExpandedClass:"fstQueryInputExpanded",fakeInputClass:"fstFakeInput",controlsClass:"fstControls",toggleButtonClass:"fstToggleBtn",activeClass:"fstActive",itemSelectedClass:"fstSelected",choiceItemClass:"fstChoiceItem",choiceRemoveClass:"fstChoiceRemove",userOptionClass:"fstUserOption",resultsContClass:"fstResults",resultsOpenedClass:"fstResultsOpened",resultsFlippedClass:"fstResultsFilpped",groupClass:"fstGroup",itemClass:"fstResultItem",groupTitleClass:"fstGroupTitle",loadingClass:"fstLoading",noResultsClass:"fstNoResults",focusedItemClass:"fstFocused",matcher:null,url:null,loadOnce:!1,apiParam:"query",initialValue:null,clearQueryOnSelect:!0,minQueryLength:1,focusFirstItem:!1,flipOnBottom:!0,typeTimeout:150,userOptionAllowed:!1,valueDelimiter:",",maxItems:null,parseData:null,onItemSelect:null,onItemCreate:null,onMaxItemsReached:null,placeholder:"Choose option",searchPlaceholder:"Search options",noResultsText:"No results",userOptionPrefix:"Add "},t.Fastselect=e,t.Fastselect.OptionsCollection=s,t.fn.fastselect=function(s){return this.each(function(){t.data(this,"fastselect")||t.data(this,"fastselect",new e(this,s))})},t});

@@ -1,0 +1,6 @@
+2023/10/20-16:51:34.162 4694 Creating DB C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_apps.docusign.com_0.indexeddb.leveldb since it was missing.
+2023/10/20-16:51:34.173 4694 Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_apps.docusign.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/10/20-16:53:46.142 4694 Level-0 table #5: started
+2023/10/20-16:53:46.148 4694 Level-0 table #5: 32861 bytes OK
+2023/10/20-16:53:46.150 4694 Delete type=0 #3
+2023/10/20-16:53:46.150 4694 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

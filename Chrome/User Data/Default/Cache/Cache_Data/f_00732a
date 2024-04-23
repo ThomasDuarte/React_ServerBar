@@ -1,0 +1,827 @@
+var ToolGroupingMaindata;
+var ToolGrouping;
+var calcJobTitle;
+var Country;
+var SBU;
+var BU;
+var BUAllTerms;
+var CategoryTitle="";
+var CategodyDescription="";
+var errorLog=[];
+var AllCategoryDetails;
+var searchTerm ="";
+
+$(function () {
+    searchTerm = getParameterByName("k");
+    var currentURL = window.location.href;
+	
+	if(currentURL != null) {
+		currentURL = currentURL.split("?")[0];
+	}
+	
+	if(searchTerm != null && searchTerm != "") {
+		currentURL = currentURL + "?k=" + searchTerm + "&";
+	}
+	else {
+		currentURL = currentURL + "?";
+	}
+	
+	$('#IncludeAllToolsSwitchDesktop, #IncludeAllToolsSwitchMobile').click(function () {
+			if ($(this).is(':checked')) {
+				currentURL = currentURL + 'isAllTools=true';
+			} else {
+				currentURL = currentURL + 'isAllTools=false';
+			}
+		window.location.href = currentURL;
+	});
+});
+
+
+function SearchToolsContent() {
+	try {
+		var searchInputValue = $('#Tools-search-input').val();
+		var includeLocalValue = getParameterByName("isAllTools");
+		var currentURL = window.location.href;
+		
+		if(includeLocalValue == null || includeLocalValue == '') {
+			includeLocalValue = "false";
+		}
+		if(currentURL != null) {
+			if(currentURL.indexOf("?") != -1) {
+				currentURL = currentURL.split("?")[0];
+			}
+			if(currentURL.indexOf("#") != -1) {
+				currentURL = currentURL.split("#")[0];
+			}
+		}
+		
+		if(searchInputValue != null && searchInputValue != "" ) {
+            currentURL = currentURL.toLowerCase().replace('default.aspx','search.aspx')
+			var redirectURL = currentURL + "?k=" + searchInputValue + "&isAllTools=" + includeLocalValue;
+			window.location.href = redirectURL;
+		}
+	}
+	catch (ex) {
+		cgiError.LogError("Error: Search Browse CGI Content BrowseCgiLanding.js: SearchToolsContent()",JSON.stringify(ex.Message));
+	}
+}
+
+$(document).on('keydown', '#Tools-search-input', function (e) {
+	var code = e.keyCode || e.which;
+	if (code === 13) {
+		e.preventDefault();
+		$('#Tools-search-button').click();
+	}
+});
+
+$(document).ready(function(){
+    var path = window.location.pathname;
+    PageName = path.split("/").pop();
+    cgi.fullPageLoader.init(); //initiate loader
+try{
+    var isDisplayAllTools = getParameterByName("isAllTools");
+	if(isDisplayAllTools != null && isDisplayAllTools == "true") {
+		$("#IncludeAllToolsSwitchDesktop, #IncludeAllToolsSwitchMobile").prop('checked', true);
+	}
+	else{
+		$("#IncludeAllToolsSwitchDesktop, #IncludeAllToolsSwitchMobile").prop('checked', false);
+    }
+    document.getElementById('Tools-search-input').value = searchTerm;
+
+	$.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null) {
+            return null;
+        }
+        return decodeURI(results[1]) || 0;
+    }
+    $.when(
+        getAllTerms("Tool Grouping")
+    ).done(function (ToolGroupingTerms) {
+        ToolGroupingMaindata = ToolGroupingTerms
+        $('#ToolsDisplaySection').html('');
+        Country = $("#divUPSIntranetCountry")[0].innerText.trim();
+        calcJobTitle = $("#divUPSIntranetCalculatedJobTitle")[0].innerText.trim();
+        SBU = $("#divUPCalculatedSBU")[0].innerText.trim();
+        BU = $("#divUPCalculatedBU")[0].innerText.trim();
+        
+		if(PageName.toLowerCase()!="search.aspx"){
+			ToolGrouping=decodeURIComponent($.urlParam('category'));
+			var CategoryDetails=getcategorydetails();
+			CategoryDetails.then(function(AllCategoryDetailsData){
+				AllCategoryDetails=AllCategoryDetailsData;
+				getchilditems(ToolGroupingMaindata,ToolGrouping,"ToolCategory"); //Check if Subterms are present for selected term
+			})
+		}else{
+			searchTerm = getParameterByName("k");
+			PrepareSearchQuery(searchTerm);
+		}
+	})
+}
+catch(ex){
+    cgiError.LogError("Error: Error to get terms for ToolCategory,Categorydetailsdata for dropdown inside Tools.js in document ready function", JSON.stringify(ex));
+	cgi.fullPageLoader.loaded();	// Hide loader
+}
+});
+
+
+function getdata(ToolGroupingValues){
+	try{
+		var getToolsItems = $.Deferred();
+		if(preferredLanguage == "FR"){
+            var Cachename = "ToolsFullListDataCacheFR";
+            var getToolsData = getLocalStorageTools(Cachename);
+            var ToolsAPI = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$top=4999&$orderby=TitleFR asc"
+        }else{
+            var Cachename = "ToolsFullListDataCache";
+            var getToolsData = getLocalStorageTools(Cachename);
+			var ToolsAPI = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$top=4999&$orderby=Title asc"
+        }
+		if(getToolsData === null) {
+			var AllToolsItems = getAllToolsItems(ToolsAPI);
+			AllToolsItems.then(function(Alldata){			
+			  setLocalStorage(Cachename,JSON.stringify(Alldata),10 * 60 * 1000);	
+			  getToolsItems.resolve(Alldata);	
+			  getfilteredtoolsdata(Alldata,ToolGroupingValues);
+		   })
+		}
+		else{
+			var imgJSONData = JSON.parse(getToolsData);
+			getToolsItems.resolve(imgJSONData);
+			getfilteredtoolsdata(imgJSONData,ToolGroupingValues);
+		}
+	}
+	catch(ex){
+		cgiError.LogError("Error:Error to get terms inside Tools.js:getdata()", JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function PrepareSearchQuery(searchTerm){
+    try{
+        if(searchTerm != null && searchTerm != "" && searchTerm != "*") {
+            if(preferredLanguage == "FR"){
+                var ToolsSearchAPI = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$filter=substringof('" + searchTerm + "',TitleFR) or substringof('" + searchTerm + "',IntranetDescriptionFR)&$top=4999&$orderby=TitleFR asc"
+            }else{
+                var ToolsSearchAPI = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$filter=substringof('" + searchTerm + "',Title) or substringof('" + searchTerm + "',IntranetDescription)&$top=4999&$orderby=Title asc"
+            }
+        }else{
+            if(preferredLanguage == "FR"){
+                var ToolsSearchAPI = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$top=4999&$orderby=TitleFR asc"
+            }else{
+                var ToolsSearchAPI =  _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Tools')/items?$select=ID,ToolURL,ToolURLFR,Title,TitleFR,IntranetDescription,IntranetDescriptionFR,IncludeCountry,ExcludeCountry,IncludeSBU,ExcludeSBU,IncludeBU,ExcludeBU,ToolCategory,IncludeCalculatedJobTitle,ExcludeCalculatedJobTitle,DisplayOrder,Tooltip,TooltipFR,MoreInfoTextEN,MoreInfoTextFR,ApplyNewTag,NewTagStartDate,NewTagEndDate&$top=4999&$orderby=Title asc"
+            }
+        }
+        var getToolsItems = $.Deferred();
+        var AllToolsItems = getAllToolsItems(ToolsSearchAPI);
+            AllToolsItems.then(function(Alldata){
+            getToolsItems.resolve(Alldata);	
+            getfilteredtoolsdata(Alldata,"");
+        })
+    }
+    catch(ex){
+        cgiError.LogError("Error:Error to get terms inside Tools.js:PrepareSearchQuery()", JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function getAllToolsItems(APIurl){
+    return $.ajax({
+        url: APIurl,
+        method: "GET",
+        headers: { "Accept": "application/json; odata=verbose",
+        },
+		success:function(data){
+		},
+		error:function(err){
+			cgiError.LogError("Error: Error while fetching data from Tools list in Tools.js: getAllToolsItems()", JSON.stringify(err));
+			cgi.fullPageLoader.loaded(); //Hide loader
+		},
+		complete:function(xhr,status,err){
+            cgiError.LogError("Info: completed : getAllToolsItems()", JSON.stringify(status));
+		}
+    })
+}
+
+function getfilteredtoolsdata(ToolsData,ToolTerms){
+    try{
+        var results=ToolsData.d.results;
+        if(PageName.toLowerCase() != "search.aspx"){
+            ToolTerms.forEach(function(ToolTerm,index){
+				
+                var FilteredData = $.grep(results, function (element, index) {
+					var ToolCategorylower="";
+                    var ToolCategory=getTaxValue(element,"ToolCategory");
+					if(ToolCategory!=""){
+					    ToolCategorylower = ToolCategory.map(element => {return element.toLowerCase();});
+					}
+                    return (ToolCategorylower.indexOf(ToolTerm.toLowerCase())!==-1);
+                });
+                FilteredData=FilteredData.sort(predicateBy("DisplayOrder"));
+                IncludeExcludeFunction(FilteredData,ToolTerm);
+            });	
+        }else{
+            var FilteredData=results.sort(predicateBy("DisplayOrder"));
+            var includeAllTools = getParameterByName("isAllTools");
+            if(includeAllTools == "true") {
+                bindTools(FilteredData,"");
+            }else{
+                IncludeExcludeFunction(FilteredData,"");
+            }
+        }
+        $('#ToolsDisplaySection div#group:last').removeClass('lead-sub');
+        if($('#group').length === 0){
+            if(preferredLanguage=="FR"){
+                var Noresultelement='<div class="ms-textLarge ms-srch-result-noResultsTitle">Aucune correspondance trouvée pour votre recherche</div>'
+                
+            }else{
+                var Noresultelement='<div class="ms-textLarge ms-srch-result-noResultsTitle">No matches found for your search</div>'
+            }
+            $('#NoResult').append(Noresultelement);
+            $('#NoResult').show();
+        }
+        cgi.fullPageLoader.loaded(); //Hide loader
+    }
+    catch(ex){
+        cgiError.LogError("Error: filtering tools in Tools.js: getfilteredtoolsdata()",JSON.stringify(ex.Message));
+        cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function IncludeExcludeFunction(ToBeFilteredData,ToolTerm){
+   try{
+		var filteritems=[];
+		ToBeFilteredData.forEach(function(item, index){
+        var Includequery;
+        var Excludequery;
+        var IncludeFlag=false;
+        var ExcludeFlag=false;
+		var IncludeJobtitle=getTaxValue(item,"IncludeCalculatedJobTitle");
+            if(IncludeJobtitle.length!=0){
+                Includequery=IncludeJobtitle.indexOf(calcJobTitle)!=-1; 
+                IncludeFlag = true;
+            }
+
+            var IncludeCountry = getTaxValue(item,"IncludeCountry");
+            if(IncludeCountry.length!=0){
+                if(IncludeFlag){
+                    Includequery=(Includequery&&IncludeCountry.indexOf(Country)!=-1); 
+                }else{
+                    IncludeFlag = true;
+                    Includequery=IncludeCountry.indexOf(Country)!=-1;
+                }
+            }
+
+            var IncludeSBU = getTaxValue(item,"IncludeSBU");
+            if(IncludeSBU.length!=0){
+                if(IncludeFlag){
+                    Includequery=(Includequery&&IncludeSBU.indexOf(SBU)!=-1);
+                }else{
+                    IncludeFlag = true;
+                    Includequery=IncludeSBU.indexOf(SBU)!=-1;
+                }
+            }
+
+            var IncludeBU = getTaxValue(item,"IncludeBU");
+            if(IncludeBU.length!=0){
+                if(IncludeFlag){
+                    Includequery=(Includequery&&IncludeBU.indexOf(BU)!=-1);
+                }else{
+                    IncludeFlag = true;
+                    Includequery=IncludeBU.indexOf(BU)!=-1;
+                }
+            }
+
+            var ExcludeJobtitle=getTaxValue(item,"ExcludeCalculatedJobTitle");
+            if(ExcludeJobtitle.length!=0){
+                ExcludeFlag=true;
+                Excludequery=ExcludeJobtitle.indexOf(calcJobTitle)==-1;
+            }
+            
+            var ExcludeCountry = getTaxValue(item,"ExcludeCountry");
+            if(ExcludeCountry.length!=0){
+                if(ExcludeFlag){
+                    Excludequery=(Excludequery||ExcludeCountry.indexOf(Country)==-1);
+                }else{
+                    ExcludeFlag=true; 
+                    Excludequery=ExcludeCountry.indexOf(Country)==-1;
+                }
+            }
+
+            var ExcludeSBU = getTaxValue(item,"ExcludeSBU");
+            if(ExcludeSBU.length!=0){
+                if(ExcludeFlag){
+                    Excludequery=(Excludequery||ExcludeSBU.indexOf(SBU)==-1);
+                }else{
+                    ExcludeFlag=true; 
+                    Excludequery=ExcludeSBU.indexOf(SBU)==-1;
+                }
+            }
+
+            var ExcludeBU = getTaxValue(item,"ExcludeBU");
+            if(ExcludeBU.length!=0){
+                if(ExcludeFlag){
+                    Excludequery=(Excludequery||ExcludeBU.indexOf(BU)==-1);
+                }else{
+                    ExcludeFlag=true; 
+                    Excludequery=ExcludeBU.indexOf(BU)==-1;
+                }
+            }
+            Includequery=(Includequery==undefined)?true:Includequery;
+            Excludequery=(Excludequery==undefined)?true:Excludequery;
+
+            if(Includequery && Excludequery){
+            filteritems.push(item);
+            }
+        });
+		bindTools(filteritems,ToolTerm);
+		cgi.fullPageLoader.loaded(); //Hide loader
+   }
+   catch(ex){
+	cgiError.LogError("Error: filtering tools in Tools.js: IncludeExcludeFunction()",JSON.stringify(ex.Message));
+	cgi.fullPageLoader.loaded();	// Hide loader  
+   }
+}
+
+function bindTools(filteritems,ToolTerm){
+try{
+    if(filteritems.length>0){
+		var contentElement="";
+		contentElement='<div id="group" name="Group" class="ms-srch-group  lead-sub">';
+		if(PageName.toLowerCase() != "search.aspx"){
+			//Data from Category list to fetch Title and Description - start
+			var Categorydetails = AllCategoryDetails.d.results;
+			var CategoryItem = $.grep(Categorydetails, function (element, index) {
+				var ToolCategorylower = "";
+				var ToolCategoryDetails=getTaxValue(element,"ToolCategory");
+				if(ToolCategoryDetails!=""){
+				    ToolCategorylower = ToolCategoryDetails.map(element => {return element.toLowerCase();});
+				}
+				return (ToolCategorylower.indexOf(ToolTerm.toLowerCase())!==-1);
+			});
+
+			if(CategoryItem.length>0){
+				if(preferredLanguage=='EN'){
+					var CategoryTitle = CategoryItem[0].Title == null ? "" : CategoryItem[0].Title ;
+					var CategoryDescription=CategoryItem[0].IntranetDescription == null ? "" : CategoryItem[0].IntranetDescription ;
+					
+				}else if(preferredLanguage=='FR'){
+					var CategoryTitle = CategoryItem[0].TitleFR == null ? "" : CategoryItem[0].TitleFR ;
+					var CategoryDescription=CategoryItem[0].IntranetDescriptionFR == null ? "" : CategoryItem[0].IntranetDescriptionFR ;
+					
+				} 
+			}else{
+				var CategoryTitle="";
+				var CategoryDescription="";
+				
+			}
+			var moreInfoTextLanding="More Info";
+			if(preferredLanguage =='FR'){
+				var moreInfoTextLanding = "Plus d'informations";
+			}
+			//Data from Category list to fetch Title and Description - end
+
+			//Tools display based on tool term - start
+			contentElement+='<div class="section-header-sub">'
+							+'<h5 class="section-title section-title-sub" id="Tools-WebPartPage-BodyTitle">'+CategoryTitle+'</h5>'
+							+'</div>'
+							+'<p class="lead btm-pad10" id="Tools-Overview-Description">'+CategoryDescription+'</p>'
+
+			var moreinforesult = GetCategoryMoreInfoHtml(ToolTerm); // GetCategoryMoreInfoHtml function is present in ToolsCategoryMoreInfo.js
+
+			if(moreinforesult==true){
+				if(CategoryItem.length > 0){
+				    var moreinfoOnclick=onclick="GetCategoryMoreInfo('{ToolTerm}','"+CategoryItem[0].Title+"','"+CategoryItem[0].TitleFR+"')"; // Passing Category details
+				}
+				else{
+					var ToolTermLower = ToolTerm.toLowerCase();
+					moreinfoOnclick=onclick="GetCategoryMoreInfo('{ToolTerm}','"+ToolTermLower+"','"+ToolTermLower+"')";
+				}
+				//GetCategoryMoreInfo function is present in ToolsCategoryMoreInfo.js
+				contentElement+='<aside class="ui-toc-more-info btm-pad10">'
+								+'<button class="btn btn-link p-0" data-toggle="offcanvas" data-target="#generic" aria-haspopup="true" aria-expanded="false" aria-controls="generic" id="Tools-Categorywise-MoreInfo" onclick="{moreinfoOnclick}">'+moreInfoTextLanding+'</button>'
+								+'</aside>'
+				contentElement=contentElement.replace("{moreinfoOnclick}",moreinfoOnclick).replace("{ToolTerm}",ToolTerm);
+			}
+		}
+		
+        contentElement+='<div id="GroupBorderTop"></div>'
+                        +'<div id="groupContent" class="ms-srch-group-content row tile-grid">'
+    
+        filteritems.forEach(function(item, index){
+            if(preferredLanguage=='EN'){
+                var Title = item.Title == null ? "" : item.Title ;
+                var titleEncode= encodeURIComponent(item.Title);
+                var toolURLLink = item.ToolURL == null ? "" : item.ToolURL ;
+                var intranetDescription=item.IntranetDescription == null ? "" : item.IntranetDescription ;
+                var toolTip = item.Tooltip == null ? "" : item.Tooltip;
+                var moreInfoText = "More Info";
+                var moreInfoDescription=item.MoreInfoTextEN;
+                if(moreInfoDescription!=null){
+                    moreInfoDescription=moreInfoDescription.replace(/\n/g, '<br>');
+                    moreInfoDescription=moreInfoDescription.replace(/'/g, "\\'");
+                }else{
+                    moreInfoDescription=null;
+                }
+                moreInfoDescriptionEncode = $htmlEncode(moreInfoDescription);
+                var copyLinkText = "Copy link";
+                var addFave = "Add to Favorites";
+                var removeFave = "Remove from Favorites";
+				var newTag = "New";
+            }else if(preferredLanguage=='FR'){
+                var Title = item.TitleFR == null ? "" : item.TitleFR ;
+                var titleEncode= encodeURIComponent(item.TitleFR);
+                var toolURLLink = item.ToolURLFR == null ? "" : item.ToolURLFR ;
+                var intranetDescription=item.IntranetDescriptionFR == null ? "" : item.IntranetDescriptionFR ;
+                var toolTip = item.TooltipFR == null ? "" : item.TooltipFR;
+                var moreInfoText = "Plus d'informations";
+                var moreInfoDescription=item.MoreInfoTextFR;
+                if(moreInfoDescription!=null){
+                    moreInfoDescription=moreInfoDescription.replace(/\n/g, '<br>');
+                    moreInfoDescription=moreInfoDescription.replace(/'/g, "\\'");
+                }else{
+                    moreInfoDescription=null;
+                }
+                moreInfoDescriptionEncode = $htmlEncode(moreInfoDescription);
+                var copyLinkText = "Copier le lien";
+                var addFave = "Ajouter aux favoris";
+                var removeFave = "Supprimer des favoris";
+				var newTag = "Nouveau";
+            }
+                var EN_text="";
+                var FR_text="";
+                var Link="";
+                var Order="";
+                var OpensInNewTab="";
+                var LinkTab="";
+                if(item.TitleFR != null){
+                    FR_text = encodeURIComponent(item.TitleFR);
+                }
+                if(item.Title != null){
+                    EN_text = encodeURIComponent(item.Title);
+                }
+                if(EN_text&&!FR_text){
+                    FR_text=EN_text;
+                }
+                if(!EN_text&&FR_text){
+                    EN_text=FR_text;
+                }
+                EN_text= EN_text.replace(/'/g, "\\'");
+                FR_text= FR_text.replace(/'/g, "\\'");
+            
+                if(preferredLanguage=='FR'){
+                    var TitleMoreinfo = decodeURIComponent(FR_text);
+                }
+                else{
+                    var TitleMoreinfo = decodeURIComponent(EN_text);
+                }
+                TitleMoreinfoEncode = $htmlEncode(TitleMoreinfo);
+                
+				//funtionality for New tag
+				var todaysDate = new Date().toISOString();
+				var applyNewtag = item.ApplyNewTag;
+				var newTagStartDate = item.NewTagStartDate;
+				var newTagEndDate = item.NewTagEndDate;
+				var isnewtag = false;
+				if(newTagStartDate!=null && newTagStartDate != ""){
+					newTagStartDate = new Date(newTagStartDate).toISOString();
+				}
+				if(newTagEndDate!=null && newTagEndDate != ""){
+					newTagEndDate = new Date(newTagEndDate).toISOString();
+				}
+                if(toolURLLink){      
+                    Link = encodeURIComponent(toolURLLink.trim());
+                    toolURLLink = toolURLLink.trim();
+                }
+				
+				if(applyNewtag && newTagStartDate <= todaysDate && newTagEndDate > todaysDate)
+				{
+				   isnewtag = true;
+				}
+                //Open external tools in new tab
+                var toolsLinkDiffHost = false;
+                if(toolURLLink!=null && toolURLLink.indexOf(window.location.host) < 0){
+                    toolsLinkDiffHost = true;
+                }
+
+                var behaviour = (toolsLinkDiffHost==true) ? '_blank' : '_self' ;
+                Order=99;
+                OpensInNewTab=0;
+                LinkTab=2;
+                var isAddedFavorite = "";
+                var gaonclick = onclick="ga('send','event','Tools','{titleEncode}','');";
+                var WindowOnclick = onclick="window.copyLinkText('{Toollink}');";
+                var ShowInformation= onclick="ShowInformation('{TitleMoreinfoEncode}','{moreInfoDescriptionEncode}');"
+                var FavIconOnClick = onclick = "cgi.myFavorites.toggleFavorites('{EN_text}','{FR_text}','{Link}',{Order},{OpensInNewTab},this,{LinkTab})";
+                //Functionality for favourites
+
+                $.when( cgi.myFavorites.FavoritesDataDeferred ).done(function ( data ) {
+                    var FavoritesData=cgi.myFavorites.FavoritesData;
+                    for (i = 0; FavoritesData.length > i; i += 1) {
+                        if(FavoritesData[i].Link) {
+                            if (decodeURIComponent(FavoritesData[i].Link.toString()).toLowerCase().trim() === decodeURIComponent(Link.toString()).toLowerCase().trim()) {
+                                isAddedFavorite = "true";
+                            }
+                        }
+                    }
+                });
+                if(cgi.myFavorites.favData != undefined && cgi.myFavorites.favData != null && cgi.myFavorites.favData.length > 0) {
+                    var i = null;
+                    for (i = 0; cgi.myFavorites.favData.length > i; i += 1) {
+                        if(cgi.myFavorites.favData[i].Link != undefined && cgi.myFavorites.favData[i].Link != null && !$isEmptyString(toolURLLink)) {
+                            if (cgi.myFavorites.favData[i].Link.Url.toString().toLowerCase().trim() === toolURLLink.toString().toLowerCase().trim()) {
+                                isAddedFavorite = "true";
+                            }
+                        }
+                    }
+                }
+                var linkelement='<div class="col">'
+                                +'<div class="card card-hover card-mb b-top-3 b-card-top">'
+                                +'<div class="card-body">'
+                                +'<h3 class="card-title toolnewdisplay">'
+                    linkelement=linkelement.replace("{titleEncode}",titleEncode);
+                
+                if(toolURLLink!=""){
+                    linkelement+='<a href="{Toollink}" onclick="{gaonclick}" class="stretched-link tools-ga4" target="{behaviour}">{Title}</a>'
+                }else{
+                    linkelement+='<a onclick="{gaonclick}" class="stretched-link tools-ga4">{Title}</a>'
+                }
+                linkelement=linkelement.replace("{gaonclick}", gaonclick).replace("{titleEncode}",titleEncode).replace("{Toollink}",toolURLLink).replace("{Title}",Title);
+				
+				//new tag html.
+				if(isnewtag){
+			        linkelement += '<small class="ToolnewTagBG '+ (isAddedFavorite ? 'd-none': '') +'">'+newTag+'</small>'
+				}
+                linkelement+='</h3>'
+                            +'<p class="card-text card-text-small">{Description}</p>'
+                            +'</div>'
+                if(toolURLLink!="") { 
+                    if(isAddedFavorite=="true"){ 
+                        linkelement+='<div class="link-options ToolfavicnBG is-favorite">'
+                        +'<a href="javascript:void(0);" class="my-favorite-toggle is-favorite" aria-label="'+removeFave+': '+titleEncode+'" data-title="'+titleEncode+'" title="'+removeFave+'" data-toggle="tooltip" onclick="{FavIconOnClick}">'
+                        +'<span class="fas fa-star" aria-hidden="true"></span></a>'
+                        +'<div class="dropdown">'
+                        +'<button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                        +'<span class="fal fa-ellipsis-h" aria-hidden="true"></span><span class="sr-only SRClass_LinkOptions_Expand">Expand to View More Options</span>'
+                        +'</button>'
+                        +'<div class="dropdown-menu dropdown-menu-right">'
+                        +'<button type="button" class="dropdown-item" data-toggle="offcanvas" data-target="#generic" onclick="{ShowInformation}"><span class="fal fa-info-circle" aria-hidden="true"></span>'+moreInfoText+'</button>'
+                        +'<a class="dropdown-item" onclick="{WindowOnclick}"><span class="fal fa-link" aria-hidden="true"></span>'+copyLinkText+'</a>'
+                        +'</div></div></div>'
+                    }else{
+                        linkelement+='<div class="link-options ToolfavicnBG">'
+                        +'<a href="javascript:void(0);" class="my-favorite-toggle" aria-label="'+addFave+': '+titleEncode+'" data-title="'+titleEncode+'" title="'+addFave+'" data-toggle="tooltip" onclick="{FavIconOnClick}">'
+                        +'<span class="fas fa-star" aria-hidden="true"></span></a>'
+                        +'<div class="dropdown">'
+                        +'<button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                        +'<span class="fal fa-ellipsis-h" aria-hidden="true"></span><span class="sr-only SRClass_LinkOptions_Expand">Expand to View More Options</span>'
+                        +'</button>'
+                        +'<div class="dropdown-menu dropdown-menu-right">'
+                        +'<button type="button" class="dropdown-item" data-toggle="offcanvas" data-target="#generic" onclick="{ShowInformation}"><span class="fal fa-info-circle" aria-hidden="true"></span>'+moreInfoText+'</button>'
+                        +'<a class="dropdown-item" onclick="{WindowOnclick}"><span class="fal fa-link" aria-hidden="true"></span>'+copyLinkText+'</a>'
+                        +'</div></div></div>'
+                    }
+                        window.copyLinkText= function (urlValue) {
+                            var txtAreaElement = document.createElement('input');
+                            txtAreaElement.text = urlValue;
+                            txtAreaElement.className = 'txtAreaElementClass';
+                            txtAreaElement.style.position = 'absolute';
+                            txtAreaElement.style.left = '-9999px';
+                            document.body.appendChild(txtAreaElement);
+                            $(".txtAreaElementClass").val(urlValue);
+                            txtAreaElement.focus();
+                            txtAreaElement.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(txtAreaElement);
+                           }
+                }
+                                
+                linkelement+='</div></div>'
+                linksElement= linkelement.replace("{WindowOnclick}",WindowOnclick).replace("{ShowInformation}",ShowInformation)
+                                .replace("{FavIconOnClick}",FavIconOnClick).replace("{moreInfoDescriptionEncode}",moreInfoDescriptionEncode)
+                                .replace("{TitleMoreinfoEncode}",TitleMoreinfoEncode).replace("{Toollink}",toolURLLink).replace("{titleEncode}",titleEncode)
+                                .replace("{Title}",Title).replace("{Description}",intranetDescription).replace("{behaviour}",behaviour).replace("{EN_text}",EN_text)
+                                .replace("{FR_text}",FR_text).replace("{Link}",Link).replace("{Order}",Order).replace("{LinkTab}",LinkTab).replace("{OpensInNewTab}",OpensInNewTab);
+                contentElement+=linksElement;
+        });
+        contentElement+= '</div><div id="GroupBorderBottom"></div></div>';
+        $('#ToolsDisplaySection').append(contentElement);
+    }
+}
+catch(ex){
+    cgiError.LogError("Error: Tools Display based on Category Tools.js: bindtools()",JSON.stringify(ex.Message));
+	cgi.fullPageLoader.loaded();	// Hide loader
+   }
+}
+
+function getcategorydetails(){
+    return  $.ajax({
+        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Category Details')/items?$select=ToolCategory,Title,TitleFR,IntranetDescription,IntranetDescriptionFR",
+        type: "GET",
+        headers: { "ACCEPT": "application/json;odata=verbose" },
+        success:function(data){
+		},
+		error:function(err){
+            cgiError.LogError("Error: Error while fetching data from Category Details list in Tools.js: getcategorydetails()", JSON.stringify(err));
+			cgi.fullPageLoader.loaded(); //Hide loader
+		},
+		complete:function(xhr,status,err){
+            cgiError.LogError("info: completed - getcategorydetails()", JSON.stringify(status));
+
+		}
+    })
+}
+
+function getTaxValue(obj, fieldName) {
+    try{
+        for (var field in obj) {
+            if (obj.hasOwnProperty(field) && field === fieldName) {
+                if (obj[field] !== null) {
+                    if(obj[field].results.length>0){
+                    obj[field].Term =[];
+                    for(var j = 0; j < obj[field].results.length; j++){
+                            obj[field].Term.push(obj[field].results[j].Label);
+                    }
+                    return obj[field].Term;
+                }
+            }
+        }
+        }
+        return ""; 
+    }
+    catch(ex){
+        errorLog.push("Error: Error in: getTaxValue() inside Tools.js: " + JSON.stringify(ex));
+        cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function getLocalStorageTools(key){
+	try{
+		const itemStr = localStorage.getItem(key);
+		if (!itemStr){
+			 return null;
+		   }
+		const item = JSON.parse(itemStr);
+		const now = new Date();
+		if (now.getTime() > item.expiry) {
+			localStorage.removeItem(key)
+			return null
+		}
+		return item.value;
+	}
+	catch(ex){
+		errorLog.push("Exception occurred inside getLocalStorageTools() in Tools.js- "+JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+	}
+}
+
+function setLocalStorage(key, value, timespan){
+	try{
+		const now = new Date();
+		const item = {
+			value: value,
+			expiry: now.getTime() + timespan,
+			}
+			localStorage.setItem(key, JSON.stringify(item));
+	}
+	catch(ex){
+        cgiError.LogError("Exception occurred inside setLocalStorage() in Tools.js- "+JSON.stringify(ex));
+        cgi.fullPageLoader.loaded();	// Hide loader
+	}
+}
+
+
+function getchilditems(data,selectedvalue,Filtercategory){
+	try{
+		var termsEnum = data.getEnumerator();
+		while (termsEnum.moveNext()) {
+			var currentTerm = termsEnum.get_current();
+			var termName = currentTerm.get_name();
+			if(termName.toLowerCase() == selectedvalue.toLowerCase()){
+			   //Check if term has child terms
+				if (currentTerm.get_termsCount() > 0) {
+					//Term has sub terms.
+					recursiveTerms(currentTerm,Filtercategory);
+				}else{
+					var Mainterm=[];
+					Mainterm.push(selectedvalue);
+					getdata(Mainterm); //if no subterms get data only for mainterm
+				}
+			}
+		}
+	}
+	catch(ex){
+		cgiError.LogError("Error: Error to get childterms inside Tools.js:getchilditems()", JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+	}
+}
+
+function recursiveTerms(currentTerm,Filtervalue) {
+    try{
+        var dfd = $.Deferred();
+        //Get Term child terms
+        var terms = currentTerm.get_terms();
+        var ctx = SP.ClientContext.get_current()
+        ctx.load(terms);
+        ctx.executeQueryAsync(
+            Function.createDelegate(this, function (sender, args) {
+                dfd.resolve(terms);
+                readvalue(terms,Filtervalue);
+            }),
+            Function.createDelegate(this, function (sender, args) {
+                dfd.reject('Error');
+            })
+        );
+        return dfd.promise();
+    }
+    catch(ex){
+        cgiError.LogError("Error: Error to get childterms inside Tools.js:recursiveTerms()", JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function getAllTerms(id) {
+    try{
+        var dfd = $.Deferred();
+        var ctx;
+        SP.SOD.loadMultiple(['sp.js'], function () {
+            // Make sure taxonomy library is registered
+            SP.SOD.registerSod(
+                'sp.taxonomy.js',
+                SP.Utilities.Utility.getLayoutsPageUrl('sp.taxonomy.js')
+            );
+
+            SP.SOD.loadMultiple(['sp.taxonomy.js'], function () {
+                var terms = '';
+                (ctx = SP.ClientContext.get_current()),
+                    (taxonomySession = SP.Taxonomy.TaxonomySession.getTaxonomySession(ctx)),
+                    (termStore = taxonomySession.getDefaultSiteCollectionTermStore()),
+                    (termSets = termStore.getTermSetsByName(id, 1033)),
+                    (termSet = termSets.getByName(id)),
+                    (terms = termSet.getAllTerms());
+                ctx.load(terms);
+
+                ctx.executeQueryAsync(
+                    Function.createDelegate(this, function (sender, args) {
+                        dfd.resolve(terms);
+                    }),
+                    Function.createDelegate(this, function (sender, args) {
+                        dfd.reject('Error');
+                    })
+                );
+            });
+        });
+        return dfd.promise();
+    }
+    catch(ex){
+        cgiError.LogError("Error: Error to get childterms inside Tools.js:getAllTerms()", JSON.stringify(ex));
+        cgi.fullPageLoader.loaded();	// Hide loader
+    }
+}
+
+function readvalue(temsData,Termsetname){
+    try{
+        var termids = [];
+        var  termnames=[];
+        termnames.push(ToolGrouping); // push selected mainterm along with subterms for tool category
+        var termsEnum = temsData.getEnumerator();
+        while (termsEnum.moveNext()) {
+            var currentTerm = termsEnum.get_current();
+            var termName = currentTerm.get_name();
+            var termId = currentTerm.get_id();
+            termids.push(termId);
+            termnames.push(termName);
+        }
+        getdata(termnames);
+    }
+    catch(ex){
+        cgiError.LogError("Error: Error in Tools.js: readvalue()", JSON.stringify(ex));
+		cgi.fullPageLoader.loaded();	// Hide loader
+    }
+    
+}
+
+function predicateBy(prop){
+    return function(a,b){
+        if (a[prop] === null) {
+             return 1;
+         }
+         if (b[prop] === null) {
+            return -1;
+          }
+          if (a === b) {
+          return 0;
+          }
+    return a[prop] < b[prop] ? -1 : 1;
+    }
+}
+
+function getParameterByName(name) {
+		var url = window.location.href;
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}

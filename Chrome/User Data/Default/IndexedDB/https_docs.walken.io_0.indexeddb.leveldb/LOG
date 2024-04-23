@@ -1,0 +1,6 @@
+2022/12/08-16:24:03.307 3464 Creating DB C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_docs.walken.io_0.indexeddb.leveldb since it was missing.
+2022/12/08-16:24:03.323 3464 Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_docs.walken.io_0.indexeddb.leveldb/MANIFEST-000001
+2022/12/08-16:24:23.752 4bc4 Level-0 table #5: started
+2022/12/08-16:24:23.760 4bc4 Level-0 table #5: 1734 bytes OK
+2022/12/08-16:24:23.763 4bc4 Delete type=0 #3
+2022/12/08-16:24:23.772 4bc4 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

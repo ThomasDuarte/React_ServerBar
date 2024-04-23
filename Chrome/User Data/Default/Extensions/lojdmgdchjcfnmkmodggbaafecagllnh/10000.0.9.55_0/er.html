@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+	<html >
+	<head>
+		<title>Emergency Room</title>
+		<link href="libs/bootstrap/css/bootstrap.min-ns.css" rel="stylesheet" media="screen" />
+		<link href="libs/bootstrap/css/bootstrap-dark.min-ns.css" rel="stylesheet" media="screen" />
+		<link href="libs/css/options.css" rel="stylesheet" media="screen" />
+		<link href="libs/fontawesome/css/font-awesome.min.css" rel="stylesheet" media="screen" />
+		<!--<link href="libs/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">-->
+		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+	</head>
+
+	
+	
+	<body class="bnsn" >
+		<div class="container">
+		<nav class="navbar navbar-default">
+		    <div class="container-fluid">
+		        <div class="ui-top-left-corner ui-logo" title="Salesforce ORGanizer"></div>
+			    <div class="navbar-header pull-right"> 
+		    	    <h3 class="navbar-brand" href="#">ORGanizer - Emergency Room</h3>
+		      	</div>
+
+		    </div><!--/.container-fluid -->
+		 </nav>
+
+		<div  class="ui-page-content" style="display:none;">
+
+			<div class="row">
+				<div class="col-sm-6" >
+					<div class="input-group input-group-sm">
+						<span class="input-group-addon" id="sizing-addon1">Client ID</span>
+						<input type="text" class="form-control" id="txtClientID" readonly>
+					</div>
+					<div class="input-group input-group-sm">
+						<span class="input-group-addon" id="sizing-addon1">Client Name</span>
+						<input type="text" class="form-control" id="txtClientName" maxlength="50" readonly>
+						
+					</div>
+
+					
+				</div>
+				<div class="col-sm-6" ></div>
+				<div class="col-sm-12" ><hr/></div>
+			</div>
+
+			<div class="panel panel-default" >
+				<div class="panel-heading">
+					<h3 class="panel-title">Other Params</h3>
+				</div>
+				<div class="panel-body " >
+					<div class="row">
+						<div class="col-sm-12">
+							<label>Session storage consumption:</label>
+							<span ><span id="sessionPercent" ></span>%</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			<div class="panel panel-default" >
+				<div class="panel-heading">
+					<h3 class="panel-title">Download Backup Logins &amp; Orgs</h3>
+				</div>
+				<div class="panel-body " >
+					<div class="row">
+						<div class="col-sm-6">
+							<label>Type encryption password (leave blank if not set)</label>
+							<input type="password" class="form-control" id="txtSecret" placeholder="Place key here...">
+						</div>
+						<div class="col-sm-6">
+							<label>&nbsp;</label><br/>
+							<button class="btn btn-sm btn-primary btn-block" id="btnDownloadBackup">Download backup...</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default" >
+				<div class="panel-heading">
+					<h3 class="panel-title">Download Automatic Backup</h3>
+				</div>
+				<div class="panel-body " >
+					<div class="row">
+						<div class="col-sm-6">
+							<label>You have <span id="autoBackupsCount">0</span> automatic backups. Index 1 is most recent</label>
+							<input type="number" max="100" min="1" class="form-control" id="txtAutoBackupIndex" placeholder="Type an automatic bakcup index">
+						</div>
+						<div class="col-sm-6">&nbsp;</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<label>Type encryption password (leave blank if not set)</label>
+							<input type="password" class="form-control" id="txtSecretAutoBackup" placeholder="Place key here...">
+						</div>
+						<div class="col-sm-6">
+							<label>&nbsp;</label><br/>
+							<button class="btn btn-sm btn-primary btn-block" id="btnDownloadAutoBackup">Download automatic backup...</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="panel panel-default" >
+				<div class="panel-heading">
+					<h3 class="panel-title">Local Storage Inspection</h3>
+				</div>
+				<div class="panel-body " >
+					<div class="row">
+						<div class="col-sm-12">
+							<button class="btn btn-sm btn-primary btn-block" id="btnInspectStorage">Inspect</button>
+							<hr/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							
+							<textarea class="form-control" readonly rows="10" id="txtInspection" style="font-family: monospace;"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			
+
+
+		</div><!--container -->
+
+	</div>
+		<script src="libs/google/buy.js"></script>
+		<script src="libs/requirejs/require-2.3.2.js"></script>
+		<script src="libs/jquery/js/jquery-3.4.1.min.js"></script>
+		<script src="libs/jquery/js/jquery-ui-1.12.2.min.js"></script>
+		<script src="libs/bootstrap/js/tab.js"></script>
+		<script src="libs/bootstrap/js/modal.js"></script>
+		<script src="libs/justgage/raphael.min.js"></script>
+		<script src="libs/justgage/justgage.js"></script>
+		<script src="libs/crypto/crypto-js.js"></script>
+		<script src="libs/lz-string/lz-string.min.js"></script>
+		<script src="libs/js/modules/global.js"></script>
+		<script src="libs/js/modules/constants.js"></script>
+		<script src="libs/js/modules/sf-client.js"></script>
+		<script src="libs/js/modules/popup-utils.js"></script>
+		<script src="libs/js/modules/lic-utl.js"></script>
+		<script src="libs/js/modules/backup-utils.js"></script>
+		<script src="libs/js/i18n-dom-matcher.js"></script>
+		<script src="libs/js/modules/backup-connector.js"></script>
+		<script src="libs/js/logger.js"></script>
+		<script src="libs/js/er.js"></script>
+		
+		<!--<script src="libs/js/analytics.js"></script>-->
+
+		
+	
+	</body>
+</html>

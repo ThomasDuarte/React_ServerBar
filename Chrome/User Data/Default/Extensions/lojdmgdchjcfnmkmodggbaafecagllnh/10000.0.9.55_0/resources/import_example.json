@@ -1,0 +1,66 @@
+{
+    "accounts": [
+        {
+            "g": "Group Name",
+            "n": "Synched Account label",
+            "p": "Password (unencrypted)",
+            "r": "https://login.salesforce.com",
+            "s": true,
+            "lt" : false,
+            "t": "TOKEN...",
+            "u": "user@name"
+        },
+        {
+            "g": "Default",
+            "n": "Local Account label",
+            "p": "Password (unencrypted)",
+            "r": "https://test.salesforce.com",
+            "s": false,
+            "lt": true,
+            "t": "TOKEN...",
+            "u": "user@name"
+        }
+    ],
+    "orgs": [
+        {
+            "c": "[HEX COLOR]",
+            "l": "Tab's label",
+            "n": "Server name (e.g. NA3, CUSTOM-DOMAIN, ...)",
+            "oid": "ORG ID",
+            "ql": [
+              {
+                "l": "Quick link label",
+                "p": "Quick Link Relative Path"
+              }
+            ]
+        },
+        {
+            "c": "ff0000",
+            "l": "My Org",
+            "n": "CS10",
+            "oid": "00DJ000000AA123",
+            "ql": [
+                {
+                    "l": "Quick link 1",
+                    "p": "/apex/MyCustomPage"
+                },
+                {
+                    "l": "Another link",
+                    "p": "/001000000012345"
+                }
+            ]
+        }
+    ],
+    "queries": [
+        {
+            "name": "My First Query",
+            "body": "Select id from Account"
+        }
+    ],
+    "scripts": [
+        {
+            "name": "My First Script",
+            "body": "System.debug('Hello World!');"
+        }
+    ]
+}

@@ -1,0 +1,471 @@
+{
+   "checksum": "f80de88873426faf79fe95254eeab7ff",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13308054910637459",
+            "date_last_used": "13347543678636026",
+            "guid": "2b4168bd-e4d3-4e16-830b-3486549d8a61",
+            "id": "5",
+            "name": "Mail - duarte.thomas1301",
+            "type": "url",
+            "url": "https://mail.google.com/mail/u/0/#inbox"
+         }, {
+            "children": [ {
+               "date_added": "13308926927538126",
+               "date_last_used": "13313840177369930",
+               "guid": "13750c80-eb24-4203-b285-fca472349d4d",
+               "id": "22",
+               "name": "Snapchat",
+               "type": "url",
+               "url": "https://web.snapchat.com/"
+            }, {
+               "date_added": "13308220806585654",
+               "date_last_used": "13347643337847323",
+               "guid": "148fa6df-6258-42dc-bd49-358546b9d93f",
+               "id": "16",
+               "name": "Spotify – Lecteur Web",
+               "type": "url",
+               "url": "https://open.spotify.com/"
+            }, {
+               "date_added": "13310569155864235",
+               "date_last_used": "13347558055039408",
+               "guid": "fd8ef5ea-7d86-4021-aa67-2bf2f730d56b",
+               "id": "44",
+               "name": "YouTube",
+               "type": "url",
+               "url": "https://www.youtube.com/"
+            }, {
+               "date_added": "13309367630887672",
+               "date_last_used": "13314185915313353",
+               "guid": "1eab3467-8262-4ef5-9206-42cd2d425ef9",
+               "id": "32",
+               "name": "DALL·E",
+               "type": "url",
+               "url": "https://labs.openai.com/e/Xqaer7fp8cJ6hmASQgZz5ymC"
+            }, {
+               "date_added": "13310641944713217",
+               "date_last_used": "13329488488393565",
+               "guid": "7f0c44a1-c0e6-4493-a977-40e7a42dfa54",
+               "id": "45",
+               "name": "Refectory (Dejbox) | In la bonne bouffe we trust",
+               "type": "url",
+               "url": "https://www.refectory.fr/carte"
+            }, {
+               "date_added": "13317315283535781",
+               "date_last_used": "13345294720019916",
+               "guid": "a2a22c93-c2bf-4056-87d6-e0612b538f73",
+               "id": "62",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Just a moment...",
+               "type": "url",
+               "url": "https://chat.openai.com/"
+            }, {
+               "date_added": "13318953415873078",
+               "date_last_used": "0",
+               "guid": "b4d446df-b81d-4a53-a8d7-a0f511e85026",
+               "id": "63",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Tempmail : Email temporaire",
+               "type": "url",
+               "url": "https://tempail.com/fr/"
+            }, {
+               "date_added": "13328204717612822",
+               "date_last_used": "0",
+               "guid": "6f346e72-7b07-4282-9608-5cdabde8af11",
+               "id": "72",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Building a WebGL Carousel with React Three Fiber and GSAP | Codrops",
+               "type": "url",
+               "url": "https://tympanus.net/codrops/2023/04/27/building-a-webgl-carousel-with-react-three-fiber-and-gsap/"
+            } ],
+            "date_added": "13310559166103734",
+            "date_last_used": "0",
+            "date_modified": "13337685188701491",
+            "guid": "3c331477-dbd1-49c3-816e-8a89263c6173",
+            "id": "42",
+            "name": "Loisirs | Autre",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13310657424217278",
+               "date_last_used": "13311857069795337",
+               "guid": "e52499c0-b2b9-4c04-b6d9-247d1e4887cc",
+               "id": "46",
+               "name": "SALES HUB ",
+               "type": "url",
+               "url": "https://org460b92d7.crm.dynamics.com/main.aspx?appid=cbd0346f-9e37-ed11-9db0-000d3a339df8&pagetype=control&controlName=MscrmControls.AcceleratedSales.AnchorShellControl"
+            }, {
+               "date_added": "13310409320983048",
+               "date_last_used": "13312283864047142",
+               "guid": "51ef44a0-89b3-4829-a49d-1a130cea5657",
+               "id": "39",
+               "name": "Sales Activity Dashboard - Dynamics 365",
+               "type": "url",
+               "url": "https://org460b92d7.crm.dynamics.com/main.aspx?app=d365default&forceUCI=1&pagetype=dashboard&id=45f88f83-0e67-443b-bd05-81d49719f6b1&type=system&_canOverride=true"
+            }, {
+               "date_added": "13310409017676866",
+               "date_last_used": "13312283849452398",
+               "guid": "f2e053d0-89c8-48c7-b9e8-cfe1ac4d594c",
+               "id": "38",
+               "name": "Power Platform admin center",
+               "type": "url",
+               "url": "https://admin.powerplatform.microsoft.com/environments"
+            }, {
+               "date_added": "13309279956364172",
+               "date_last_used": "13311695993709328",
+               "guid": "9547473b-8f9f-4a0d-bfcb-5c9a4fe4d4a8",
+               "id": "25",
+               "name": "Découvrir les principes fondamentaux de Microsoft Dynamics 365 Marketing - Training | Microsoft Learn",
+               "type": "url",
+               "url": "https://learn.microsoft.com/fr-fr/training/paths/learn-fundamentals-of-microsoft-dynamics-365-marketing/"
+            }, {
+               "date_added": "13310408585001753",
+               "date_last_used": "13313690058389417",
+               "guid": "8e84eabc-56c0-459d-a7c4-f8797d0ba3d1",
+               "id": "37",
+               "name": "Power Platform admin center",
+               "type": "url",
+               "url": "https://admin.powerplatform.microsoft.com/environments/"
+            }, {
+               "date_added": "13309279938068925",
+               "date_last_used": "13313689955062254",
+               "guid": "0301b2dd-0b40-4bb4-a3a4-b68185fdca78",
+               "id": "24",
+               "name": "Microsoft Customer Digital Experiences | My Environments",
+               "type": "url",
+               "url": "https://cdx.transform.microsoft.com/my-tenants/tenant-details/d1a86e38-bca5-4c58-9a18-b720b8b115eb"
+            }, {
+               "date_added": "13309708316034183",
+               "date_last_used": "13313690025716913",
+               "guid": "abeee29b-6e49-414b-a1dc-dfb287523ba8",
+               "id": "34",
+               "name": "Microsoft Customer Digital Experiences",
+               "type": "url",
+               "url": "https://cdx.transform.microsoft.com/"
+            } ],
+            "date_added": "13310559116600623",
+            "date_last_used": "0",
+            "date_modified": "13310657438118886",
+            "guid": "05fee309-f08e-455f-bf60-b38b155828e9",
+            "id": "41",
+            "name": "Dynamics ",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13308058271251208",
+               "date_last_used": "13358251975427558",
+               "guid": "36706ef3-6afa-4135-a3c1-ab883be8205e",
+               "id": "7",
+               "name": "Home | CGI Intranet",
+               "type": "url",
+               "url": "https://intranet.ent.cgi.com/Pages/default.aspx"
+            }, {
+               "date_added": "13326811505417925",
+               "date_last_used": "13326881168874749",
+               "guid": "f06c0e39-5e47-437e-aa5f-f080d698844c",
+               "id": "70",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Door James RESERVATION",
+               "type": "url",
+               "url": "https://doorjames.app/"
+            }, {
+               "date_added": "13308061645293285",
+               "date_last_used": "13358250823015413",
+               "guid": "958d03aa-4cbf-46c2-85dd-178b2708b6f0",
+               "id": "9",
+               "name": "PSA - Feuille de temps",
+               "type": "url",
+               "url": "https://psa-fs.ent.cgi.com/psp/fsprda/?cmd=login&languageCd=CFR&"
+            }, {
+               "date_added": "13308061961519637",
+               "date_last_used": "13349181148281904",
+               "guid": "dfa09073-e7e3-47d6-9da3-4107bb770ca4",
+               "id": "10",
+               "name": "JIRA - Feuille de temps",
+               "type": "url",
+               "url": "https://proactioneu.ent.cgi.com/jira/secure/Dashboard.jspa"
+            }, {
+               "date_added": "13308062240729482",
+               "date_last_used": "13356619121868670",
+               "guid": "29e94ade-27d1-49aa-95c0-04f16feb1022",
+               "id": "12",
+               "name": "RH - Congés",
+               "type": "url",
+               "url": "https://psa-hrservicecenter.ent.cgi.com/psp/cmprd/EMPLOYEE/CRM/h/?tab=CR_RC_HRHD_SS"
+            }, {
+               "date_added": "13308062985942661",
+               "date_last_used": "13358247444390982",
+               "guid": "73022f29-e769-44d3-835f-4e02984a29df",
+               "id": "14",
+               "name": "Percipio - eLearning",
+               "type": "url",
+               "url": "https://cgi.percipio.com/"
+            }, {
+               "date_added": "13308758060554506",
+               "date_last_used": "13309350977231389",
+               "guid": "fe1d20b6-097c-46f8-9486-9c29a6932f32",
+               "id": "19",
+               "name": "EasyVista 2022.1.109.0.04",
+               "type": "url",
+               "url": "https://oney.easyvista.com/"
+            }, {
+               "date_added": "13308915267415900",
+               "date_last_used": "13309350974306999",
+               "guid": "6d2965b9-0b5c-4198-a5ee-199fffe469d5",
+               "id": "21",
+               "name": "Confluence",
+               "type": "url",
+               "url": "https://proactioneu.ent.cgi.com/confluence/"
+            }, {
+               "date_added": "13309280562150275",
+               "date_last_used": "13358247290486397",
+               "guid": "f1dcc9b4-77cd-4032-9501-5f0e79d47a15",
+               "id": "30",
+               "name": "CSE SHAPSHA CGI - Identification",
+               "type": "url",
+               "url": "https://www.cseshapsha-cgi.fr/com/login?back_url=%2Fcom%2Fhomepage"
+            }, {
+               "date_added": "13309281933238364",
+               "date_last_used": "0",
+               "guid": "ad809615-5af4-4fa0-a248-e91e2fa9d213",
+               "id": "31",
+               "name": "GRR (Gestion et Réservation de Ressources)",
+               "type": "url",
+               "url": "https://cse-cgi-rennes.mygrr.net/login.php"
+            }, {
+               "date_added": "13310206623007956",
+               "date_last_used": "13345575565375399",
+               "guid": "b1d0405d-01a8-4b6f-83a3-b8b47a1e07e7",
+               "id": "35",
+               "name": "PSA VPN",
+               "type": "url",
+               "url": "https://psa-fs.ent.cgi.com/psc/fsprda/EMPLOYEE/ERP/c/NUI_FRAMEWORK.PT_LANDINGPAGE.GBL?&lp=ERP.EMPLOYEE.UC_RS_PSA_FIN_RM"
+            }, {
+               "date_added": "13319131163000079",
+               "date_last_used": "13324747871903305",
+               "guid": "eec51b4f-7cc2-43dc-abb9-b90ddb447b9c",
+               "id": "65",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "RAA",
+               "type": "url",
+               "url": "https://psw.ent.cginet/SPPTool/Login.aspx?ReturnUrl=%2fSPPTool%2fDocuments.aspx"
+            } ],
+            "date_added": "13310559195927862",
+            "date_last_used": "0",
+            "date_modified": "13328204717612822",
+            "guid": "6efcadd9-a6be-4759-9509-b556ad038ef6",
+            "id": "43",
+            "name": "CGI",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13312024125379243",
+               "date_last_used": "13312290303636184",
+               "guid": "3e393440-4b4f-498f-b328-4f2d78056882",
+               "id": "48",
+               "name": "WeShare",
+               "type": "url",
+               "url": "https://welcome.weshare.safran-group.com/"
+            }, {
+               "date_added": "13312290054766390",
+               "date_last_used": "13313755128227480",
+               "guid": "d77d09b6-fdb2-4569-965b-8cf3eec5b95a",
+               "id": "50",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "CGI HOSTING FRANCE",
+               "type": "url",
+               "url": "https://fr-portail-gto.resultinfra.com/portail/cloudprive/#/login?redirect=%2F"
+            }, {
+               "date_added": "13312370053589320",
+               "date_last_used": "13328267717737936",
+               "guid": "8bdd4225-96b2-466a-b573-cf1628025147",
+               "id": "53",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "myvirtualworkplace-ext",
+               "type": "url",
+               "url": "https://myvirtualworkplace-ext.safran-group.com/logon/LogonPoint/tmindex.html"
+            }, {
+               "date_added": "13312390088636567",
+               "date_last_used": "13334664336133961",
+               "guid": "e993563d-f61f-4753-b6e7-b91a5ec4501c",
+               "id": "56",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Citrix Workspace",
+               "type": "url",
+               "url": "https://myvirtualworkplace-ext.safran-group.com/Citrix/GVW-NSExternalWeb/"
+            }, {
+               "date_added": "13312459178935724",
+               "date_last_used": "13321445385977088",
+               "guid": "ddb60172-89a1-428e-9daf-4f8b0d14ae0a",
+               "id": "58",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "PBRPortal - Séléction SAFRAN VPN external2",
+               "type": "url",
+               "url": "http://fr-pbr-vdr2.resultinfra.com/#/"
+            }, {
+               "date_added": "13313863585522790",
+               "date_last_used": "13314205160919893",
+               "guid": "067a6c75-3202-449f-8e17-fabe26f6032b",
+               "id": "60",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Liquid - portal doc",
+               "type": "url",
+               "url": "https://learn.microsoft.com/en-us/power-apps/maker/portals/liquid/portals-entity-tags"
+            }, {
+               "date_added": "13323349763642504",
+               "date_last_used": "0",
+               "guid": "0fab5274-d291-4a2a-937d-f2c59e5d4079",
+               "id": "68",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "▶ Part/MRO/SB Claim - Proto - Safran Warranty Claim",
+               "type": "url",
+               "url": "https://www.figma.com/proto/hFGWzOQpUcRURCv1KQ0wl1/Safran-Warranty-Claim?page-id=0%3A1&node-id=0%3A3289&viewport=372%2C165%2C0.06&scaling=scale-down-width&starting-point-node-id=0%3A3289&show-proto-sidebar=1"
+            } ],
+            "date_added": "13312024109616667",
+            "date_last_used": "0",
+            "date_modified": "13326811505417925",
+            "guid": "453f061a-2dba-4ed0-a93a-0f9229e43d0d",
+            "id": "47",
+            "name": "SAFRAN",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13340710112800317",
+               "date_last_used": "13347382404339460",
+               "guid": "e964de26-3b05-4e35-94c8-b84b6c5d305a",
+               "id": "78",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Umanis - Se connecter",
+               "type": "url",
+               "url": "https://identity.umanis.com/app/panw_globalprotect/exk7niyrm8D6UDyBV417/sso/saml"
+            }, {
+               "date_added": "13340713206594150",
+               "date_last_used": "0",
+               "guid": "9e4af375-c28f-41db-b523-f05897188efe",
+               "id": "79",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "GitLab",
+               "type": "url",
+               "url": "https://fr-forge-gto.resultinfra.com/gitlab/"
+            }, {
+               "date_added": "13340714147034984",
+               "date_last_used": "13344360956676382",
+               "guid": "e67f8ce2-828b-4f8a-a39b-671f5c12dcbe",
+               "id": "80",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "MyDAT by GTO",
+               "type": "url",
+               "url": "https://fr-forge-gto.resultinfra.com/"
+            }, {
+               "date_added": "13340722653331006",
+               "date_last_used": "0",
+               "guid": "0cd7103a-a16e-47de-b3e7-00d4d56237a4",
+               "id": "82",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Eclipse · Wiki · EFFICY / wiki-technique · GitLab",
+               "type": "url",
+               "url": "https://fr-forge-gto.resultinfra.com/gitlab/efficy/wiki-technique/-/wikis/Pr%C3%A9paration-d'une-VM-d%C3%A9veloppeur/Eclipse"
+            }, {
+               "date_added": "13342540112268290",
+               "date_last_used": "13346781149713218",
+               "guid": "0832a570-194b-4c3a-a76f-4b7f0c0d2e7a",
+               "id": "84",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Introduction",
+               "type": "url",
+               "url": "https://help.efficy.io/E-deal_crm/index.html"
+            }, {
+               "date_added": "13342874826544383",
+               "date_last_used": "0",
+               "guid": "af5315d0-f5df-4b51-937c-a1cc7cdb688d",
+               "id": "86",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "[CCASSD-204] [86389] - WS : SearchCMCAS : ajouter le champ email - EU Jira",
+               "type": "url",
+               "url": "https://proactioneu.ent.cgi.com/jira/browse/CCASSD-204"
+            } ],
+            "date_added": "13340709245758038",
+            "date_last_used": "0",
+            "date_modified": "13342874826544383",
+            "guid": "fe236d30-f136-4735-8a75-31a6a46e9470",
+            "id": "76",
+            "name": "EFFICY",
+            "type": "folder"
+         }, {
+            "date_added": "13337685188701491",
+            "date_last_used": "13337689692535528",
+            "guid": "fd1b0cae-9572-4691-b3db-74460a924e36",
+            "id": "74",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "FICHIER LIVRAISONS",
+            "type": "url",
+            "url": "https://groupecgi.sharepoint.com/:x:/r/teams/PRJ00010974/_layouts/15/Doc.aspx?sourcedoc=%7B0FCFDC60-3EDC-4C92-BD32-405E1505BF6D%7D&file=Versions_Solutions_par_Tenant_v2.0.xlsx&wdOrigin=TEAMS-ELECTRON.p2p.p2p&action=default&mobileredirect=true"
+         } ],
+         "date_added": "13308054272324254",
+         "date_last_used": "0",
+         "date_modified": "13340713206594150",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Barre de favoris",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13308054272324255",
+         "date_last_used": "0",
+         "date_modified": "13340709297459333",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Autres favoris",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13308054272324260",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Favoris sur mobile",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

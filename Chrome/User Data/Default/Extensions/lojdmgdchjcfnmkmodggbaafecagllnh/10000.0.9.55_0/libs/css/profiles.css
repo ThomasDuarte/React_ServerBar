@@ -1,0 +1,6 @@
+/* ORGanizer for Salesforce - v10000.0.9.53 
+ * Author: Enrico Murru (https://organizer.solutions/)
+ * Copyright 2016-2024
+ */
+
+.ui-profile,.ui-profile-end,.ui-profile-start{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.pointer{cursor:pointer}.header-fixed{width:100%}.header-fixed{overflow-y:auto;height:350px;border:1px solid #eee}.header-fixed table{border-collapse:collapse;width:100%}.header-fixed th,.header-fixed td{padding:8px 16px}.header-fixed tr.ui-table-tr-days th,.header-fixed tr.ui-table-tr-range th{height:3em}.header-fixed tr.ui-table-tr-days th{position:sticky;top:0;background:#eee;border:#eee solid fixed 2px}.bnsn-dark .header-fixed tr.ui-table-tr-days th{background:#111}.header-fixed tr.ui-table-tr-range th{position:sticky;top:3em;background:#eee;border:#eee solid fixed 2px}.bnsn-dark .header-fixed tr.ui-table-tr-range th{background:#111}.selected{background:#ffe560!important}.bnsn-dark .selected{background:#3498db!important}.changed{color:#a94442;font-weight:700}.no-selection{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}

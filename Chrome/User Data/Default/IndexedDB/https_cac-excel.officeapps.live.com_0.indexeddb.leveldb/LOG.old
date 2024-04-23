@@ -1,0 +1,15 @@
+2023/09/12-14:32:45.991 4730 Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_cac-excel.officeapps.live.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/09/12-14:32:45.993 4730 Recovering log #71
+2023/09/12-14:32:45.994 4730 Reusing old log C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_cac-excel.officeapps.live.com_0.indexeddb.leveldb/000071.log 
+2023/09/12-16:54:14.811 4738 Level-0 table #76: started
+2023/09/12-16:54:14.814 4738 Level-0 table #76: 745 bytes OK
+2023/09/12-16:54:14.817 4738 Delete type=0 #71
+2023/09/12-16:54:14.818 4738 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2023/09/12-16:54:14.818 4738 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x04\x01\x02\x01 \x006\x00a\x007\x000\x003\x005\x007\x001\x009\x008\x00b\x00e\x004\x000\x00c\x00a\x009\x009\x003\x00e\x00e\x008\x009\x009\x005\x004\x007\x00f\x007\x00c\x00c\x00a' @ 1639 : 1
+2023/09/12-16:54:14.818 4738 Compacting 1@1 + 1@2 files
+2023/09/12-16:54:14.822 4738 Generated table #77@1: 105 keys, 1890 bytes
+2023/09/12-16:54:14.822 4738 Compacted 1@1 + 1@2 files => 1890 bytes
+2023/09/12-16:54:14.823 4738 compacted to: files[ 0 0 1 0 0 0 0 ]
+2023/09/12-16:54:14.824 4738 Delete type=2 #73
+2023/09/12-16:54:14.824 4738 Delete type=2 #76
+2023/09/12-16:54:14.827 4738 Manual compaction at level-1 from '\x00\x04\x01\x02\x01 \x006\x00a\x007\x000\x003\x005\x007\x001\x009\x008\x00b\x00e\x004\x000\x00c\x00a\x009\x009\x003\x00e\x00e\x008\x009\x009\x005\x004\x007\x00f\x007\x00c\x00c\x00a' @ 1639 : 1 .. (end); will stop at (end)

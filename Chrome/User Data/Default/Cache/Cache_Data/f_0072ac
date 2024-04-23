@@ -1,0 +1,572 @@
+cgi.offcanvas = {
+	resizeTimer: null,
+	isOpen: false,
+	childIsOpen: false,
+	mainNavId: '#main-navigation',
+	$mainNavBtn: null,
+	$mainNavIcon: null,
+	myFaveId: '#my-favorites',
+	$myFaveNavBtn: null,
+	$myFaveNavIcon: null,
+	annId: '#announcements',
+	$annNavBtn: null,
+	$annNavIcon: null,
+	searchId: '#site-search',
+	$searchBtn: null,
+	peopleId: '#people-detail',
+	annoDetailId: '#announcement-detail',
+	orgChartId: '#org-chart',
+	currentTrigger: null,
+	currentChildTrigger: null,
+	lastFocusableItemPeopleDetails: null,
+	firstFocusableItemGeneric: null,
+	lastFocusableItemGeneric: null,
+	openOffcanvas: function (e, toggleTarget, clickedElm) {
+		cgi.offcanvas.currentTrigger = clickedElm;
+		$(toggleTarget).addClass('show');
+		var ariaElUpdate = '[data-target="' + toggleTarget + '"]';
+		$(ariaElUpdate).attr('aria-expanded', 'true');
+		$('html').addClass('offcanvas-open');
+
+		if ($(window).outerWidth() >= 992 || toggleTarget == cgi.offcanvas.searchId) {
+			$('body').append('<div class="offcanvas-cover"></div>');
+		}
+		// Setup focus on open depending on offcanvas
+		if (toggleTarget === cgi.offcanvas.myFaveId) {
+			// Focus on first nav-link
+			$('#favorite-home').focus();
+		} else if (toggleTarget == cgi.offcanvas.annId) {
+			// Focus on the first announcement title
+			$('.announcement:first-of-type .announcement-link').focus();
+		} else if (toggleTarget == cgi.offcanvas.peopleId) {
+			// Focus is covered in PersonDetails.js
+		} else if (toggleTarget == cgi.offcanvas.searchId) {
+			// Focus on the input
+			$('#site-search-input').focus();
+		} else {
+			// This covers the generic and any other offcanvas that may come up
+
+			// Because this panel is all user-generated, we need to find the first and last focusable item so we can use the to loop back around within the panel
+			// If we've already set these, we want to reset them on open
+			if (cgi.offcanvas.firstFocusableItemGeneric != null || cgi.offcanvas.lastFocusableItemGeneric != null) {
+				$(cgi.offcanvas.firstFocusableItemGeneric).removeClass('is-generic-first-item');
+				$(cgi.offcanvas.lastFocusableItemGeneric).removeClass('is-generic-last-item');
+			}
+
+			// Find the first/last focusable items and add classes to them (+ focus on the first one), which we'll target later
+			cgi.offcanvas.firstFocusableItemGeneric = $('.offcanvas.show').find(':focusable:not(.close)').first();
+			cgi.offcanvas.lastFocusableItemGeneric = $('.offcanvas.show').find(':focusable:not(.close)').last();
+
+			// If there are no focusable items other than the close icon, focus on close as first/last items
+			if(cgi.offcanvas.firstFocusableItemGeneric.length != 0) {
+				$(cgi.offcanvas.firstFocusableItemGeneric).addClass('is-generic-first-item').focus();
+				$(cgi.offcanvas.lastFocusableItemGeneric).addClass('is-generic-last-item');
+			} else {
+				$('.offcanvas.show button.close').addClass('is-generic-first-item is-generic-last-item').focus();
+			}
+		}
+
+		if ($(window).outerWidth() < 992) {
+			cgi.offcanvas.toggleMobileBtns(toggleTarget);
+		}
+
+		cgi.offcanvas.isOpen = true;
+	},
+	closeOffcanvas: function (e, toggleTarget) {
+		// Don't allow to open a new offcanvas via trigger when another is open but close it
+		var ariaElUpdate = '[data-target="' + '#' + $('.offcanvas.show').attr('id') + '"]';
+		$(ariaElUpdate).attr('aria-expanded', 'false');
+		var ariaElUpdateChild = '[data-target="' + '#' + $('.offcanvas.show-child .offcanvas-child').attr('id') + '"]';
+		$(ariaElUpdateChild).attr('aria-expanded', 'false');
+
+		// Refocus on the navbar trigger if closed via keyboard
+		var code = e.keyCode || e.which;
+		if (code === 13 || code === 27) {
+			// Because the element is not visible on init of focus, we have to do some timing manipulation
+			setTimeout(function () {
+				if ($(cgi.offcanvas.currentTrigger).hasClass('nav-item')) {
+					$(cgi.offcanvas.currentTrigger).find('a.nav-link').focus();
+				} else {
+					$(cgi.offcanvas.currentTrigger).focus();
+				}
+			});
+		}
+
+		// Reset the UI
+		$('.offcanvas').removeClass('show');
+		$('html').removeClass('offcanvas-open');
+
+		if ($('.offcanvas-cover')) {
+			$('.offcanvas-cover').remove();
+		}
+
+		if (cgi.offcanvas.childIsOpen) {
+			$('.offcanvas').removeClass('show-child');
+			cgi.offcanvas.childIsOpen = false;
+		}
+
+		// Reset mobile buttons
+		if (toggleTarget != null && $(window).outerWidth() < 992) {
+			cgi.offcanvas.toggleMobileBtns(toggleTarget);
+		} else {
+			cgi.offcanvas.resetMobileButtons();
+		}
+
+		cgi.offcanvas.isOpen = false;
+	},
+	openChildOffcanvas: function (e, toggleTarget, clickedElm) {
+		cgi.offcanvas.currentChildTrigger = clickedElm;
+		$(toggleTarget).parent('.offcanvas').addClass('show-child');
+		var ariaElUpdate = '[data-target="' + toggleTarget + '"]';
+		$(ariaElUpdate).attr('aria-expanded', 'true');
+		var lastFocusableItemInChildOC =  $('.offcanvas.show-child').find(':focusable').last();
+		lastFocusableItemInChildOC.addClass('is-child-last-item');
+		cgi.offcanvas.childIsOpen = true;
+	},
+	closeChildOffcanvas: function (e, toggleTarget) {
+		var ariaElUpdate = '[data-target="' + '#' + $('.offcanvas.show-child .offcanvas-child').attr('id') + '"]';
+		$(ariaElUpdate).attr('aria-expanded', 'false');
+		$(toggleTarget).parent('.offcanvas').removeClass('show-child');
+
+		// Refocus on the navbar trigger if closed via keyboard
+		var code = e.keyCode || e.which;
+		if (code === 13) {
+			$(cgi.offcanvas.currentChildTrigger).focus();
+		}
+		cgi.offcanvas.childIsOpen = false;
+	},
+	toggleMobileBtns: function (toggleTarget) {
+		cgi.offcanvas.resetMobileButtons();
+
+		if (toggleTarget === cgi.offcanvas.mainNavId) {
+			cgi.offcanvas.$myFaveNavIcon.attr('class', 'fal fa-star');
+			cgi.offcanvas.$annNavIcon.attr('class', 'fal fa-bell');
+			if (!$(cgi.offcanvas.mainNavId).hasClass('show')) {
+				cgi.offcanvas.$mainNavBtn.removeClass('active close');
+				cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-bars');
+			} else {
+				cgi.offcanvas.$mainNavBtn.addClass('active close');
+				cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-times');
+			}
+		} else if (toggleTarget === cgi.offcanvas.myFaveId) {
+			cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-bars');
+			cgi.offcanvas.$annNavIcon.attr('class', 'fal fa-bell');
+			if (!$(cgi.offcanvas.myFaveId).hasClass('show')) {
+				cgi.offcanvas.$myFaveNavBtn.removeClass('active close');
+				cgi.offcanvas.$myFaveNavIcon.attr('class', 'fal fa-star');
+			} else {
+				cgi.offcanvas.$myFaveNavBtn.addClass('active close');
+				cgi.offcanvas.$myFaveNavIcon.attr('class', 'fas fa-star');
+			}
+		} else if (toggleTarget === cgi.offcanvas.annId) {
+			cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-bars');
+			cgi.offcanvas.$myFaveNavIcon.attr('class', 'fal fa-star');
+			if (!$(cgi.offcanvas.annId).hasClass('show')) {
+				cgi.offcanvas.$annNavBtn.removeClass('active close');
+				cgi.offcanvas.$annNavIcon.attr('class', 'fal fa-bell');
+			} else {
+				cgi.offcanvas.$annNavBtn.addClass('active close');
+				cgi.offcanvas.$annNavIcon.attr('class', 'fas fa-bell');
+			}
+		} else if (toggleTarget === cgi.offcanvas.searchId) {
+			cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-bars');
+			cgi.offcanvas.$myFaveNavIcon.attr('class', 'fal fa-star');
+			cgi.offcanvas.$annNavIcon.attr('class', 'fal fa-bell');
+			if (!$(cgi.offcanvas.searchId).hasClass('show')) {
+				cgi.offcanvas.$searchBtn.removeClass('active close');
+			} else {
+				cgi.offcanvas.$searchBtn.addClass('active close');
+			}
+		}
+	},
+	resetMobileButtons: function () {
+		cgi.offcanvas.$mainNavIcon.attr('class', 'fal fa-bars');
+		cgi.offcanvas.$myFaveNavIcon.attr('class', 'fal fa-star');
+		cgi.offcanvas.$annNavIcon.attr('class', 'fal fa-bell');
+		$('#ui-navbar-bottom .nav-link').removeClass('active close');
+	},
+	updateOffCanvas: function () {
+		var winWidth = $(window).width();
+			
+		if (winWidth <= 991) {
+			if($('#subNavigationWrap').length){
+				cgi.offcanvas.setupSubMenuOffcanvas();
+			}	
+		} else {
+			if ($('#subNavigationWrap').length) {
+				cgi.offcanvas.undoSubMenuOffcanvas();
+			}
+		}
+	},
+	setupSubMenuOffcanvas: function () {
+		var $subMenOC = $('#subNavigationWrap');
+		if (!$('#subNavigationWrapClose').length) {
+			$subMenOC.prepend(
+				'<button type="button" class="close" id="subNavigationWrapClose" data-toggle="offcanvas" data-target="#subNavigationWrap" aria-expanded="true"><span class="fal fa-chevron-left mr-1" aria-hidden="true"></span><span id="BrowseCGI_Label_CloseSubNavPanel">Collapse Sub Navigation</span></button>'
+			);
+		}
+	},
+	undoSubMenuOffcanvas: function () {
+		$('#subNavigationWrapClose').remove();
+	},
+	updateOffcanvasesAfterLoad: function(){
+		// Because some offcanvas, such as refiners need to be set up after the page is finished loading, we will call this after the window is done loading; this is why we aren't using "updateOffcanvas"
+		var winWidth = $(window).width();
+
+		if (winWidth <= 991) {
+			cgi.offcanvas.setupRefinersOffcanvas();
+		} else {
+			cgi.offcanvas.undoRefinersOffcanvas();
+		}
+	},
+	setupRefinersOffcanvas: function () {
+		var $refinersOC = $('#refinerOffcanvasWrap');
+		if (!$('#refinerOffcanvasWrapClose').length) {
+			$refinersOC.prepend(
+				'<button type="button" class="close" id="refinerOffcanvasWrapClose" data-toggle="offcanvas" data-target="#refinerOffcanvasWrap" aria-expanded="true"><span class="fal fa-chevron-left mr-1" aria-hidden="true"></span><span id="SearchResults_Label_CollapseRefinerPanel">Collapse Refiners</span></button><div class="offcanvas-loader text-center text-gray-600"><span class="fal fa-spinner-third fa-spin mb-2" aria-hidden="true"></span></div>'
+			);
+		}
+	},
+	undoRefinersOffcanvas: function () {
+		$('#refinerOffcanvasWrapClose').remove();
+	},
+	closeRefinementPanel: function(){
+		// We've added this function to Filter_MultiValue_Body.html so when filters are clicked, the offcanvas closes
+		// Added a loder for a more visual effect while the filters load
+		$('#refinerOffcanvasWrap .offcanvas-loader').addClass('is-loading');
+		$('#refinerOffcanvasWrap').css('overflow', 'hidden');
+		setTimeout(function () {
+			$('#refinerOffcanvasWrapClose').click();
+			$('#refinerOffcanvasWrap .offcanvas-loader').removeClass('is-loading');
+			$('#refinerOffcanvasWrap').css('overflow', '');
+		}, 400);
+	},
+	parentClickHandling: function () {
+		function specificOffcanvasOpenFunctions(e, toggleTarget, clickedElm) {
+			// For people detail, swap the content by calling createPeopleDetailOffcanvas() from PersonDetail.js
+			if (toggleTarget === cgi.offcanvas.peopleId) {
+				createPersonDetailOffcanvas($(clickedElm).data('userdetails'));
+			}
+
+			// Favorites: Reset the management view on load and focus on first item
+			if (toggleTarget === cgi.offcanvas.myFaveId) {
+				cgi.myFavorites.closeManageMode(e);
+			}
+		}
+		function parentClickLogic(e, clickedElm) {
+			e.preventDefault();
+			var toggleTarget = $(clickedElm).data('target');
+			
+			// Determine how to handle the click based on which trigger is clicked
+			if ( toggleTarget === '#main-navigation' && $('#main-navigation').hasClass('show')) {
+				// Mobile navigation toggle
+				cgi.offcanvas.closeOffcanvas(e, toggleTarget);
+			} else if ($(clickedElm).hasClass('close')) {
+				// If clicking on a close trigger, close it
+				cgi.offcanvas.closeOffcanvas(e, toggleTarget);
+			} else if (!$(clickedElm).hasClass('close') && cgi.offcanvas.isOpen && toggleTarget === cgi.offcanvas.peopleId && $(cgi.offcanvas.peopleId).hasClass('show')) {
+				// If people-detail is open and another is clicked (but not close button), swap the content by calling createPeopleDetailOffcanvas() from PersonDetail.js
+				createPersonDetailOffcanvas($(clickedElm).data('userdetails'));
+
+				// If on mobile, close the open org chart when swapping users via the org chart
+				if ($(window).outerWidth() < 992 && $(clickedElm).parent('.tile-heading')) {
+					var toggleChildTarget = '.offcanvas.show.show-child .offcanvas-child';
+					cgi.offcanvas.closeChildOffcanvas(e, toggleChildTarget);
+				}
+			} else if (cgi.offcanvas.isOpen) {
+				// Close the targested offcanvas
+				cgi.offcanvas.closeOffcanvas(e, toggleTarget);
+				cgi.offcanvas.openOffcanvas(e, toggleTarget, clickedElm);
+				specificOffcanvasOpenFunctions(e, toggleTarget, clickedElm);
+			} else {
+				// Open the targeted offcanvas
+				cgi.offcanvas.openOffcanvas(e, toggleTarget, clickedElm);
+				specificOffcanvasOpenFunctions(e, toggleTarget, clickedElm);
+			}
+		}
+
+		$(document).on('click', '[data-toggle="offcanvas"]', function (e) {
+			parentClickLogic(e, this);
+		});
+		
+		$(document).on('keypress', '[data-toggle="offcanvas"]', function (e) {
+			var code = e.keyCode || e.which;
+			if (code === 13) {
+				parentClickLogic(e, this);
+			}
+		});
+	},
+	childClickHandling: function () {
+		function clickLogic(e, clickedElm) {
+			e.preventDefault();
+			e.stopPropagation();
+			var toggleChildTarget = $(clickedElm).data('target');
+			var targetUserDetails = $(clickedElm).data('userdetails');
+			// Determine how to handle the click based on various states
+			if ($(clickedElm).attr('id') == 'js-trigger-org-chart') {	
+				// For people detail, call the renderOrgChart function from PersonDetail.js
+				// If the user is clicking to activate an org chart after another, rerun renderOrgChart() from PersonDetail.js
+				if (toggleChildTarget === cgi.offcanvas.orgChartId) {
+				//&& $(cgi.offcanvas.orgChartId).data('userdetails') != targetUserDetails) {
+					renderOrgChart($(clickedElm).data('userdetails'),$(clickedElm).data('manager'));
+				}
+				if (!cgi.offcanvas.childIsOpen) {
+					cgi.offcanvas.openChildOffcanvas(e, toggleChildTarget, clickedElm);
+
+					// Focus into the child canvas
+					setTimeout(function () {
+						$('.offcanvas.show-child')
+							.find('.offcanvas-child-close:first-child')
+							.focus();
+					}, 100);
+				}
+			} else if (cgi.offcanvas.childIsOpen && $(clickedElm).hasClass('offcanvas-child-close')){
+				cgi.offcanvas.closeChildOffcanvas(e, toggleChildTarget);
+			} else if (!$(clickedElm).hasClass('offcanvas-child-close')) {
+				if (!cgi.offcanvas.childIsOpen) {
+					cgi.offcanvas.openChildOffcanvas(e, toggleChildTarget, clickedElm);
+				}
+
+				// Focus into the child canvas
+				setTimeout(function () {
+					$('.offcanvas.show-child')
+						.find('.offcanvas-child-close:first-child')
+						.focus();
+				}, 100);
+			}
+		}
+		$(document).on('click', '[data-toggle="offcanvas-child"]', function (e) {
+			clickLogic(e, this);
+		});
+		$(document).on('keypress', '[data-toggle="offcanvas-child"]', function (e) {
+			var code = e.keyCode || e.which;
+			if (code === 13) {
+				clickLogic(e, this);
+			}
+		});
+	},
+	keybinding: function () {
+		// Focus close button when we reach the end of the offcanvas content
+		var closePanelBtn = '.offcanvas.show button.text-white.close';
+		function closeBtnFocus(e) {
+			var code = e.keyCode || e.which;
+			if (code === 9) {
+				if (!e.shiftKey) {
+					$(closePanelBtn).focus();
+					e.preventDefault();
+				}
+			}
+		}
+
+		// Custom triggers to set the close button focus for the various panels
+		$(document).on('keydown', cgi.myFavorites.manageOpenBtnId, function (e) {
+			closeBtnFocus(e);
+		});
+
+		$(document).on('keydown', cgi.myFavorites.manageCloseBtnId, function (e) {
+			closeBtnFocus(e);
+		});
+
+		$(document).on('keydown', '#js-mark-all-read', function (e) {
+			closeBtnFocus(e);
+		});
+
+		$(document).on('keydown', '.is-people-detail-last-item', function (e) {
+			closeBtnFocus(e);
+		});
+
+		$(document).on('keydown', '.is-generic-last-item', function (e) {
+			closeBtnFocus(e);
+		});
+
+		// Create a loop for focusing within annnoucements .offcanvas-child
+		$(document).on('keydown','#announcements.offcanvas.show-child .is-child-last-item',
+			function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 9) {
+					$('.offcanvas.show-child')
+						.find('.offcanvas-child-close:first-child')
+						.focus();
+					e.preventDefault();
+				}
+			}
+		);
+
+		// Create a loop for focusing within people-detail .offcanvas-child
+		$(document).on('keydown','#people-detail.offcanvas.show-child .tile:last a',
+			function (e) {
+				var code = e.keyCode || e.which;
+				if (code === 9) {
+					$('.offcanvas.show-child')
+						.find('.offcanvas-child-close:first-child')
+						.focus();
+					e.preventDefault();
+				}
+			}
+		);
+
+		// Don't leave the offcanvas via tabbing out of the Close button
+		$(document).on('keydown', closePanelBtn, function (e) {
+			var code = e.keyCode || e.which;
+			if (code === 9) {
+				if (e.shiftKey) {
+					// Setup keybinding depending on offcanvas
+					if ($(cgi.offcanvas.myFaveId).hasClass('show')) {
+						if ($(cgi.offcanvas.myFaveId).hasClass('in-manage-mode')) {
+							$(cgi.myFavorites.manageCloseBtnId).focus();
+						} else {
+							$(cgi.myFavorites.manageOpenBtnId).focus();
+						}
+					} else if ($(cgi.offcanvas.annId).hasClass('show')) {
+						$('#js-mark-all-read').focus();
+					} else if ($(cgi.offcanvas.peopleId).hasClass('show')) {
+						$(cgi.offcanvas.peopleId + ' .is-people-detail-last-item').focus();
+					} else {
+						$('.offcanvas.show .is-generic-last-item').focus();
+					}
+
+					e.preventDefault();
+				}
+			}
+		});
+
+		// Close off canvas on 'esc' click
+		$(document).keyup(function (e) {
+			if (e.keyCode === 27) {
+				// If the user if actively editing favorites, confirm before closing
+				if ($(cgi.offcanvas.myFaveId).hasClass('in-manage-mode')) {
+					cgi.myFavorites.closeManageMode(e);
+					cgi.offcanvas.closeOffcanvas(e);
+				} else {
+					cgi.offcanvas.closeOffcanvas(e);
+				}
+			}
+		});
+	},
+	init: function () {
+		cgi.offcanvas.parentClickHandling();
+		cgi.offcanvas.childClickHandling();
+		cgi.offcanvas.updateOffCanvas();
+
+		// Set variables
+		cgi.offcanvas.$mainNavBtn = $(
+			'button[data-target="' + cgi.offcanvas.mainNavId + '"]'
+		);
+		cgi.offcanvas.$mainNavIcon = cgi.offcanvas.$mainNavBtn.find('.fal');
+		cgi.offcanvas.$myFaveNavBtn = $(
+			'button[data-target="' + cgi.offcanvas.myFaveId + '"]'
+		);
+		cgi.offcanvas.$myFaveNavIcon = cgi.offcanvas.$myFaveNavBtn.find('.fa-star');
+		cgi.offcanvas.$annNavBtn = $(
+			'button[data-target="' + cgi.offcanvas.annId + '"]'
+		);
+		cgi.offcanvas.$annNavIcon = cgi.offcanvas.$annNavBtn.find('.fa-bell');
+		cgi.offcanvas.$searchBtn = $(
+			'button[data-target="' + cgi.offcanvas.searchId + '"]'
+		);
+
+		// Close offcanvas on offcabvas-cover click
+		$(document).on('click', '.offcanvas-cover', function (e) {
+			// If the user if actively editing favorites, confirm before closing
+			if ($(cgi.offcanvas.myFaveId).hasClass('in-manage-mode')) {
+				cgi.myFavorites.closeManageMode(e);
+				cgi.offcanvas.closeOffcanvas(e);
+			} else {
+				cgi.offcanvas.closeOffcanvas(e);
+			}
+		});
+
+		// Close child people offcanvas when the parent is clicked - mobile only
+		$(document).on('click', '#people-detail-subheader, #people-detail-body', function (e) {
+			var clickedElmId = $(this).attr('id');
+			if (cgi.offcanvas.childIsOpen && $(window).outerWidth() < 992 && clickedElmId != 'org-chart-body' && clickedElmId != 'PeopleDetail_Label_OrgChartButton') {
+				var toggleChildTarget = '.offcanvas-parent.show.show-child .offcanvas-child';
+				cgi.offcanvas.closeChildOffcanvas(e, toggleChildTarget);
+			}
+		});
+
+		$(window).on('resize', function (e) {
+			clearTimeout(cgi.offcanvas.resizeTimer);
+			cgi.offcanvas.updateOffCanvas();
+			cgi.offcanvas.updateOffcanvasesAfterLoad();
+			cgi.offcanvas.resetMobileButtons();
+			cgi.offcanvas.resizeTimer = setTimeout(function () {}, 250);
+		});
+
+		$(window).on('load', function (e) {
+			// Refiners on mobile
+			setTimeout(function () {
+				cgi.offcanvas.updateOffcanvasesAfterLoad();
+			}, 300);
+		});
+	},
+};
+
+/* CCISUPGR-1912 */
+$(window).on('load', function() {
+    var timeoutIteration = 0;
+    var slideLoaded = false;
+	if(window.location.href.indexOf('PeopleSearchGridView.aspx') != -1){
+		PeopleSlideLoad(timeoutIteration,slideLoaded);
+	}    
+});
+
+function PeopleSlideLoad(timeoutIteration, slideLoaded) {
+    try {
+        var qryString = $.urlParam('email');
+        var userEmail = qryString;
+        if (qryString != null) {
+            var emailIndex = qryString.toLowerCase().indexOf("@cgi.com");
+            if (emailIndex != -1) {
+                userEmail = qryString.substring(0, emailIndex + 8); //8 => @cgi.com
+            }
+            $elements = $("a[data-target='#people-detail']");
+            if ($elements.length == 0 && timeoutIteration < 5) {
+                setTimeout(function() {
+                    PeopleSlideLoad(timeoutIteration + 1,false);
+                }, 2000);
+            } else {
+                slideLoaded = true;
+            }
+            if (userEmail != "" && slideLoaded) {
+                $.each($elements, function(index, curElement) {
+                    try {
+                        if (curElement != null) {
+                            if (curElement.dataset["userdetails"] != null) {							
+                                var matchUser = curElement.dataset["userdetails"].toLowerCase().indexOf(userEmail.toLowerCase());
+                                if (matchUser != -1) {
+                                    $(curElement).trigger('click');
+                                    return false;
+                                }
+                            }
+                        }
+                    } catch (ex) {
+                        cgiError.LogError("Error: Iterating the users if more than one in slideout offcanvas.js: window.load()", JSON.stringify(ex));
+                    }
+                });
+            }
+        }
+    } catch (e) {
+        cgiError.LogError("Error: Show user slideout offcanvas.js: window.load()", JSON.stringify(e));
+    }
+}
+
+$.urlParam = function(name) {
+    try {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        } else {
+            return decodeURI(results[1]) || 0;
+        }
+    } catch (ex) {
+        cgiError.LogError("Error: Parsing the query string parameter offcanvas.js: urlParam()", JSON.stringify(ex));
+    }
+}
+
+
+$(document).on('click', '.tile-stacked', function() {
+	$('.offcanvas-inner').animate({
+	  scrollTop: 0
+	}, 500);
+  });

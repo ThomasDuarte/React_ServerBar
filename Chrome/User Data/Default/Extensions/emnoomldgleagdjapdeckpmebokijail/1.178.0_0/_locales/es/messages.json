@@ -1,0 +1,363 @@
+{
+   "0_1_code": {
+      "message": "$COUNT$ Código",
+      "placeholders": {
+         "count": {
+            "content": "$1"
+         }
+      }
+   },
+   "_frais_de_port_inclus_": {
+      "message": "(tarifa de envío incluida)"
+   },
+   "_x_des_derniers_achats_ont_donne_droit_a_un_bonus_surprise": {
+      "message": "\u003Cspan class='value'>80\u003C/span>% de las últimas compras permitieron acumular cashback sorpresa"
+   },
+   "a_vous_de_jouer__cliquez_pour_essayer": {
+      "message": "Tu turno, haz clic para probar"
+   },
+   "activation": {
+      "message": "Activación"
+   },
+   "activer_le_bonus": {
+      "message": "Activar el cashback"
+   },
+   "activez_le_bonus_chez_nos_marchands_partenaires": {
+      "message": "¡Actives el cashback en nuestras tiendas asociadas y recuperes una parte del monto de tu pedido en tu hucha Wanteeed!"
+   },
+   "adblock_content": {
+      "message": "¡Desactívalo para asegurarte de recibir tu cashback!"
+   },
+   "adblock_cta": {
+      "message": "Lo desactivé, sigo hacía mi cashback."
+   },
+   "adblock_return": {
+      "message": "Regresar"
+   },
+   "adblock_title": {
+      "message": "Un bloqueador de anuncios está activado en tu navegador."
+   },
+   "aidez_vos_amis_a_economiser_du_temps_et_de_l_argent": {
+      "message": "Ayuda a tus amigos a ahorrar tiempo y dinero."
+   },
+   "annuler": {
+      "message": "Anular"
+   },
+   "appliquer_le_code": {
+      "message": "¡Usa el código!"
+   },
+   "attention": {
+      "message": "Atención"
+   },
+   "aucun_bonus_n_est_actuellement_disponible_pour_cette_boutique": {
+      "message": "Actualmente no hay cashback disponible para esta tienda"
+   },
+   "bon_plan": {
+      "message": "Ganga :"
+   },
+   "bons_achat": {
+      "message": "Vales"
+   },
+   "bonus": {
+      "message": "Cashback"
+   },
+   "bonus__active": {
+      "message": "Cashback activado"
+   },
+   "bonus_active": {
+      "message": "Cashback activado"
+   },
+   "bonus_surprise": {
+      "message": "Cashback sorpresa"
+   },
+   "boouuum": {
+      "message": "¡BUUUUM !"
+   },
+   "categorie": {
+      "message": "Categoría"
+   },
+   "code_x_sur_x": {
+      "message": "código $COUNT$ / $TOTAL$",
+      "placeholders": {
+         "count": {
+            "content": "$1"
+         },
+         "total": {
+            "content": "$2"
+         }
+      }
+   },
+   "codes": {
+      "message": "Códigos"
+   },
+   "codes_promo_disponibles": {
+      "message": "códigos promocionales disponibles"
+   },
+   "codes_promo_disponibles_pour_cette_boutique": {
+      "message": "códigos promocionales disponibles para esta tienda"
+   },
+   "community_onboarding": {
+      "message": "¡Bienvenido a la comunidad de Wanteeed!\u003Cbr>\u003Cbr>Recientemente compartiste un código y esto permitió que otros usuarios realizaran ahorros gracias a ti 😍\u003Cbr>\u003Cbr>¡Sigue compartiendo para descubrir nuevas sorpresas!"
+   },
+   "configuration": {
+      "message": "Configuración"
+   },
+   "connexion": {
+      "message": "Conexión"
+   },
+   "croisez_autant_de_doigts_que_vous_le_pouvez": {
+      "message": "¡Cruza tantos dedos como puedas!"
+   },
+   "description": {
+      "message": "Wanteeed te permite aplicar automáticamente los mejores descuentos para cientos de sitios comerciales."
+   },
+   "discount": {
+      "message": "ahorrados"
+   },
+   "dites_nous_ce_que_vous_en_pensez": {
+      "message": "¡Es nuevo! ¡Dinos qué piensas!"
+   },
+   "email": {
+      "message": "Email"
+   },
+   "email_placeholder": {
+      "message": "mi@correo.com"
+   },
+   "et_ce_n_est_peut_etre_pas_fini": {
+      "message": "y puede que aún no haya terminado..."
+   },
+   "exclusions": {
+      "message": "exclusiones"
+   },
+   "fermer_lextension": {
+      "message": "cerrar la extensión"
+   },
+   "format_invalide": {
+      "message": "Formato inválido"
+   },
+   "fort": {
+      "message": "Alto"
+   },
+   "hausse_du_bonus_aujourd_hui": {
+      "message": "¡Hoy, aumento de cashback!"
+   },
+   "hebergement": {
+      "message": "Alojamientos"
+   },
+   "il_n_y_a_pas_de_code_promo_actuellement_pour_ce_site": {
+      "message": "Actualmente no hay ningún código promocional para este sitio."
+   },
+   "il_y_a_x_codes_promo_valides_pour_ce_site": {
+      "message": "Hay $VOUCHER_COUNT$ códigos promocionales válidos para este sitio",
+      "placeholders": {
+         "voucher_count": {
+            "content": "$1"
+         }
+      }
+   },
+   "j_ai_deja_un_compte": {
+      "message": "Ya tengo una cuenta"
+   },
+   "j_en_profite": {
+      "message": "Lo quiero"
+   },
+   "je_vote": {
+      "message": "¡Lo quiero!"
+   },
+   "jusqu_a": {
+      "message": "hasta"
+   },
+   "jusqu_a_x_": {
+      "message": "\u003Cspan style='font-size:11px;'>hasta\u003C/span>\n\u003Cspan class='red-text value text-lighten-1'>2.6%\u003C/span>"
+   },
+   "le_code_promo_a_ete_applique": {
+      "message": "¡Se ha aplicado el código promocional!"
+   },
+   "le_meilleur_code_promo_sera_automatiquement_applique_lors_de_votre_commande_sur_ce_site": {
+      "message": "El mejor código promocional se aplicará automáticamente cuando realices un pedido en este sitio."
+   },
+   "les_boutiques": {
+      "message": "Tiendas"
+   },
+   "les_codes_promo_automatiques_ne_sont_pas_encore_disponibles_sur_cette_boutique": {
+      "message": "Los códigos promocionales automáticos aún no están disponibles en esta tienda :("
+   },
+   "mail_ou_mot_de_passe_incorrect": {
+      "message": "Correo o contraseña incorrectos"
+   },
+   "mais_du_temps_de_gagne_plus_besoin_de_chercher_des_codes_sur_internet": {
+      "message": "¡Pero ahorraste tiempo! No más búsquedas de códigos en Internet."
+   },
+   "meilleure_offre": {
+      "message": "Mejor oferta : "
+   },
+   "mon_compte": {
+      "message": "Mi cuenta"
+   },
+   "mot_de_passe": {
+      "message": "Contraseña"
+   },
+   "mot_de_passe_oublie": {
+      "message": "Contraseña olvidada"
+   },
+   "no_bonus_mea_body": {
+      "message": "¡Mira, esta tienda similar propone cashback!"
+   },
+   "no_bonus_mea_title": {
+      "message": "No hay cashback disponible"
+   },
+   "no_code": {
+      "message": "¿No hay ningún código promocional disponible?"
+   },
+   "noter_wanteeed": {
+      "message": "Calificar Wanteeed"
+   },
+   "nous_testons_les_codes_promo_pour_vous": {
+      "message": "Probamos los códigos promocionales para ti"
+   },
+   "nous_vous_remboursons_une_partie_de_vos_achats_sur_cette_boutique": {
+      "message": "Te devolveremos parte de tus compras en esta tienda"
+   },
+   "or": {
+      "message": "o"
+   },
+   "parrainage": {
+      "message": "Recomendación"
+   },
+   "partager": {
+      "message": "Compartir"
+   },
+   "pas_de_bonus": {
+      "message": "Ningún cashback :("
+   },
+   "pas_de_reduction_aujourd_hui": {
+      "message": "No hay descuentos hoy."
+   },
+   "plus_besoin_de_chercher_le_bon_code_promo_avant_d_acheter_wanteeed_le_trouve_pour_vous__en_un_clic": {
+      "message": "No es necesario buscar el código promocional correcto antes de comprar, Wanteeed lo encuentra por ti, con un solo clic."
+   },
+   "popup_code_apply__cta_referral_link": {
+      "message": "Recomienda a tus amigos"
+   },
+   "popup_code_apply__cta_signup_link": {
+      "message": "Crea tu cuenta"
+   },
+   "popup_code_apply__label_referral_link": {
+      "message": "¡Comparte y gana 3€!"
+   },
+   "popup_code_apply__label_signup_link": {
+      "message": "Crea tu cuenta para acceder a descuentos adicionales"
+   },
+   "pour_nous_remercier_donnez_nous_une_note": {
+      "message": "Para agradecernos, danos una calificación :)"
+   },
+   "ps__ca_marche_sur_des_centaines_d_autres_boutiques": {
+      "message": "PD: ¡funciona en cientos de otras tiendas!"
+   },
+   "ps__des_20_euros_confirmes_vous_pouvez_demander_un_virement_sur_votre_compte_bancaire": {
+      "message": "PD: ¡En cuanto cumulaste 20 € confirmados, puedes solicitar una transferencia a tu cuenta bancaria!"
+   },
+   "retrouvez_tous_vos_bonus_sur_votre_compte_wanteeed": {
+      "message": "Encuentre todas sus bonificaciones en su cuenta Wanteeed"
+   },
+   "route_forgot_password": {
+      "message": "https://wanteeed.com/es/contrasena-olvidada"
+   },
+   "route_retailers": {
+      "message": "/es/tiendas"
+   },
+   "route_tos": {
+      "message": "/es/info/aviso-legal"
+   },
+   "route_uninstall": {
+      "message": "/es/nos-dejas"
+   },
+   "se_connecter": {
+      "message": "Conectarse"
+   },
+   "super": {
+      "message": "¡ESTUPENDO!"
+   },
+   "sur_quel_mail_souhaitez_vous_recevoir_vos_bonus": {
+      "message": "¿En qué correo quieres recibir tu cashback ?"
+   },
+   "taux_succes": {
+      "message": "Tasa de éxito"
+   },
+   "tester_les_codes": {
+      "message": "¡Probar los códigos!"
+   },
+   "thanks": {
+      "message": "¡Gracias!"
+   },
+   "tip_autotest_vouchers": {
+      "message": "¡Probado automáticamente antes del pago!"
+   },
+   "valider": {
+      "message": "Validar"
+   },
+   "voir": {
+      "message": "ver"
+   },
+   "votre_vote_est_pris_en_compte": {
+      "message": "Tu voto lo tomamos en cuenta"
+   },
+   "vous_devez_vous_connecter_a_votre_compte_client_sur_ce_site__domain_avant_de_lancer_le_test": {
+      "message": "Debes iniciar sesión en tu cuenta de cliente en este sitio ($DOMAIN$) antes de hacer la prueba.",
+      "placeholders": {
+         "domain": {
+            "content": "$1"
+         }
+      }
+   },
+   "wanteeed_va_chercher_pour_vous_les_meilleurs_codes_promo_du_net": {
+      "message": "Wanteeed buscará los mejores códigos promocionales en la red."
+   },
+   "wanteeed_vous_a_permis_d_economiser_x_": {
+      "message": "Wanteeed te ahorró \u003Cspan class='amount'>15,20\u003C/span>€"
+   },
+   "warning_no_config": {
+      "message": "El probador de códigos automático aún no está disponible. Mientras tanto, aquí están todos los códigos promocionales de la tienda para probar manualmente."
+   },
+   "x_bonus": {
+      "message": "$BONUS$ de cashback",
+      "placeholders": {
+         "bonus": {
+            "content": "$1"
+         }
+      }
+   },
+   "x_codes": {
+      "message": "$COUNT$ Códigos",
+      "placeholders": {
+         "count": {
+            "content": "$1"
+         }
+      }
+   },
+   "x_codes_promo": {
+      "message": "$VOUCHER_COUNT$ códigos promocionales",
+      "placeholders": {
+         "voucher_count": {
+            "content": "$1"
+         }
+      }
+   },
+   "x_euros_de_moins_a_payer": {
+      "message": "¡\u003Cspan class='amount'>3\u003C/span>€ menos para pagar !"
+   },
+   "x_rembourses_au_lieu_de_y": {
+      "message": "\u003Cspan class='red'>$NEW_VALUE$$CURRENCY$\u003C/span> reembolsados en lugar de $OLD_VALUE$$CURRENCY$",
+      "placeholders": {
+         "currency": {
+            "content": "$2"
+         },
+         "new_value": {
+            "content": "$1"
+         },
+         "old_value": {
+            "content": "$3"
+         }
+      }
+   }
+}

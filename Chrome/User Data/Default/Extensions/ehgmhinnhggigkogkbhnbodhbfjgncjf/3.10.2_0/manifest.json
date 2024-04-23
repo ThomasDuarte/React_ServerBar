@@ -1,0 +1,36 @@
+{
+   "action": {
+      "default_icon": "icon/icon.png",
+      "matches": [ "https://*.force.com/*", "https://*.salesforce.com/*", "https://*.cloudforce.com/*" ]
+   },
+   "background": {
+      "service_worker": "dist/js/service_worker.js",
+      "type": "module"
+   },
+   "content_scripts": [ {
+      "css": [ "dist/css/app.css" ],
+      "js": [ "dist/js/app.min.js" ],
+      "matches": [ "https://*.force.com/*", "https://*.salesforce.com/*", "https://*.cloudforce.com/*", "https://github.com/*" ]
+   } ],
+   "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+   },
+   "description": "Powerful Salesforce developer tools, loved by over 50K developers worldwide.",
+   "differential_fingerprint": "1.8878ef622826c694e7a34a70781c4de7647e555f9e1d5e1da7947a41bfcfed35",
+   "icons": {
+      "128": "icon/icon-128.png",
+      "16": "icon/icon-16.png",
+      "48": "icon/icon-48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiq6MkQlA72TDWkmzUmmDAHuFOFEDH4zwto0uu5vHnMamAAFILUZoqeTycxsWpOBYqjRoKoD3zD/6lPkACRBYgXvi0ob0/UsN73pNYSRd5tbnvdbMyyXRXDz+uV+0wvvm4TynVxPwvTZS6B8eaLae9GV2Se8e9f27mPUbpmGkr1Bm7NcJN12cR1Yk7R2m0A3ye5nR/3ZCbrdZc/x8h35s2Uy/3wOUTbhpjdMhPk9M/lpOFWD18AwrFW2iP33pl/rYSSwE5pLkqJo3cAKwaMW5FMPAjbCP+i8YMRqdYzLxTapvEZseJNSiQpJOiU2gyuvw+5GVGjjUn/+T2CIqBfdJWQIDAQAB",
+   "manifest_version": 3,
+   "name": "Salesforce DevTools",
+   "permissions": [ "activeTab", "https://*force.com/*", "storage", "unlimitedStorage", "scripting" ],
+   "short_name": "Salesforce DevTools",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "3.10.2",
+   "web_accessible_resources": [ {
+      "matches": [ "*://*/*" ],
+      "resources": [ "popup.html" ]
+   } ]
+}

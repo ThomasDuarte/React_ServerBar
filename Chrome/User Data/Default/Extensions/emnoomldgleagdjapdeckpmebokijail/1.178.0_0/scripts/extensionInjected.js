@@ -1,0 +1,1 @@
+self.wtdExtensionInjected=!0;

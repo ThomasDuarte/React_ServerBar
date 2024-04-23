@@ -1,0 +1,6 @@
+2023/12/12-09:57:41.836 683c Creating DB C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_arc.net_0.indexeddb.leveldb since it was missing.
+2023/12/12-09:57:41.844 683c Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_arc.net_0.indexeddb.leveldb/MANIFEST-000001
+2023/12/12-09:57:42.425 5ee8 Level-0 table #5: started
+2023/12/12-09:57:42.430 5ee8 Level-0 table #5: 649 bytes OK
+2023/12/12-09:57:42.432 5ee8 Delete type=0 #3
+2023/12/12-09:57:42.433 683c Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

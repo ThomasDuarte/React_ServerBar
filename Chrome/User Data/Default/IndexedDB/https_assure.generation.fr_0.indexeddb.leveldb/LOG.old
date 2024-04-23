@@ -1,0 +1,7 @@
+2022/12/27-14:34:46.725 6ffc Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_assure.generation.fr_0.indexeddb.leveldb/MANIFEST-000001
+2022/12/27-14:34:46.764 6ffc Recovering log #3
+2022/12/27-14:34:46.770 6ffc Reusing old log C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_assure.generation.fr_0.indexeddb.leveldb/000003.log 
+2022/12/27-14:34:49.081 6ffc Level-0 table #5: started
+2022/12/27-14:34:49.088 6ffc Level-0 table #5: 853 bytes OK
+2022/12/27-14:34:49.090 6ffc Delete type=0 #3
+2022/12/27-14:34:49.106 6ffc Manual compaction at level-0 from (begin) .. (end); will stop at (end)

@@ -1,0 +1,415 @@
+function myFunction() {
+   var myChart;
+    var resizeTimer;
+    var clientID = 0; // 0 = CAN | 1 = USD
+    var officeElement = document.getElementById("divUPSOffice");
+	var StockPricePreference = $('#divUPStockPricePreference').text().trim();
+	//console.log('StockPricePreference::'+StockPricePreference);
+    var ofcLocation = "";
+    var inovestorChartAPI = "";
+    var inovestorMarketAPI = "";
+    var scurl = _spPageContextInfo.siteAbsoluteUrl + "/";
+    // Live data from Inovestors.com 
+    //var inovestorChartAPI = "https://dfc.inovestor.com/api/CGI/chartDatas/" + clientID + "?dataType=Intraday"; //https://dfc.inovestor.com/api/CGI/chartDatas/0?dataType=Intraday
+    //var inovestorMarketAPI = "https://dfc.inovestor.com/api/CGI/quotes/" + clientID;  //https://dfc.inovestor.com/api/CGI/quotes/0
+    // Data from SharePoint libraray.
+    if (officeElement.childElementCount > 0) {
+        ofcLocation = officeElement.children[0].innerText;
+    }
+    //console.log('Profile office Location', ofcLocation);
+	
+	// Added logic to check user preferred stock price..
+	if (StockPricePreference){
+		if (StockPricePreference == "USD") {
+			clientID = 1;
+			inovestorChartAPI = scurl + "SharePrice/USChartData.js?format=json&nocache=" + (new Date()).getTime();
+			inovestorMarketAPI = scurl + "SharePrice/USQuotes.js?format=json&nocache=" + (new Date()).getTime();
+		} else {
+			clientID = 0;
+			inovestorChartAPI = scurl + "SharePrice/CANChartData.js?format=json&nocache=" + (new Date()).getTime();
+			inovestorMarketAPI = scurl + "SharePrice/CANQuotes.js?format=json&nocache=" + (new Date()).getTime();
+		}
+		
+	} else {
+		if (ofcLocation != null && ofcLocation.substring(0, 3) == "US/") {
+			clientID = 1;
+			inovestorChartAPI = scurl + "SharePrice/USChartData.js?format=json&nocache=" + (new Date()).getTime();
+			inovestorMarketAPI = scurl + "SharePrice/USQuotes.js?format=json&nocache=" + (new Date()).getTime();
+		} else {
+			clientID = 0;
+			inovestorChartAPI = scurl + "SharePrice/CANChartData.js?format=json&nocache=" + (new Date()).getTime();
+			inovestorMarketAPI = scurl + "SharePrice/CANQuotes.js?format=json&nocache=" + (new Date()).getTime();
+		}
+	}
+
+    var ticker = '',
+        exchange = '',
+        dataLength = 0,
+        symbol = '',
+        name = '',
+        last = '',
+        change = '',
+        percentChange = '',
+        open = '',
+        high = '',
+        low = '',
+        volumeNum = '',
+        averageVolume30Days = '',
+        previousClose = '',
+        previousCloseDateTime = '',
+        previousCloseVolume = '',
+        high52Weeks = '',
+        low52Weeks = '',
+        currency = '';
+
+    if ($('#stock-chart').length) {
+        //console.log('clientID', clientID);
+        // var stockchart = $('#stock-chart').highcharts;
+       // requestStockChartData();
+        requestStockMarketData();
+
+        $('#stock-trends').on('click', function(e) {
+            //(clientID === 0) ? clientID = 1 : clientID = 0;
+            // inovestorChartAPI = "https://dfc.inovestor.com/api/CGI/chartDatas/" + clientID + "?dataType=Intraday";
+            // inovestorMarketAPI = "https://dfc.inovestor.com/api/CGI/quotes/" + clientID;
+          
+            if (clientID === 0) {
+                clientID = 1
+                inovestorChartAPI = scurl + "SharePrice/USChartData.js?format=json&nocache=" + (new Date()).getTime();
+                inovestorMarketAPI = scurl + "SharePrice/USQuotes.js?format=json&nocache=" + (new Date()).getTime();
+            } else {
+                clientID = 0
+                inovestorChartAPI = scurl + "SharePrice/CANChartData.js?format=json&nocache=" + (new Date()).getTime();
+                inovestorMarketAPI = scurl + "SharePrice/CANQuotes.js?format=json&nocache=" + (new Date()).getTime();
+            }
+            //console.log('Toggle Stock Data');
+    
+        
+        // Ater destroy the current, then we build new chart.
+               requestStockMarketData(clientID);
+      
+        })
+    }
+
+    function requestStockMarketData(clientID) {
+        // request data
+        //console.log('Request Stock Market Data', inovestorMarketAPI);
+		var stockMarketPref = "GlobalUSDStockMarketCache";
+		var stockChartPref = "GlobalUSDStockChartCache";
+		if(clientID == 0){
+			stockMarketPref = "GlobalCANStockMarketCache";
+			stockChartPref = "GlobalCANStockChartCache";
+		}
+		
+		var getStockMarketData = getLocalStorage(stockMarketPref);
+		if(getStockMarketData == null){
+			$.getJSON(inovestorMarketAPI, {
+                format: "json",
+                cache: false
+            })
+			.done(function(data) {
+				setLocalStorage(stockMarketPref,JSON.stringify(data),5 * 60 * 1000);
+                DisplayInvestorMerketDataGlobal(data,stockChartPref);
+            })
+			.fail(function(xhr, ajaxOptions, thrownError) {
+				dir(thrownError);
+				dir(xhr);
+				dir(ajaxOptions);
+			})
+			.always(function() {
+				console.log("Complete");
+			})
+		}
+		else{
+			var stockMarketJSONData = JSON.parse(getStockMarketData);
+			DisplayInvestorMerketDataGlobal(stockMarketJSONData,stockChartPref);
+		}
+    };
+	
+	function DisplayInvestorMerketDataGlobal(data,stockChartPref){
+	 	//console.log('Loaded Data Successfully', data);
+        symbol = data[0]['symbol'];
+        name = data[0]['name'];
+        last = Number(Math.round(data[0]['last'] + 'e2') + 'e-2');
+        change = data[0]['change'];
+        percentChange = Number(Math.round(data[0]['percentChange'] + 'e2') + 'e-2');
+        open = data[0]['open'];
+        high = data[0]['high'];
+        low = data[0]['low'];
+        volumeNum = data[0]['volume'];
+        averageVolume30Days = data[0]['averageVolume30Days'];
+        previousClose = data[0]['previousClose'];
+        previousCloseDateTime = data[0]['previousCloseDateTime'];
+        previousCloseVolume = data[0]['previousCloseVolume'];
+        high52Weeks = data[0]['high52Weeks'];
+        low52Weeks = data[0]['low52Weeks'];
+        currency = data[0]['currency'];
+
+        if (!change) {
+            change = '0.0';
+        }
+        var sign = percentChange ? percentChange < 0 ? -1 : 1 : 0
+
+        // Math.sign is not supported on IE11.
+        // if(Math.sign(percentChange) === -1) {
+        //     priceChange = '<br><span class="card-price-change text-danger">' + change + '</span> <span class="card-price-change-percent text-danger">(' + percentChange + '%)</span>';
+        //  } else if (Math.sign(percentChange) === 1) {
+        //      priceChange = '<br><span class="card-price-change text-success">' + change + '</span> <span class="card-price-change-percent text-success">(' + percentChange + '%)</span>';
+        //  } else {
+        //      priceChange = '<br><span class="card-price-change">' + change + '</span> <span class="card-price-change-percent">(' + percentChange + '%)</span>';
+        //  }
+
+        if (sign === -1) {
+          priceChange = '<br /><span class="card-price-change text-16 text-danger">' + change + '</span> <span class="card-price-change-percent text-16 text-danger">(' + percentChange + '%)</span>';
+        } else if (sign === 1) {
+          priceChange = '<br /><span class="card-price-change text-16 text-success">' + change + '</span> <span class="card-price-change-percent text-16 text-success">(' + percentChange + '%)</span>';
+        } else {
+           priceChange = '<br /><span class="card-price-change text-16">' + change + '</span> <span class="card-price-change-percent text-16">(' + percentChange + '%)</span>';
+        }
+        $('#card-stock-title').html('<span class="card-price-diff float-right clearfix text-right"><span class="card-current-price text-18">' + last + ' (' + currency + ')</span>' + priceChange + '</span>' + name + ' (' + symbol + ')');
+
+        // After onclick event. old chart values are persist and need to destroy the chart before building the new chart, othewise we see both charts on mouseover.
+        if (myChart != undefined || myChart !=null) {
+          myChart.destroy();
+        }
+        // call Charting...
+        requestStockChartData(previousClose,stockChartPref);
+	}
+	
+    function requestStockChartData(prevClose,stockChartPref) {
+        // request data
+        //console.log('Request Stock Chart Data', inovestorChartAPI);
+		var getStockChartData = getLocalStorage(stockChartPref);
+		if(getStockChartData == null){
+			$.getJSON(inovestorChartAPI, {
+                format: "json",
+                cache: false
+            })
+			.done(function(data) {
+				setLocalStorage(stockChartPref,JSON.stringify(data),5 * 60 * 1000);
+                DisplayStockChart(data,prevClose);
+            })
+			.fail(function(xhr, ajaxOptions, thrownError) {
+                dir(thrownError);
+                dir(xhr);
+                dir(ajaxOptions);
+            })
+			.always(function() {
+				console.log("Complete");
+			})
+		}
+		else{
+			var stockChartJSONData = JSON.parse(getStockChartData);			
+			DisplayStockChart(stockChartJSONData,prevClose);
+		}
+    };
+	
+	function DisplayStockChart(data,prevClose){
+		// console.log('Loaded ' + data[0]['datas'].length + ' items successfully');
+        ohlc = [];
+        volume = [];
+        price = [];
+        ticker = data[0]['ticker'];
+        exchange = data[0]['exchange'];
+        dataLength = data[0]['datas'].length;
+        dataValues = data[0]['datas'];
+        //prevClose = data[0]['datas'][0][2];
+        var i = 0;
+        $.each(dataValues, function(i, item) {
+           price.push([
+           dataValues[i][0], // the date
+           dataValues[i][1] // close
+           ]);
+         });
+        //console.log("Investor dot com data:" + data);
+        buildStockChart(prevClose, price);	
+	}
+	
+    function buildStockChart(prevClose, price) {
+        //console.log('Build Chart');
+        var yValues = [];
+        var datetime = [];
+       
+        $.each(price, function(i, item) {
+            yValues.push(item[1]);
+            datetime.push(item[0]);
+        });
+
+        // var xValues = [];
+       // var sortedArray = datetime.sort(function(a, b) {
+        //    return a.index - b.index;
+       // });
+
+      //  $.each(sortedArray, function(k, itemx) {
+      //      xValues.push(parseInt(itemx.split("T")[1].split(":")[0]));
+      //  });
+
+        // renderChart(yValues, xValues, prevClose);
+
+        renderChart(yValues, datetime, prevClose);
+    }
+
+    function renderChart(chartData, chartLabels, prevClose) {
+        //https://www.chartjs.org/docs/latest/charts/line.html reference for documentation.
+        var ctx = document.getElementById("myStock-Chart").getContext('2d');
+        Chart.defaults.global.defaultFontColor = '#818181';
+         myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    data: chartData,
+                    pointStyle: 'line', //'dash'
+                    borderColor: 'rgba(0,0,0, 0.3)',
+                    borderWidth: 1,
+                    fill: false,
+                    lineTension: 0,
+                    radius: 1,
+                    //stepped:true
+                }, ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            parser: 'YYYY-MM-DDTHH:mm:ss',
+                            unit: 'hour',
+                            unitStepSize: 1.0,
+                            displayFormats: {
+                                'hour': 'ha',
+                            }
+                        },
+                        display: true,
+                        gridLines: {
+                            display: false,
+                            color:'rgba(0,0,0, 0.2)',
+                        },
+                        ticks: {
+                           // source: "data",
+                            display: true,
+                            //stepSize: 1, 
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true,
+                            color:'rgba(0,0,0, 0.2)',
+                        },
+                        ticks: {
+                            display: true,
+                            stepSize: 1, // To control Price in Y-axis
+                        },
+                    }],
+                },
+
+                // Boolean - whether or not the chart should be responsive and resize when the browser does.
+                responsive: true,
+                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                maintainAspectRatio: false,
+                
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    enabled: false,
+                },
+                animation: {
+                    duration: 0,
+                },
+                hover: {
+                    animationDuration: 0,
+                },
+                responsiveAnimationDuration: 0,
+
+
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 10
+                    }
+                },
+                // Needs to use plugin to use the annotations to draw a line for previous close line..
+                annotation: {
+                    annotations: [{
+                       // drawTime: 'afterDatasetsDraw',
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y-axis-0',
+                        value: prevClose,
+                        borderColor: 'red',
+                        borderWidth: 0.8,
+                        label: {
+                            enabled: true,
+                            position: "right",
+                            content: "Prev Close",
+                            backgroundColor: '#4b4b4b',
+                            fontFamily: "sans-serif",
+                            fontSize: 9,
+                            fontStyle: "normal",
+                            fontColor: "#fff",
+                            xPadding: 4,
+                            yPadding: 2,
+                            cornerRadius: 4,
+                            // Adjustment along x-axis (left-right) of label relative to above number (can be negative)
+                            // For horizontal lines positioned left or right, negative values move
+                            // the label toward the edge, and positive values toward the center.
+                            xAdjust: 0,
+                            // Adjustment along y-axis (top-bottom) of label relative to above number (can be negative)
+                            // For vertical lines positioned top or bottom, negative values move
+                            // the label toward the edge, and positive values toward the center.
+                            yAdjust: 0,
+                            // Rotation of label, in degrees, default is 0
+                            rotation: 0
+                                }
+                            }]
+                        },// end of annotation..
+
+            }, // end of options..
+
+        });
+    };
+	
+	// StockPreferrence caching begin
+	function setLocalStorage(key, value, timespan){
+		try{
+			const now = new Date();
+			const item = {
+				value: value,
+				expiry: now.getTime() + timespan,
+				}
+				localStorage.setItem(key, JSON.stringify(item));
+		}
+		catch(ex){
+			console.log("Exception occurred inside BindFirstImgItem.Message- "+ex.Message);
+		}
+	}
+	function getLocalStorage(key){
+		try{
+			const itemStr = localStorage.getItem(key);
+			if (!itemStr){
+				 return null;
+			   }
+			const item = JSON.parse(itemStr);
+			const now = new Date();
+			if (now.getTime() > item.expiry) {
+				localStorage.removeItem(key)
+				return null
+			}
+			return item.value;
+		}
+		catch(ex){
+			console.log("Exception occurred inside BindFirstImgItem.Message- "+ex.Message);
+		}
+	}
+// StockPreferrence caching ends
+
+}
+
+
+$(document).ready(function() {
+    myFunction();
+})
