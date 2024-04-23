@@ -1,0 +1,45 @@
+.server-bar{
+  display: flex;
+  flex-direction: column;
+  width: 5rem;
+  height: 100vh;
+  background-color: #2f3136;
+  color: #dcddde;
+  padding: 10px;
+  border-right: 1px solid #4f545c;
+}
+
+.server-bar h1 {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 0px;
+  justify-content: center;
+}
+
+.server-bar__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.server-bar__content img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.server-bar__content li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px 0 10px;
+  padding: 0%;
+}
