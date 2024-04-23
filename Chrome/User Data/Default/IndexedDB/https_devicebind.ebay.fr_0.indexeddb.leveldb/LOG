@@ -1,7 +1,0 @@
-2023/09/12-11:01:35.974 30a0 Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_devicebind.ebay.fr_0.indexeddb.leveldb/MANIFEST-000001
-2023/09/12-11:01:35.975 30a0 Recovering log #3
-2023/09/12-11:01:35.976 30a0 Reusing old log C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_devicebind.ebay.fr_0.indexeddb.leveldb/000003.log 
-2023/09/12-11:01:39.127 43f4 Level-0 table #5: started
-2023/09/12-11:01:39.136 43f4 Level-0 table #5: 1213 bytes OK
-2023/09/12-11:01:39.142 43f4 Delete type=0 #3
-2023/09/12-11:01:39.146 43f4 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

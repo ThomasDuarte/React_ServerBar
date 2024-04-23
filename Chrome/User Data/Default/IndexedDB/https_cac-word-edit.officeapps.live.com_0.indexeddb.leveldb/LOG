@@ -1,7 +1,0 @@
-2023/09/19-16:05:28.878 7bc Reusing MANIFEST C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_cac-word-edit.officeapps.live.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/09/19-16:05:28.880 7bc Recovering log #3
-2023/09/19-16:05:28.881 7bc Reusing old log C:\Users\thomas.duarte\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_cac-word-edit.officeapps.live.com_0.indexeddb.leveldb/000003.log 
-2023/09/19-16:05:32.538 4acc Level-0 table #5: started
-2023/09/19-16:05:32.542 4acc Level-0 table #5: 1348 bytes OK
-2023/09/19-16:05:32.544 4acc Delete type=0 #3
-2023/09/19-16:05:32.545 4acc Manual compaction at level-0 from (begin) .. (end); will stop at (end)

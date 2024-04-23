@@ -1,1 +1,0 @@
-self.alert=function(o){console.log(o)},self.confirm=function(o){return console.log(o),!0};
