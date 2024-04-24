@@ -1,15 +1,15 @@
-import './App.css'
-import Server_Bar from './components/Server_Bar'
+import "./App.css";
+import Layout from "./components/Layout/Layout";
+import Server_Content from "./components/Server_Content";
 
 function App() {
-
   return (
     <>
       <div className="app">
-        <Server_Bar />
+        <Layout></Layout>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

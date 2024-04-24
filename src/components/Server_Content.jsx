@@ -1,4 +1,4 @@
-function Server_Content() {
+function Server_Content(serverContent) {
   return (
     <div className="server-content">
       <h1>Server Content</h1>
