@@ -19,22 +19,27 @@ function NavBar() {
 
   const servers = {
     server1: {
+      id: 1,
       name: "Server 1",
       url: "https://via.placeholder.com/150",
     },
     server2: {
+      id: 2,
       name: "Server 2",
       url: "https://via.placeholder.com/150",
     },
     server3: {
+      id: 3,
       name: "Server 3",
       url: "https://via.placeholder.com/150",
     },
     server4: {
+      id: 4,
       name: "Server 4",
       url: "https://via.placeholder.com/150",
     },
     server5: {
+      id: 5,
       name: "Server 5",
       url: "https://via.placeholder.com/150",
     },
