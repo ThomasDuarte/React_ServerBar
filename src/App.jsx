@@ -1,11 +1,13 @@
-import "./App.css";
-import Layout from "./components/Layout/Layout";
+import Layout from "./Layout/Layout";
+import { ServerProvider } from "./contexts/ServersContext";
 
 function App() {
   return (
     <>
       <div className="app">
-        <Layout></Layout>
+        <ServerProvider>
+          <Layout></Layout>
+        </ServerProvider>
       </div>
     </>
   );
