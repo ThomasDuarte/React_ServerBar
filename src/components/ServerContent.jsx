@@ -9,10 +9,32 @@ function ServerContent() {
   ).length;
   if (numberServerDisplayed === 0) {
     return (
-      <div className="flex-initial  w-full text-center h-screen">
+      <div
+        className="flex-initial  w-full text-center h-screen overflow-y-auto"
+        style={{ marginLeft: "4.5rem" }}
+      >
         <hr className="h-7 mt-0 ml-0 bg-nav-bar-color border-t-0 "></hr>
         <h1 className="text-3xl font-bold">Bienvenue</h1>
         <p> Veuillez sélectionner un voyant pour afficher les détails.</p>
+        <h2 className="text-2xl font-bold mt-10">
+          Qu'est-ce que notre application ?
+        </h2>
+        <p>
+          Nous fournissons une plateforme pour ceux qui souhaitent connaitre la
+          signification des voyants pouvant être observés sur leur tableau de
+          bord.
+        </p>
+        <h2 className="text-2xl font-bold mt-10">
+          Comment utiliser notre application
+        </h2>
+        <ol className="text-center mt-3 ml-6 list-none">
+          <li>Étape 1 : Sélectionner un voyant</li>
+          <li>Étape 2 : Lire les détails</li>
+        </ol>
+        <h3 className="text-xl font-bold mt-10">
+          Si vous souhaitez retourner sur cette page, veuillez cliquer sur le
+          voyant déjà sélectionné dans la barre de navigation.
+        </h3>
       </div>
     );
   }
