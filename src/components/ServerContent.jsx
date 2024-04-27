@@ -13,7 +13,7 @@ function ServerContent() {
         className="flex-initial  w-full text-center h-screen overflow-y-auto"
         style={{ marginLeft: "4.5rem" }}
       >
-        <hr className="h-7 mt-0 ml-0 bg-nav-bar-color border-t-0 "></hr>
+        <hr className="h-7 mt-0 ml-0 bg-nav-bar-color border-t-0"></hr>
         <h1 className="text-3xl font-bold">Bienvenue</h1>
         <p> Veuillez sélectionner un voyant pour afficher les détails.</p>
         <h2 className="text-2xl font-bold mt-10">

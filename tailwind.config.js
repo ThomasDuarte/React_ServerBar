@@ -13,5 +13,8 @@ export default {
         "body-color": "#2c2f33",
       },
     },
+    fontFamily: {
+      original: ["original-font"],
+    },
   },
 };
