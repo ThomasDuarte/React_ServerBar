@@ -1,3 +1,4 @@
+import backgroundImage from "../assets/background.jpeg";
 import NavBar from "../components/NavBar";
 import ServerContent from "../components/ServerContent";
 
@@ -6,7 +7,7 @@ export default function Layout({ children }) {
     <div className="relative">
       <div
         className="absolute inset-0 bg-center bg-no-repeat bg-cover mx-auto w-full min-h-screen"
-        style={{ backgroundImage: "url('./src/assets/background.jpeg')" }}
+        style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="bg-gradient-to-b from-black via-black to-transparent opacity-50 h-full"></div>
       </div>
