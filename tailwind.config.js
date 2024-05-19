@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        "nav-bar-color": "#23272a",
-        "body-color": "#2c2f33",
+        "nav-bar-color": "#8a2be2",
+        "body-color": "#8a2899",
       },
     },
     fontFamily: {

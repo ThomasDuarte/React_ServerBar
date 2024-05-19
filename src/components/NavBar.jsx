@@ -1,5 +1,4 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ServerContext } from "../contexts/ServersContext";
 
 function ServerButton({ url, name, handleServerClick }) {
@@ -11,6 +10,12 @@ function ServerButton({ url, name, handleServerClick }) {
 }
 
 function NavBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClickMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   const { dataServers, setDataServers } = useContext(ServerContext);
 
   const handleClick = (serverId) => {
@@ -26,16 +31,23 @@ function NavBar() {
 
   return (
     <>
+      <button
+        className="md:hidden text-white ml-2 mt-1 absolute bg-white bg-opacity-10 rounded-xl w-14 h-8"
+        onClick={handleClickMenu}
+      >
+        Menu
+      </button>
       <div
-        className="fixed top-0 left-0 flex flex-col items-center bg-nav-bar-color h-screen overflow-y-auto text-gray-100"
+        className={`fixed flex flex-col items-center bg-nav-bar-color overflow-y-auto overflow-x-hidden text-gray-100 bg-opacity-20 w-14 mt-10 md:mt-40 ml-1.5 md:ml-16 rounded-full transform transition-transform duration-200 ease-in-out ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
+        } md:translate-y-0 ${isOpen ? "visible" : "invisible"} md:visible`}
         style={{
           scrollbarWidth: "none" /* Firefox */,
           "-ms-overflow-style": "none" /* IE and Edge */,
+          maxHeight: "-webkit-fill-available",
+          marginBottom: "10rem",
         }}
       >
-        <div className="text-center font-bold">
-          <h1>Voyants</h1>
-        </div>
         <ul className="w-14 mx-2 mt-1">
           {dataServers.map((server) => (
             <ServerButton
